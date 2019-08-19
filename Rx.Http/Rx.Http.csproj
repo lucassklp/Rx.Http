@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+      <PackageReference Include="System.Net.Http" Version="4.3.4" />
+      <PackageReference Include="System.Reactive" Version="4.1.6" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Body.Parsers\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Body.Parsers\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Body.Parsers\**" />
+    </ItemGroup>
+
+</Project>
