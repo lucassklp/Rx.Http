@@ -6,9 +6,6 @@ namespace Rx.Http.Serializers
 {
     public class JsonSerializer : IBodySerializer
     {
-        
-        
-        
         public T Deserialize<T>(Stream stream) where T : class
         {
             using (var sr = new StreamReader(stream))

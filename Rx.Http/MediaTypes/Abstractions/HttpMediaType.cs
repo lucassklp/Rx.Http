@@ -8,11 +8,11 @@ namespace Rx.Http.MediaTypes.Abstractions
 {
     public abstract class HttpMediaType
     {
-        public IBodySerializer Serializer { get; private set; }
+        public IBodySerializer BodySerializer { get; private set; }
 
         public HttpMediaType(IBodySerializer serializer)
         {
-            Serializer = serializer;
+            BodySerializer = serializer;
         }
 
         public bool CanSerialize(string mediaType)

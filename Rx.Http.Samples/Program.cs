@@ -12,11 +12,13 @@ namespace Rx.Http.Samples
     {
         static async Task Main(string[] args)
         {
-            var request = new RxHttpRequest();
-            var response = await request.Get<string>("http://google.com");
+            var request = new RxHttpClient();
+
+            //Get the html code from the google home page
+            var response = await request.Get("http://google.com");
             Console.WriteLine("Google request finished!");
 
-
+            //Asynchronously, get the json from jsonplaceholder and serialize it. 
             request.Get<List<Todo>>("https://jsonplaceholder.typicode.com/todos/").Subscribe(itens => {
                 Console.WriteLine("Json request finished!");
             });

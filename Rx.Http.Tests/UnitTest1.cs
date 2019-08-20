@@ -13,7 +13,7 @@ namespace Rx.Http.Tests
         [Fact]
         public async void Test1()
         {
-            var request = new RxHttpRequest();
+            var request = new RxHttpClient();
             var response = await request.Get<string>("http://google.com", opt => {
                 opt.Serializer = new TextSerializer();
             });
