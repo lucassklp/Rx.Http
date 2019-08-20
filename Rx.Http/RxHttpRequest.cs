@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Rx.Http.MediaTypes;
+using Rx.Http.MediaTypes.Abstractions;
 using Rx.Http.Serializers;
 
 namespace Rx.Http
@@ -32,12 +34,6 @@ namespace Rx.Http
         {
             return ExecuteRequest<TResponse>(() => http.PostAsync(url, new ByteArrayContent(new byte[]{})), func);
         }
-
-        public IObservable<TResponse> Post<TResponse>(string url, Action<RxHttpRequestOptions> func = null)
-            where TResponse: class
-        {
-            return ExecuteRequest<TResponse>(() => http.PostAsync(url, ), func);
-        }
         
         public IObservable<TResponse> Post<TResponse>(string url, HttpContent content, Action<RxHttpRequestOptions> func = null) where TResponse: class
         {
@@ -53,8 +49,30 @@ namespace Rx.Http
                 func?.Invoke(options);
                 var response = await method.Invoke();
 
-                SerializerMap.GetSerializable("application/json");
-                
+                /*
+                 * At this point, we need to deserialize the response from server
+                 * Check if a Deserializer is set. 
+                 * If it is, then use it. 
+                 * Otherwise, try to get a default serializer using mime type from response
+                 */
+                if (options.Deserializer == null)
+                {
+                    HttpMediaType FindMimeTypeFromContentType()
+                    {
+                        try
+                        {
+                            var mimeType = response.Content.Headers.ContentType.MediaType;   
+                            return MediaTypesMap.GetMediaType(mimeType);
+                        }
+                        catch
+                        {
+                            return null;
+                        }
+                    }
+
+                    options.Deserializer = FindMimeTypeFromContentType()?.Serializer ?? new TextSerializer();
+                }
+
                 return options.Deserializer.Deserialize<TResponse>(await response.Content.ReadAsStreamAsync());
             });
         }

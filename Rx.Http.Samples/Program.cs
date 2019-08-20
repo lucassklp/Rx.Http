@@ -13,17 +13,15 @@ namespace Rx.Http.Samples
         static async Task Main(string[] args)
         {
             var request = new RxHttpRequest();
-            var response = await request.Get<string>("http://google.com", opt => {
-                opt.Serializer = new TextSerializer();
-            });
+            var response = await request.Get<string>("http://google.com");
+            Console.WriteLine("Google request finished!");
 
 
             request.Get<List<Todo>>("https://jsonplaceholder.typicode.com/todos/").Subscribe(itens => {
-                Console.WriteLine(itens.ToString());
+                Console.WriteLine("Json request finished!");
             });
-            
-            Console.WriteLine("Test finished");
 
+            Console.WriteLine("Main thread finished!");
             Console.ReadKey();
         }
     }
