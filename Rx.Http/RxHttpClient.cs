@@ -22,24 +22,16 @@ namespace Rx.Http
             this.http = http;
         }
 
-        public IObservable<string> Get(string url, Action<RxHttpRequestOptions> opts = null)
+        public IObservable<string> Get(string url)
         {
-            return Get<string>(url, opt => {
-                opt.Deserializer = new TextSerializer();
-            });
-        }
-
-        public IObservable<TResponse> Get<TResponse>(RxHttpRequest httpRequest)
-            where TResponse: class
-        {
-            return httpRequest.Execute<TResponse>(this.http);
+            return new RxGetHttpRequest(this.http, url).Request();
         }
 
         public IObservable<TResponse> Get<TResponse>(string url, Action<RxHttpRequestOptions> func = null) 
             where TResponse: class
         {
-            return new RxGetHttpRequest(url, func)
-                .Execute<TResponse>(this.http);
+            return new RxGetHttpRequest(this.http, url, func)
+                .Request<TResponse>();
         }
     }
 }

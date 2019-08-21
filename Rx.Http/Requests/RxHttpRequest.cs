@@ -14,13 +14,28 @@ namespace Rx.Http.Requests
         public HttpHeaders Headers {get;set;}
         public IDeserializer Deserializer {get;set;}
         public ISerializer Serializer {get;set;}
-        internal HttpMediaType mediaType {get;}
-        public RxHttpRequest(string url, Action<RxHttpRequestOptions> opts = null, object obj = null)
+        internal HttpClient http;
+        public RxHttpRequest(HttpClient http, string url, Action<RxHttpRequestOptions> opts = null, object obj = null)
         {
-            this.mediaType = mediaType;
+            this.Url = url;
             this.QueryStrings = new Dictionary<string, string>();
+
+            this.http = http;
+            Setup(opts);
         }
 
-        internal abstract IObservable<TResponse> Execute<TResponse>(HttpClient http) where TResponse: class;
+        private void Setup(Action<RxHttpRequestOptions> opts)
+        {
+            var options = new RxHttpRequestOptions(http.DefaultRequestHeaders);
+            opts?.Invoke(options);
+
+            this.Headers = options.Headers;
+            this.QueryStrings = options.QueryStrings;
+            this.Serializer = options.Serializer;
+            this.Deserializer = options.Deserializer;
+        }
+
+        internal abstract IObservable<TResponse> Request<TResponse>() where TResponse: class;
+        internal abstract IObservable<string> Request();
     }
 }

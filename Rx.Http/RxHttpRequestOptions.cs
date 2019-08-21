@@ -12,11 +12,12 @@ namespace Rx.Http
     {
         public ISerializer Serializer {get;set;}
         public IDeserializer Deserializer {get;set;}
-        internal HttpHeaders Headers {get;set;}
+        internal HttpHeaders Headers { get; private set; }
         public Dictionary<string, string> QueryStrings {get; private set;}
 
-        public RxHttpRequestOptions()
+        public RxHttpRequestOptions(HttpHeaders headers)
         {
+            this.Headers = headers;
             this.QueryStrings = new Dictionary<string, string>();
         }
 
@@ -30,11 +31,6 @@ namespace Rx.Http
             var token = $"{user}:{key}";
             var tokenBase64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(token));
             this.AddHeader(HeaderNames.Authorization, $"Basic {tokenBase64}");
-        }
-
-        internal void ConfigureRequest(RxHttpClient request)
-        {
-            //request
         }
     }
 }

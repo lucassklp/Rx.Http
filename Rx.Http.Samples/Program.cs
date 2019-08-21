@@ -15,7 +15,7 @@ namespace Rx.Http.Samples
             var request = new RxHttpClient();
 
             //Get the html code from the google home page
-            var response = await request.Get("http://google.com");
+            var response = await request.Get("http://www.google.com");
             Console.WriteLine("Google request finished!");
 
             //Asynchronously, get the json from jsonplaceholder and serialize it. 
