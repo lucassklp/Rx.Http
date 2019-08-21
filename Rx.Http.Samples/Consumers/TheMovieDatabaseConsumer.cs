@@ -1,19 +1,28 @@
+using System;
+using System.Net.Http;
 using Rx.Http.Interceptors;
 using Rx.Http.Requests;
+using Rx.Http.Samples.Models;
 
 namespace Rx.Http.Samples.Consumers
 {
     public class TheMovieDatabaseConsumer : RxConsumer
     {
-        public TheMovieDatabaseConsumer()
+        public TheMovieDatabaseConsumer(): base(new RxHttpClient(new HttpClient()))
         {
 
         }
-        public override void Setup(RxHttpRequestConventions conventions)
+        public override RxHttpRequestConventions Setup()
         {
-            conventions.BaseUrl = @"https://api.themoviedb.org/3/";
+            var conventions = new RxHttpRequestConventions();
+            //conventions.BaseUrl = @"/";
             conventions.Interceptors.Add(new TheMovieDatabaseInterceptor());
-            base.Setup(conventions);
+            return conventions;
+        }
+
+        public IObservable<Result> ListMovies()
+        {
+            return Get<Result>("https://api.themoviedb.org/3/movie/popular");
         }
     }
 
@@ -24,5 +33,4 @@ namespace Rx.Http.Samples.Consumers
             request.QueryStrings.Add("api_key", "key");
         }
     }
-
 }
