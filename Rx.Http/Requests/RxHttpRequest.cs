@@ -26,7 +26,16 @@ namespace Rx.Http.Requests
 
         public Uri GetUri()
         {
-            var builder = new UriBuilder(http.BaseAddress.AbsoluteUri);
+            UriBuilder builder = null;
+            if(http?.BaseAddress != null)
+            {
+                builder = new UriBuilder(http.BaseAddress.AbsoluteUri + Url);
+            }
+            else
+            {
+                builder = new UriBuilder(Url);
+            }
+
             var query = HttpUtility.ParseQueryString(builder.Query);
             
             foreach (var entry in QueryStrings)

@@ -15,15 +15,12 @@ namespace Rx.Http.Samples.Consumers
         public override RxHttpRequestConventions Setup()
         {
             var conventions = new RxHttpRequestConventions();
-            //conventions.BaseUrl = @"/";
+            conventions.BaseUrl = @"https://api.themoviedb.org/3";
             conventions.Interceptors.Add(new TheMovieDatabaseInterceptor());
             return conventions;
         }
 
-        public IObservable<Result> ListMovies()
-        {
-            return Get<Result>("https://api.themoviedb.org/3/movie/popular");
-        }
+        public IObservable<Result> ListMovies() => Get<Result>("/movie/popular");
     }
 
     public class TheMovieDatabaseInterceptor : RxInterceptor

@@ -41,7 +41,10 @@ namespace Rx.Http
         private void ApplyConventions(RxHttpRequestConventions conventions)
         {
             this.interceptors = conventions.Interceptors;
-            this.http.BaseAddress = new UriBuilder(conventions.BaseUrl).Uri;
+            if (!string.IsNullOrWhiteSpace(conventions.BaseUrl))
+            {
+                this.http.BaseAddress = new UriBuilder(conventions.BaseUrl).Uri;
+            }
         }
     }
 }

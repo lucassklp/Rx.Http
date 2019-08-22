@@ -14,23 +14,25 @@ namespace Rx.Http.Samples
     {
         static async Task Main(string[] args)
         {
-            var request = new RxHttpClient(new HttpClient());
+            RxHttpClient request = new RxHttpClient(new HttpClient());
 
             //Get the html code from the google home page
-            // var response = await request.Get("http://www.google.com");
-            // Console.WriteLine("Google request finished!");
+            var response = await request.Get("http://www.google.com");
+            Console.WriteLine("Google request finished!");
 
-            // //Asynchronously, get the json from jsonplaceholder and serialize it. 
-            // request.Get<List<Todo>>("https://jsonplaceholder.typicode.com/todos/").Subscribe(itens => {
-            //     Console.WriteLine("Json request finished!");
-            // });
+            //Asynchronously, get the json from jsonplaceholder and serialize it. 
+            request.Get<List<Todo>>("https://jsonplaceholder.typicode.com/todos/").Subscribe(itens =>
+            {
+                Console.WriteLine("Json request finished!");
+            });
 
             var tmdbConsumer = new TheMovieDatabaseConsumer();
             var item = await tmdbConsumer.ListMovies();
+            Console.WriteLine("List Movie Finished!");
 
 
             Console.WriteLine("Main thread finished!");
-            //Console.ReadKey();
+            Console.ReadKey();
         }
     }
 }
