@@ -7,5 +7,10 @@ namespace Rx.Http
     {
         public string BaseUrl {get;set;}
         public List<RxInterceptor> Interceptors {get;set;}
+
+        public RxHttpRequestConventions()
+        {
+            this.Interceptors = new List<RxInterceptor>();
+        }
     }
 }

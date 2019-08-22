@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using Rx.Http.MediaTypes.Abstractions;
+using System.Web;
 using Rx.Http.Serializers.Interfaces;
 
 namespace Rx.Http.Requests
@@ -22,6 +22,20 @@ namespace Rx.Http.Requests
 
             this.http = http;
             Setup(opts);
+        }
+
+        public Uri GetUri()
+        {
+            var builder = new UriBuilder(http.BaseAddress.AbsoluteUri);
+            var query = HttpUtility.ParseQueryString(builder.Query);
+            
+            foreach (var entry in QueryStrings)
+            {
+                query[entry.Key] = entry.Value;    
+            }
+
+            builder.Query = query.ToString();
+            return builder.Uri;
         }
 
         private void Setup(Action<RxHttpRequestOptions> opts)

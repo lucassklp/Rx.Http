@@ -15,7 +15,7 @@ namespace Rx.Http.Requests
         {
             return SingleObservable.Create(async () =>
             {
-                var response = await http.GetAsync(Url);
+                var response = await http.GetAsync(GetUri());
                 Deserializer = new TextSerializer();
                 return Deserializer.Deserialize<string>(await response.Content.ReadAsStreamAsync());
             });
@@ -25,7 +25,7 @@ namespace Rx.Http.Requests
         {
             return SingleObservable.Create(async () => 
             {
-                var response = await http.GetAsync(Url);
+                var response = await http.GetAsync(GetUri());
                 
                 if(Deserializer == null)
                 {

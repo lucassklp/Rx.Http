@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Reactive.Linq;
 using System.Threading;
 using Rx.Http.Serializers;
@@ -13,17 +14,15 @@ namespace Rx.Http.Tests
         [Fact]
         public async void Test1()
         {
-            var request = new RxHttpClient();
+            var request = new RxHttpClient(new HttpClient());
             var response = await request.Get<string>("http://google.com", opt => {
                 opt.Serializer = new TextSerializer();
             });
-
 
             request.Get<List<Todo>>("https://jsonplaceholder.typicode.com/todos/").Subscribe(itens => {
                 System.Console.WriteLine(itens.ToString());
             });
 
-            Thread.Sleep(20000);
             Console.WriteLine("Test finished");
         }
     }

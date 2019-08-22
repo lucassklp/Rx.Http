@@ -1,20 +1,17 @@
 ﻿using System;
 using System.Net.Http;
-using System.Threading.Tasks;
-using Rx.Http.MediaTypes;
-using Rx.Http.MediaTypes.Abstractions;
 using Rx.Http.Requests;
-using Rx.Http.Serializers;
 
 namespace Rx.Http
 {
     public class RxHttpClient
     {
         private HttpClient http;
-
-        public RxHttpClient()
+        
+        public Uri BaseAddress
         {
-            this.http = new HttpClient();
+            get => http.BaseAddress;
+            set => http.BaseAddress = value;
         }
 
         public RxHttpClient(HttpClient http)
@@ -24,14 +21,25 @@ namespace Rx.Http
 
         public IObservable<string> Get(string url)
         {
-            return new RxGetHttpRequest(this.http, url).Request();
+            return this.CreateGetRequest(url).Request();
         }
 
+        internal RxHttpRequest CreateGetRequest(string url)
+        {
+            return new RxGetHttpRequest(this.http, url);
+        }
+        
         public IObservable<TResponse> Get<TResponse>(string url, Action<RxHttpRequestOptions> func = null) 
             where TResponse: class
         {
-            return new RxGetHttpRequest(this.http, url, func)
+            return CreateGetRequest(url, func)
                 .Request<TResponse>();
         }
+
+        internal RxHttpRequest CreateGetRequest(string url, Action<RxHttpRequestOptions> func = null)
+        {
+            return new RxGetHttpRequest(this.http, url, func);
+        }
+
     }
 }
