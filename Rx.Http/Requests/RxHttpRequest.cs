@@ -2,7 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web;
+using Microsoft.Extensions.Logging;
+using Rx.Http.MediaTypes;
 using Rx.Http.Serializers.Interfaces;
 
 namespace Rx.Http.Requests
@@ -14,15 +17,29 @@ namespace Rx.Http.Requests
         public HttpHeaders Headers {get;set;}
         public IDeserializer Deserializer {get;set;}
         public ISerializer Serializer {get;set;}
-        internal HttpClient http;
-        public RxHttpRequest(HttpClient http, string url, Action<RxHttpRequestOptions> opts = null, object obj = null)
-        {
-            this.Url = url;
-            this.QueryStrings = new Dictionary<string, string>();
 
+        internal HttpClient http;
+
+        internal object obj;
+
+        private ILogger logger;
+
+        public RxHttpRequest(HttpClient http)
+        {
+            this.QueryStrings = new Dictionary<string, string>();
             this.http = http;
-            Setup(opts);
         }
+
+        public RxHttpRequest(HttpClient http, ILogger logger)
+        {
+            this.QueryStrings = new Dictionary<string, string>();
+            this.http = http;
+            this.logger = logger;
+        }
+
+        public abstract string MethodName { get; internal set; }
+        internal abstract Task<HttpResponseMessage> HttpMethod(string url, HttpContent content);
+
 
         public Uri GetUri()
         {
@@ -47,7 +64,7 @@ namespace Rx.Http.Requests
             return builder.Uri;
         }
 
-        private void Setup(Action<RxHttpRequestOptions> opts)
+        internal void Setup(Action<RxHttpRequestOptions> opts)
         {
             var options = new RxHttpRequestOptions(http.DefaultRequestHeaders);
             opts?.Invoke(options);
@@ -58,7 +75,43 @@ namespace Rx.Http.Requests
             this.Deserializer = options.Deserializer;
         }
 
-        internal abstract IObservable<TResponse> Request<TResponse>() where TResponse: class;
-        internal abstract IObservable<string> Request();
+        internal IObservable<string> Request()
+        {
+            return SingleObservable.Create(async () =>
+            {
+                var uri = GetUri();
+                logger?.LogInformation($"{MethodName.ToUpper()}: {uri.AbsoluteUri}");
+
+                var response = await http.GetAsync(uri);
+                logger?.LogInformation($"Server response: {response.ReasonPhrase}({response.StatusCode}) => {response.Content.Headers.ContentType}");
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    logger?.LogError($"Server response body:\n{ await response.Content.ReadAsStringAsync() }");
+                }
+
+                var deserialized = await response.Content.ReadAsStringAsync();
+
+                return deserialized;
+            });
+        }
+
+        internal IObservable<TResponse> Request<TResponse>()
+            where TResponse: class
+        {
+            return SingleObservable.Create(async () =>
+            {
+                var response = await http.GetAsync(GetUri());
+
+                if (Deserializer == null)
+                {
+                    var mimeType = response.Content.Headers.ContentType.MediaType;
+                    var mediaType = MediaTypesMap.GetMediaType(mimeType);
+                    Deserializer = mediaType.BodySerializer;
+                }
+
+                return Deserializer.Deserialize<TResponse>(await response.Content.ReadAsStreamAsync());
+            });
+        }
     }
 }

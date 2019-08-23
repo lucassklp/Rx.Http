@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using Microsoft.Extensions.Logging;
 using Rx.Http.Requests;
 
 namespace Rx.Http
@@ -7,16 +8,17 @@ namespace Rx.Http
     public class RxHttpClient
     {
         private HttpClient http;
-        
+        private ILogger logger;
         public Uri BaseAddress
         {
             get => http.BaseAddress;
             set => http.BaseAddress = value;
         }
 
-        public RxHttpClient(HttpClient http)
+        public RxHttpClient(HttpClient http, ILogger<RxHttpClient> logger)
         {
             this.http = http;
+            this.logger = logger;
         }
 
         public IObservable<string> Get(string url)

@@ -1,41 +1,21 @@
-using System;
 using System.Net.Http;
-using Rx.Http.MediaTypes;
-using Rx.Http.Serializers;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Rx.Http.Requests
 {
     public class RxGetHttpRequest : RxHttpRequest
     {
-        public RxGetHttpRequest(HttpClient http, string url, Action<RxHttpRequestOptions> opts = null) : base(http, url, opts, null)
+        public RxGetHttpRequest(HttpClient http) : base(http)
         {
         }
 
-        internal override IObservable<string> Request()
+        public RxGetHttpRequest(HttpClient http, ILogger logger) : base(http, logger)
         {
-            return SingleObservable.Create(async () =>
-            {
-                var response = await http.GetAsync(GetUri());
-                Deserializer = new TextSerializer();
-                return Deserializer.Deserialize<string>(await response.Content.ReadAsStreamAsync());
-            });
         }
 
-        internal override IObservable<TResponse> Request<TResponse>()
-        {
-            return SingleObservable.Create(async () => 
-            {
-                var response = await http.GetAsync(GetUri());
-                
-                if(Deserializer == null)
-                {
-                    var mimeType = response.Content.Headers.ContentType.MediaType;
-                    var mediaType = MediaTypesMap.GetMediaType(mimeType);
-                    Deserializer = mediaType.BodySerializer;
-                }
+        public override string MethodName { get; internal set; } = "GET";
 
-                return Deserializer.Deserialize<TResponse>(await response.Content.ReadAsStreamAsync());
-            });
-        }
+        internal override Task<HttpResponseMessage> HttpMethod(string url, HttpContent content) => this.http.GetAsync(url);
     }
 }
