@@ -1,10 +1,12 @@
 using System.IO;
 using System.Net.Http;
+using System.Text;
+using Newtonsoft.Json;
 using Rx.Http.Serializers.Interfaces;
 
 namespace Rx.Http.Serializers
 {
-    public class JsonSerializer : IBodySerializer
+    public class JsonSerializer : ITwoWaysSerializable
     {
         public T Deserialize<T>(Stream stream) where T : class
         {
@@ -18,15 +20,12 @@ namespace Rx.Http.Serializers
             }
         }
 
-        public HttpContent CreateHttpContent(Stream stream)
+        public Stream Serialize<T>(T data)
+            where T : class
         {
-            return new StreamContent(stream);
+            var content = JsonConvert.SerializeObject(data);
+            byte[] byteArray = Encoding.ASCII.GetBytes(content);
+            return new MemoryStream(byteArray);
         }
-
-        public byte[] Serialize<T>(T data) where T: class
-        {
-            throw new System.NotImplementedException();
-        }
-        
     }
 }

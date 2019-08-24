@@ -1,6 +1,5 @@
-﻿using Rx.Http.Serializers.Interfaces;
+﻿using Rx.Http.Serializers.Body;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -8,11 +7,11 @@ namespace Rx.Http.MediaTypes.Abstractions
 {
     public abstract class HttpMediaType
     {
-        public IBodySerializer BodySerializer { get; private set; }
+        public BodySerializer Body { get; private set; }
 
-        public HttpMediaType(IBodySerializer serializer)
+        public HttpMediaType(BodySerializer serializer)
         {
-            BodySerializer = serializer;
+            Body = serializer;
         }
 
         public bool CanSerialize(string mediaType)

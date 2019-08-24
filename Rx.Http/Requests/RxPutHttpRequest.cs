@@ -15,7 +15,7 @@ namespace Rx.Http.Requests
 
         }
 
-        public override string MethodName { get; internal set; } = "PUT";
+        internal override string MethodName { get; set; } = "PUT";
 
         internal override Task<HttpResponseMessage> HttpMethod(string url, HttpContent content) => http.PutAsync(url, content);
     }

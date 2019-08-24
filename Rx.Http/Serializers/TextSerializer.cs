@@ -4,7 +4,7 @@ using Rx.Http.Serializers.Interfaces;
 
 namespace Rx.Http.Serializers
 {
-    public class TextSerializer : IBodySerializer
+    public class TextSerializer : ITwoWaysSerializable
     {
         public T Deserialize<T>(Stream stream) where T: class
         {
@@ -14,10 +14,10 @@ namespace Rx.Http.Serializers
             }
         }
 
-        public byte[] Serialize<T>(T data) where T: class
+        public Stream Serialize<T>(T data)
+            where T: class
         {
-            return Encoding.ASCII.GetBytes(data.ToString());
+            return new MemoryStream(Encoding.ASCII.GetBytes(data.ToString()));
         }
-        
     }
 }

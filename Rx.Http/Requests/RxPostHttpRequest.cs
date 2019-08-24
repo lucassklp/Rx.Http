@@ -19,7 +19,7 @@ namespace Rx.Http.Requests
         {
         }
 
-        public override string MethodName { get; internal set; } = "POST";
+        internal override string MethodName { get; set; } = "POST";
 
         internal override Task<HttpResponseMessage> HttpMethod(string url, HttpContent content) => http.PostAsync(url, content);
     }

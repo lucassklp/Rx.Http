@@ -21,14 +21,15 @@ namespace Rx.Http
             this.logger = logger;
         }
 
+        public RxHttpClient(HttpClient http)
+        {
+            this.http = http;
+            this.logger = null;
+        }
+
         public IObservable<string> Get(string url)
         {
             return this.CreateGetRequest(url).Request();
-        }
-
-        internal RxHttpRequest CreateGetRequest(string url)
-        {
-            return new RxGetHttpRequest(this.http, url);
         }
         
         public IObservable<TResponse> Get<TResponse>(string url, Action<RxHttpRequestOptions> func = null) 
@@ -38,9 +39,9 @@ namespace Rx.Http
                 .Request<TResponse>();
         }
 
-        internal RxHttpRequest CreateGetRequest(string url, Action<RxHttpRequestOptions> func = null)
+        internal RxHttpRequest CreateGetRequest(string url, Action<RxHttpRequestOptions> opts = null)
         {
-            return new RxGetHttpRequest(this.http, url, func);
+            return new RxGetHttpRequest(this.http, this.logger, url, opts);
         }
 
     }

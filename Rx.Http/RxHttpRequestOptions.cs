@@ -5,13 +5,13 @@ using System.Text;
 using Microsoft.Net.Http.Headers;
 using System.Collections.Generic;
 using System.Net.Http;
+using Rx.Http.MediaTypes.Abstractions;
 
 namespace Rx.Http
 {
     public class RxHttpRequestOptions
     {
-        public ISerializer Serializer {get;set;}
-        public IDeserializer Deserializer {get;set;}
+        public HttpMediaType MediaType { get; set; }
         internal HttpHeaders Headers { get; private set; }
         public Dictionary<string, string> QueryStrings {get; private set;}
 

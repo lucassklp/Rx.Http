@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Rx.Http.Samples.Models;
-using Rx.Http.Serializers;
-using System.Reactive.Linq;
-using System.Net.Http;
-using Rx.Http.Samples.Consumers;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
+using Microsoft.Extensions.Logging.Debug;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Rx.Http.Samples
 {
@@ -14,25 +11,34 @@ namespace Rx.Http.Samples
     {
         static async Task Main(string[] args)
         {
-            RxHttpClient request = new RxHttpClient(new HttpClient());
+            var serviceCollection = new ServiceCollection();
+            ConfigureServices(serviceCollection);
+            var serviceProvider = serviceCollection.BuildServiceProvider();
 
-            //Get the html code from the google home page
-            var response = await request.Get("http://www.google.com");
-            Console.WriteLine("Google request finished!");
+            // Get an instance of the service
+            // ILogger instance will be injected by dependency injection
+            // Note : if no DI is setup, MyService will work because ILogger is null-checked (ie _logger?.Info(msg))
+            var example = serviceProvider.GetService<Example>();
 
-            //Asynchronously, get the json from jsonplaceholder and serialize it. 
-            request.Get<List<Todo>>("https://jsonplaceholder.typicode.com/todos/").Subscribe(itens =>
-            {
-                Console.WriteLine("Json request finished!");
-            });
+            await example.Execute();
 
-            var tmdbConsumer = new TheMovieDatabaseConsumer();
-            var item = await tmdbConsumer.ListMovies();
-            Console.WriteLine("List Movie Finished!");
-
-
-            Console.WriteLine("Main thread finished!");
-            Console.ReadKey();
         }
+
+        private static void ConfigureServices(ServiceCollection services)
+        {
+            services.AddLogging(config =>
+            {
+                config.AddDebug(); // Log to debug (debug window in Visual Studio or any debugger attached)
+                config.AddConsole(); // Log to console (colored !)
+            })
+            .Configure<LoggerFilterOptions>(options =>
+            {
+                options.AddFilter<DebugLoggerProvider>(null /* category*/ , LogLevel.Information /* min level */);
+                options.AddFilter<ConsoleLoggerProvider>(null  /* category*/ , LogLevel.Information /* min level */);
+            })
+            .AddTransient<Example>();
+
+        }
+
     }
 }
