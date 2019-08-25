@@ -115,7 +115,8 @@ namespace Rx.Http.Requests
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    logger?.LogError($"Server response body:\n{ bodyAsText }");
+                    logger?.LogError($"Server response body: { bodyAsText }");
+                    response.EnsureSuccessStatusCode();
                 }
 
                 return bodyAsText;
@@ -156,6 +157,11 @@ namespace Rx.Http.Requests
 
                 logger?.LogInformation($"Server response: {response.ReasonPhrase}({(int)response.StatusCode}) => {response.Content.Headers.ContentType} in {requestWatch.ElapsedMilliseconds}ms");
 
+                if (!response.IsSuccessStatusCode)
+                {
+                    logger?.LogError($"Server response body: { await response.Content.ReadAsStringAsync() }");
+                    response.EnsureSuccessStatusCode();
+                }
 
                 logger?.LogTrace("Getting the ResponseMediaType");
                 if (ResponseMediaType == null)
