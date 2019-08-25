@@ -5,35 +5,41 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Reactive.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Rx.Http.Samples
 {
     class Example
     {
+        private TheMovieDatabaseConsumer tmdbConsumer;
         private ILogger<RxHttpClient> logger;
-        public Example(ILogger<RxHttpClient> logger)
+        public Example(ILogger<RxHttpClient> logger, TheMovieDatabaseConsumer tmdbConsumer)
         {
             this.logger = logger;
+            this.tmdbConsumer = tmdbConsumer;
         }
 
         public async Task Execute()
         {
-            RxHttpClient httpClient = new RxHttpClient(new HttpClient(), logger);
-
-            //Get the html code from the google home page
-            var response = await httpClient.Get("http://www.google.com");
-
-            //Asynchronously, get the json from jsonplaceholder and serialize it. 
-            httpClient.Get<List<Todo>>("https://jsonplaceholder.typicode.com/todos/").Subscribe(itens =>
+            while (true)
             {
-                Console.WriteLine("Json request finished!");
-            });
+                RxHttpClient httpClient = new RxHttpClient(new HttpClient(), logger);
 
-            var tmdbConsumer = new TheMovieDatabaseConsumer();
-            var item = await tmdbConsumer.ListMovies();
+                //Get the html code from the google home page
+                var response = await httpClient.Get("http://www.google.com");
 
-            Console.ReadKey();
+                //Asynchronously, get the json from jsonplaceholder and serialize it. 
+                httpClient.Get<List<Todo>>("https://jsonplaceholder.typicode.com/todos/").Subscribe(itens =>
+                {
+                    Console.WriteLine("Json request finished!");
+                });
+
+                var item = await tmdbConsumer.ListMovies();
+
+                //Thread.Sleep(1000);
+            }
+
         }
     }
 }

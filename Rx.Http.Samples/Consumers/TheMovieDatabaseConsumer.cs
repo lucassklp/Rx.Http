@@ -1,5 +1,6 @@
 using System;
 using System.Net.Http;
+using Microsoft.Extensions.Logging;
 using Rx.Http.Interceptors;
 using Rx.Http.Requests;
 using Rx.Http.Samples.Models;
@@ -8,7 +9,7 @@ namespace Rx.Http.Samples.Consumers
 {
     public class TheMovieDatabaseConsumer : RxConsumer
     {
-        public TheMovieDatabaseConsumer(): base(new RxHttpClient(new HttpClient()))
+        public TheMovieDatabaseConsumer(ILogger<RxHttpClient> logger): base(new RxHttpClient(new HttpClient(), logger))
         {
 
         }

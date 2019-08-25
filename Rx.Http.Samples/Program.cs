@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Logging.Debug;
 using Microsoft.Extensions.DependencyInjection;
+using Rx.Http.Samples.Consumers;
 
 namespace Rx.Http.Samples
 {
@@ -36,7 +37,8 @@ namespace Rx.Http.Samples
                 options.AddFilter<DebugLoggerProvider>(null /* category*/ , LogLevel.Information /* min level */);
                 options.AddFilter<ConsoleLoggerProvider>(null  /* category*/ , LogLevel.Information /* min level */);
             })
-            .AddTransient<Example>();
+            .AddTransient<Example>()
+            .AddTransient<TheMovieDatabaseConsumer>();
 
         }
 

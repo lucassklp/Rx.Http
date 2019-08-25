@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -75,9 +76,17 @@ namespace Rx.Http.Requests
             var options = new RxHttpRequestOptions(http.DefaultRequestHeaders);
             optionsCallback?.Invoke(options);
 
-            this.Headers = options.Headers;
-            this.QueryStrings = options.QueryStrings;
-            this.RequestMediaType = RequestMediaType;
+            options.Headers?.Select(x => {
+                this.Headers.Add(x.Key, x.Value);
+                return x;
+            });
+
+            options.QueryStrings?.Select(x => {
+                this.QueryStrings.Add(x.Key, x.Value);
+                return x;
+            });
+
+            this.RequestMediaType = this.RequestMediaType ?? options.MediaType;
         }
 
         internal IObservable<string> Request()
@@ -152,9 +161,7 @@ namespace Rx.Http.Requests
                 if (ResponseMediaType == null)
                 {
                     var mimeType = response.Content.Headers.ContentType.MediaType;
-
                     logger?.LogTrace($"ResponseMediaType is null, trying to use the mime type from the server({mimeType})");
-                    
                     ResponseMediaType = MediaTypesMap.GetMediaType(mimeType);
                 }
 
