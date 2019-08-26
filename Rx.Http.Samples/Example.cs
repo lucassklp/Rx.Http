@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Rx.Http.MediaTypes;
 using Rx.Http.Samples.Consumers;
 using Rx.Http.Tests.Models;
 using System;
@@ -22,31 +23,36 @@ namespace Rx.Http.Samples
 
         public async Task Execute()
         {
-            while (true)
+            while(true)
             {
-                RxHttpClient httpClient = new RxHttpClient(new HttpClient(), logger);
-
-                //Get the html code from the google home page
-                var response = await httpClient.Get("http://www.google.com");
-
-                //Asynchronously, get the json from jsonplaceholder and serialize it. 
-                httpClient.Get<List<Todo>>("https://jsonplaceholder.typicode.com/todos/").Subscribe(itens =>
+                using (var httpClient = new RxHttpClient(new HttpClient(), logger))
                 {
-                    Console.WriteLine("Json request finished!");
-                });
+                    //Get the html code from the google home page
+                    var response = await httpClient.Get("http://www.google.com");
 
-                var item = await tmdbConsumer.ListMovies();
+                    //Asynchronously, get the json from jsonplaceholder and serialize it. 
+                    httpClient.Get<List<Todo>>("https://jsonplaceholder.typicode.com/todos/", options => 
+                    {
+                        options.RequestMediaType = new JsonHttpMediaType();
+                        options.AddHeader("Authorization", "Bearer <token>");
+                        options.QueryStrings.Add("name", "John Doe");
+                    }).Subscribe(itens =>
+                    {
+                        Console.WriteLine("Json request finished!");
+                    });
 
-                var postWithId = await httpClient.Post<Identifiable>(@"https://jsonplaceholder.typicode.com/posts", new Post()
-                {
-                    Title = "Foo",
-                    Body = "Bar",
-                    UserId = 3
-                });
+                    var item = await tmdbConsumer.ListMovies();
+
+                    var postWithId = await httpClient.Post<Identifiable>(@"https://jsonplaceholder.typicode.com/posts", new Post()
+                    {
+                        Title = "Foo",
+                        Body = "Bar",
+                        UserId = 3
+                    });
+                }
 
                 Thread.Sleep(1000);
             }
-
         }
     }
 }

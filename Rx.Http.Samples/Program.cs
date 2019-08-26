@@ -34,7 +34,7 @@ namespace Rx.Http.Samples
             .Configure<LoggerFilterOptions>(options =>
             {
                 options.AddFilter<DebugLoggerProvider>(null /* category*/ , LogLevel.Information /* min level */);
-                options.AddFilter<ConsoleLoggerProvider>(null  /* category*/ , LogLevel.Trace /* min level */);
+                options.AddFilter<ConsoleLoggerProvider>(null  /* category*/ , LogLevel.Information /* min level */);
             })
             .AddTransient<Example>()
             .AddTransient<TheMovieDatabaseConsumer>();

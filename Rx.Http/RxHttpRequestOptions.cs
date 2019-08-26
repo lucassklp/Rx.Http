@@ -11,7 +11,8 @@ namespace Rx.Http
 {
     public class RxHttpRequestOptions
     {
-        public HttpMediaType MediaType { get; set; }
+        public HttpMediaType RequestMediaType { get; set; }
+        public HttpMediaType ResponseMediaType { get; set; }
         internal HttpHeaders Headers { get; private set; }
         public Dictionary<string, string> QueryStrings {get; private set;}
 

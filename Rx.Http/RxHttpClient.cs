@@ -7,7 +7,7 @@ using Rx.Http.Tests.Models;
 
 namespace Rx.Http
 {
-    public class RxHttpClient
+    public class RxHttpClient : IDisposable
     {
         private HttpClient http;
         private ILogger logger;
@@ -29,28 +29,70 @@ namespace Rx.Http
             this.logger = null;
         }
 
-        #region GET Methods
-        public IObservable<string> Get(string url)
+        public IObservable<string> Get(string url, Action<RxHttpRequestOptions> opts = null)
         {
-            return this.CreateGetRequest(url).Request();
+            return CreateGetRequest(url, opts).Request();
         }
 
-        public IObservable<TResponse> Get<TResponse>(string url, Action<RxHttpRequestOptions> func = null)
+        public IObservable<TResponse> Get<TResponse>(string url, Action<RxHttpRequestOptions> opts = null)
             where TResponse : class
         {
-            return CreateGetRequest(url, func)
-                .Request<TResponse>();
+            return CreateGetRequest(url, opts).Request<TResponse>();
         }
 
-        internal RxHttpRequest CreateGetRequest(string url, Action<RxHttpRequestOptions> opts = null)
+        internal RxGetHttpRequest CreateGetRequest(string url, Action<RxHttpRequestOptions> opts = null)
         {
             return new RxGetHttpRequest(this.http, this.logger, url, opts);
         }
-        #endregion
 
         public IObservable<TResponse> Post<TResponse>(string url, object obj = null, Action<RxHttpRequestOptions> options = null) where TResponse : class
         {
-            return new RxPostHttpRequest(http, logger, url, obj, options).Request<TResponse>();
+            return CreatePostRequest(url, obj, options).Request<TResponse>();
+        }
+
+        public IObservable<string> Post(string url, object obj = null, Action<RxHttpRequestOptions> options = null)
+        {
+            return CreatePostRequest(url, obj, options).Request();
+        }
+
+        internal RxPostHttpRequest CreatePostRequest(string url, object obj = null, Action<RxHttpRequestOptions> options = null)
+        {
+            return new RxPostHttpRequest(http, logger, url, obj, options);
+        }
+
+        public IObservable<TResponse> Put<TResponse>(string url, object obj = null, Action<RxHttpRequestOptions> options = null) where TResponse : class
+        {
+            return CreatePutRequest(url, obj, options).Request<TResponse>();
+        }
+
+        public IObservable<string> Put(string url, object obj = null, Action<RxHttpRequestOptions> options = null)
+        {
+            return CreatePutRequest(url, obj, options).Request();
+        }
+
+        internal RxPutHttpRequest CreatePutRequest(string url, object obj = null, Action<RxHttpRequestOptions> options = null)
+        {
+            return new RxPutHttpRequest(http, logger, url, obj, options);
+        }
+
+        public IObservable<TResponse> Delete<TResponse>(string url, Action<RxHttpRequestOptions> options = null) where TResponse : class
+        {
+            return CreateDeleteRequest(url, options).Request<TResponse>();
+        }
+
+        public IObservable<string> Delete(string url, Action<RxHttpRequestOptions> options = null)
+        {
+            return CreateDeleteRequest(url, options).Request();
+        }
+
+        internal RxDeleteHttpRequest CreateDeleteRequest(string url, Action<RxHttpRequestOptions> opts = null)
+        {
+            return new RxDeleteHttpRequest(this.http, this.logger, url, opts);
+        }
+
+        public void Dispose()
+        {
+            this.http.Dispose();
         }
     }
 }

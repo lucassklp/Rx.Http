@@ -86,7 +86,8 @@ namespace Rx.Http.Requests
                 return x;
             });
 
-            this.RequestMediaType = this.RequestMediaType ?? options.MediaType;
+            this.RequestMediaType = this.RequestMediaType ?? options.RequestMediaType;
+            this.ResponseMediaType = this.ResponseMediaType ?? options.ResponseMediaType;
         }
 
         internal IObservable<string> Request()
