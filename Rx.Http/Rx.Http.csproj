@@ -8,6 +8,7 @@
         <Description>A lightweight library that is inpired in Angular Http Client and help programmers to make asynchronous http requests.</Description>
         <PackageProjectUrl>https://github.com/lucassklp/Rx.Http</PackageProjectUrl>
         <RepositoryUrl>https://github.com/lucassklp/Rx.Http</RepositoryUrl>
+        <PackageIconUrl>https://lucassklp.github.io/Rx.Http/Resources/rx.http.icon.png</PackageIconUrl>
     </PropertyGroup>
 
     <ItemGroup>
@@ -16,6 +17,13 @@
       <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
       <PackageReference Include="System.Net.Http" Version="4.3.4" />
       <PackageReference Include="System.Reactive" Version="4.1.6" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="..\LICENSE">
+        <Pack>True</Pack>
+        <PackagePath></PackagePath>
+      </None>
     </ItemGroup>
 
 </Project>

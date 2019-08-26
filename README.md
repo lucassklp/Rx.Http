@@ -6,6 +6,21 @@ A lightweight library that is inpired in [Angular Http Client](https://angular.i
 
 **Note: This project is under development.**
 
+# Installation
+
+If you are using Package Manager:
+
+```
+Install-Package Rx.Http -Version 0.9.1
+```
+
+If you are using .NET CLI
+
+```
+dotnet add package Rx.Http --version 0.9.1
+```
+
+
 ## Example of use
 
 ```csharp
@@ -48,7 +63,7 @@ You can customize your own *Media Type* by implementing the abstract class **Htt
 
 ## Consumers
 
-A consumer is defined as a service that follow a pattern for all requests. You can encapsulate the logic of all those requests in a easy way.
+A consumer is defined as a service that have common behavior for the requests. You can encapsulate the logic of all those requests in a easy way.
 The main advantage of using consumers is to make a abstraction of the HTTP request and its implementation details, and only work with the results from it.
 
 ### Interceptors
