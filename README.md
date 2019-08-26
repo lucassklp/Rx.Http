@@ -1,4 +1,6 @@
-# Rx.Http
+<p align="center">
+  <img src="Resources/rx.http.mini.png">
+</p>
 
 A lightweight library that is inpired in [Angular Http Client](https://angular.io/guide/http) and help programmers to make asynchronous http requests.
 

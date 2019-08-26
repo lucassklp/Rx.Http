@@ -2,6 +2,12 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
+        <Version>0.9.1</Version>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Authors>Lucas Simas</Authors>
+        <Description>A lightweight library that is inpired in Angular Http Client and help programmers to make asynchronous http requests.</Description>
+        <PackageProjectUrl>https://github.com/lucassklp/Rx.Http</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/lucassklp/Rx.Http</RepositoryUrl>
     </PropertyGroup>
 
     <ItemGroup>
