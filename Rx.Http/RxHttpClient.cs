@@ -1,9 +1,8 @@
-﻿using System;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Rx.Http.Requests;
-using Rx.Http.Tests.Models;
+using System;
+using System.Net.Http;
+
 
 namespace Rx.Http
 {

@@ -1,9 +1,6 @@
 ﻿using Rx.Http.MediaTypes.Abstractions;
 using Rx.Http.Serializers;
 using Rx.Http.Serializers.Body;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Rx.Http.MediaTypes
 {

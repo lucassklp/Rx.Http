@@ -1,6 +1,6 @@
+using Rx.Http.Interceptors;
 using System;
 using System.Collections.Generic;
-using Rx.Http.Interceptors;
 
 namespace Rx.Http
 {
@@ -14,15 +14,15 @@ namespace Rx.Http
         {
             this.http = http;
             var conventions = Setup();
-            if(conventions != null)
+            if (conventions != null)
             {
                 ApplyConventions(conventions);
             }
         }
 
 
-        public IObservable<TResponse> Get<TResponse>(string url, Action<RxHttpRequestOptions> func = null) 
-            where TResponse: class
+        public IObservable<TResponse> Get<TResponse>(string url, Action<RxHttpRequestOptions> func = null)
+            where TResponse : class
         {
             var request = http.CreateGetRequest(url);
             this.interceptors.ForEach(x => x.Intercept(request));
@@ -30,7 +30,7 @@ namespace Rx.Http
         }
 
         public IObservable<string> Get(string url)
-        {   
+        {
             var request = http.CreateGetRequest(url);
             this.interceptors.ForEach(x => x.Intercept(request));
             return request.Request();

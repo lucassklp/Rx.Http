@@ -1,3 +1,6 @@
+using Microsoft.Extensions.Logging;
+using Rx.Http.MediaTypes;
+using Rx.Http.MediaTypes.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -6,10 +9,6 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web;
-using Microsoft.Extensions.Logging;
-using Rx.Http.MediaTypes;
-using Rx.Http.MediaTypes.Abstractions;
-using Rx.Http.Serializers.Interfaces;
 
 namespace Rx.Http.Requests
 {
@@ -17,14 +16,14 @@ namespace Rx.Http.Requests
     {
         private string url;
         public string Url { get => GetUri().AbsoluteUri; set => this.url = value; }
-        public Dictionary<string, string> QueryStrings{get;set;}
-        public HttpHeaders Headers {get;set;}
+        public Dictionary<string, string> QueryStrings { get; set; }
+        public HttpHeaders Headers { get; set; }
 
         public HttpMediaType RequestMediaType { get; set; }
         public HttpMediaType ResponseMediaType { get; set; }
 
         internal Action<RxHttpRequestOptions> optionsCallback { get; set; }
-        
+
         internal HttpClient http;
 
         internal object obj;
@@ -51,7 +50,7 @@ namespace Rx.Http.Requests
         public Uri GetUri()
         {
             UriBuilder builder = null;
-            if(http?.BaseAddress != null)
+            if (http?.BaseAddress != null)
             {
                 builder = new UriBuilder(http.BaseAddress.AbsoluteUri + url);
             }
@@ -61,10 +60,10 @@ namespace Rx.Http.Requests
             }
 
             var query = HttpUtility.ParseQueryString(builder.Query);
-            
+
             foreach (var entry in QueryStrings)
             {
-                query[entry.Key] = entry.Value;    
+                query[entry.Key] = entry.Value;
             }
 
             builder.Query = query.ToString();
@@ -76,12 +75,14 @@ namespace Rx.Http.Requests
             var options = new RxHttpRequestOptions(http.DefaultRequestHeaders);
             optionsCallback?.Invoke(options);
 
-            options.Headers?.Select(x => {
+            options.Headers?.Select(x =>
+            {
                 this.Headers.Add(x.Key, x.Value);
                 return x;
             });
 
-            options.QueryStrings?.Select(x => {
+            options.QueryStrings?.Select(x =>
+            {
                 this.QueryStrings.Add(x.Key, x.Value);
                 return x;
             });
@@ -117,14 +118,14 @@ namespace Rx.Http.Requests
 
                 logger?.LogTrace($"Server response body: { bodyAsText }");
                 response.EnsureSuccessStatusCode();
-               
+
 
                 return bodyAsText;
             });
         }
 
         internal IObservable<TResponse> Request<TResponse>()
-            where TResponse: class
+            where TResponse : class
         {
             logger?.LogTrace("Applying the options");
             Setup();
@@ -137,7 +138,7 @@ namespace Rx.Http.Requests
 
 
                 logger?.LogTrace("Getting the RequestMediaType");
-                if(RequestMediaType == null)
+                if (RequestMediaType == null)
                 {
                     logger?.LogTrace("RequestMediaType is null, using the default (application/json)");
                     RequestMediaType = MediaTypesMap.GetMediaType("application/json");
@@ -159,7 +160,7 @@ namespace Rx.Http.Requests
 
                 logger?.LogTrace($"Server response body: { await response.Content.ReadAsStringAsync() }");
                 response.EnsureSuccessStatusCode();
-                
+
                 logger?.LogTrace("Getting the ResponseMediaType");
                 if (ResponseMediaType == null)
                 {

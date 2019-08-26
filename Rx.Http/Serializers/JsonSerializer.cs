@@ -1,8 +1,7 @@
-using System.IO;
-using System.Net.Http;
-using System.Text;
 using Newtonsoft.Json;
 using Rx.Http.Serializers.Interfaces;
+using System.IO;
+using System.Text;
 
 namespace Rx.Http.Serializers
 {

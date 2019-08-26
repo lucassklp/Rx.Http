@@ -1,11 +1,9 @@
-using Rx.Http.Serializers.Interfaces;
-using System.Net.Http.Headers;
-using System;
-using System.Text;
 using Microsoft.Net.Http.Headers;
-using System.Collections.Generic;
-using System.Net.Http;
 using Rx.Http.MediaTypes.Abstractions;
+using System;
+using System.Collections.Generic;
+using System.Net.Http.Headers;
+using System.Text;
 
 namespace Rx.Http
 {
@@ -14,7 +12,7 @@ namespace Rx.Http
         public HttpMediaType RequestMediaType { get; set; }
         public HttpMediaType ResponseMediaType { get; set; }
         internal HttpHeaders Headers { get; private set; }
-        public Dictionary<string, string> QueryStrings {get; private set;}
+        public Dictionary<string, string> QueryStrings { get; private set; }
 
         public RxHttpRequestOptions(HttpHeaders headers)
         {

@@ -1,7 +1,6 @@
 ﻿using Rx.Http.Serializers.Body;
 using System;
 using System.Linq;
-using System.Text;
 
 namespace Rx.Http.MediaTypes.Abstractions
 {
@@ -16,7 +15,7 @@ namespace Rx.Http.MediaTypes.Abstractions
 
         public bool CanSerialize(string mediaType)
         {
-            return !string.IsNullOrEmpty(mediaType) && 
+            return !string.IsNullOrEmpty(mediaType) &&
                 SupportedMimeTypes.Contains(mediaType.ToLower().Trim());
         }
 

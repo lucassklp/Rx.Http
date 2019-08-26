@@ -1,5 +1,4 @@
 ﻿using Rx.Http.MediaTypes.Abstractions;
-using Rx.Http.Serializers;
 using Rx.Http.Serializers.Body;
 
 namespace Rx.Http.MediaTypes

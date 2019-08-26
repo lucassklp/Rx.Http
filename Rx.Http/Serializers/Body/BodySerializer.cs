@@ -22,6 +22,6 @@ namespace Rx.Http.Serializers.Body
 
         public abstract HttpContent Serialize(object obj);
 
-        public T Deserialize<T>(Stream stream) where T: class => Deserializer.Deserialize<T>(stream);
+        public T Deserialize<T>(Stream stream) where T : class => Deserializer.Deserialize<T>(stream);
     }
 }
