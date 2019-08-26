@@ -9,6 +9,7 @@
         <PackageProjectUrl>https://github.com/lucassklp/Rx.Http</PackageProjectUrl>
         <RepositoryUrl>https://github.com/lucassklp/Rx.Http</RepositoryUrl>
         <PackageIconUrl>https://lucassklp.github.io/Rx.Http/Resources/rx.http.icon.png</PackageIconUrl>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
     </PropertyGroup>
 
     <ItemGroup>
