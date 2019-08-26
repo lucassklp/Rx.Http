@@ -13,7 +13,7 @@ namespace Rx.Http.Serializers.Body
 
         public override HttpContent Serialize(object obj)
         {
-            return new StreamContent(this.serializer.Serialize(obj));
+            return new StreamContent(this.Serializer.Serialize(obj));
         }
     }
 }

@@ -1,4 +1,4 @@
-namespace Rx.Http.Samples.Models
+namespace Rx.Http.Tests.Models
 {
     public class Movie
     {

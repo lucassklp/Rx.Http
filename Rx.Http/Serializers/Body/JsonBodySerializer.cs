@@ -14,7 +14,7 @@ namespace Rx.Http.Serializers.Body
 
         public override HttpContent Serialize(object obj)
         {
-            var stream = this.serializer.Serialize(obj);
+            var stream = this.Serializer.Serialize(obj);
             return new StreamContent(stream);
         }
     }

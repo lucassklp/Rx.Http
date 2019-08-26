@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Rx.Http.Samples.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Logging.Debug;
@@ -35,7 +34,7 @@ namespace Rx.Http.Samples
             .Configure<LoggerFilterOptions>(options =>
             {
                 options.AddFilter<DebugLoggerProvider>(null /* category*/ , LogLevel.Information /* min level */);
-                options.AddFilter<ConsoleLoggerProvider>(null  /* category*/ , LogLevel.Information /* min level */);
+                options.AddFilter<ConsoleLoggerProvider>(null  /* category*/ , LogLevel.Trace /* min level */);
             })
             .AddTransient<Example>()
             .AddTransient<TheMovieDatabaseConsumer>();

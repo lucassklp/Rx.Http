@@ -6,22 +6,22 @@ namespace Rx.Http.Serializers.Body
 {
     public abstract class BodySerializer
     {
-        internal ISerializer serializer;
-        internal IDeserializer deserializer;
+        public ISerializer Serializer;
+        public IDeserializer Deserializer;
         public BodySerializer(ISerializer serializer, IDeserializer deserializer)
         {
-            this.serializer = serializer;
-            this.deserializer = deserializer;
+            this.Serializer = serializer;
+            this.Deserializer = deserializer;
         }
 
         public BodySerializer(ITwoWaysSerializable serializable)
         {
-            serializer = serializable;
-            deserializer = serializable;
+            Serializer = serializable;
+            Deserializer = serializable;
         }
 
         public abstract HttpContent Serialize(object obj);
 
-        public T Deserialize<T>(Stream stream) where T: class => deserializer.Deserialize<T>(stream);
+        public T Deserialize<T>(Stream stream) where T: class => Deserializer.Deserialize<T>(stream);
     }
 }

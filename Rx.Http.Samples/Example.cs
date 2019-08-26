@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Rx.Http.Samples.Consumers;
-using Rx.Http.Samples.Models;
+using Rx.Http.Tests.Models;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -37,7 +37,14 @@ namespace Rx.Http.Samples
 
                 var item = await tmdbConsumer.ListMovies();
 
-                //Thread.Sleep(1000);
+                var postWithId = await httpClient.Post<Identifiable>(@"https://jsonplaceholder.typicode.com/posts", new Post()
+                {
+                    Title = "Foo",
+                    Body = "Bar",
+                    UserId = 3
+                });
+
+                Thread.Sleep(1000);
             }
 
         }

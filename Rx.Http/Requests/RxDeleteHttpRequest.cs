@@ -9,12 +9,12 @@ namespace Rx.Http.Requests
 {
     class RxDeleteHttpRequest : RxHttpRequest
     {
-        public RxDeleteHttpRequest(HttpClient http) : base(http)
+        public RxDeleteHttpRequest(HttpClient http, Action<RxHttpRequestOptions> options = null) : base(http)
         {
 
         }
 
-        public RxDeleteHttpRequest(HttpClient http, ILogger logger) : base(http, logger)
+        public RxDeleteHttpRequest(HttpClient http, ILogger logger, Action<RxHttpRequestOptions> options = null) : base(http, logger)
         {
 
         }

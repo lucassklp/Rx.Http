@@ -113,11 +113,10 @@ namespace Rx.Http.Requests
                 deserializerWatch.Stop();
                 logger?.LogInformation($"Deserialization completed successfully in {deserializerWatch.ElapsedMilliseconds}ms");
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    logger?.LogError($"Server response body: { bodyAsText }");
-                    response.EnsureSuccessStatusCode();
-                }
+
+                logger?.LogTrace($"Server response body: { bodyAsText }");
+                response.EnsureSuccessStatusCode();
+               
 
                 return bodyAsText;
             });
@@ -148,7 +147,7 @@ namespace Rx.Http.Requests
                 var httpContent = RequestMediaType.Body.Serialize(this.obj);
                 serializeWatch.Stop();
                 logger?.LogInformation($"Serialization completed successfully in {serializeWatch.ElapsedMilliseconds}ms");
-
+                logger?.LogTrace($"Request content: {await httpContent.ReadAsStringAsync()}");
 
                 Stopwatch requestWatch = new Stopwatch();
                 requestWatch.Start();
@@ -157,12 +156,9 @@ namespace Rx.Http.Requests
 
                 logger?.LogInformation($"Server response: {response.ReasonPhrase}({(int)response.StatusCode}) => {response.Content.Headers.ContentType} in {requestWatch.ElapsedMilliseconds}ms");
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    logger?.LogError($"Server response body: { await response.Content.ReadAsStringAsync() }");
-                    response.EnsureSuccessStatusCode();
-                }
-
+                logger?.LogTrace($"Server response body: { await response.Content.ReadAsStringAsync() }");
+                response.EnsureSuccessStatusCode();
+                
                 logger?.LogTrace("Getting the ResponseMediaType");
                 if (ResponseMediaType == null)
                 {

@@ -3,7 +3,7 @@ using System.Net.Http;
 using Microsoft.Extensions.Logging;
 using Rx.Http.Interceptors;
 using Rx.Http.Requests;
-using Rx.Http.Samples.Models;
+using Rx.Http.Tests.Models;
 
 namespace Rx.Http.Samples.Consumers
 {

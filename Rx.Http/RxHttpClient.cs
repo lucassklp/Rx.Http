@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Rx.Http.Requests;
+using Rx.Http.Tests.Models;
 
 namespace Rx.Http
 {
@@ -27,13 +29,14 @@ namespace Rx.Http
             this.logger = null;
         }
 
+        #region GET Methods
         public IObservable<string> Get(string url)
         {
             return this.CreateGetRequest(url).Request();
         }
-        
-        public IObservable<TResponse> Get<TResponse>(string url, Action<RxHttpRequestOptions> func = null) 
-            where TResponse: class
+
+        public IObservable<TResponse> Get<TResponse>(string url, Action<RxHttpRequestOptions> func = null)
+            where TResponse : class
         {
             return CreateGetRequest(url, func)
                 .Request<TResponse>();
@@ -43,6 +46,11 @@ namespace Rx.Http
         {
             return new RxGetHttpRequest(this.http, this.logger, url, opts);
         }
+        #endregion
 
+        public IObservable<TResponse> Post<TResponse>(string url, object obj = null, Action<RxHttpRequestOptions> options = null) where TResponse : class
+        {
+            return new RxPostHttpRequest(http, logger, url, obj, options).Request<TResponse>();
+        }
     }
 }
