@@ -49,6 +49,8 @@ namespace Rx.Http.Samples
                         Body = "Bar",
                         UserId = 3
                     });
+
+                    var rsd = await httpClient.Post(@"https://postman-echo.com/post");
                 }
 
                 Thread.Sleep(1000);

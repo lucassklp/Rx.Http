@@ -54,6 +54,17 @@ namespace Rx.Http
             return CreatePostRequest(url, obj, options).Request();
         }
 
+        public IObservable<T> Post<T>(string url, HttpContent form, Action<RxHttpRequestOptions> options = null)
+            where T: class
+        {
+            return CreatePostRequest(url, form, options).Request<T>();
+        }
+
+        public IObservable<string> Post(string url, FormUrlEncodedContent content, Action<RxHttpRequestOptions> options = null)
+        {
+            return CreatePostRequest(url, content, options).Request();
+        }
+
         internal RxPostHttpRequest CreatePostRequest(string url, object obj = null, Action<RxHttpRequestOptions> options = null)
         {
             return new RxPostHttpRequest(http, logger, url, obj, options);
@@ -68,6 +79,18 @@ namespace Rx.Http
         {
             return CreatePutRequest(url, obj, options).Request();
         }
+
+        public IObservable<T> Put<T>(string url, FormUrlEncodedContent form, Action<RxHttpRequestOptions> options = null)
+            where T : class
+        {
+            return CreatePutRequest(url, form, options).Request<T>();
+        }
+
+        public IObservable<string> Put(string url, HttpContent content, Action<RxHttpRequestOptions> options = null)
+        {
+            return CreatePutRequest(url, content, options).Request();
+        }
+
 
         internal RxPutHttpRequest CreatePutRequest(string url, object obj = null, Action<RxHttpRequestOptions> options = null)
         {
