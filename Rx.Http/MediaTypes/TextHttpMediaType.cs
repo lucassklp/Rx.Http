@@ -1,22 +1,31 @@
-﻿using Rx.Http.MediaTypes.Abstractions;
-using Rx.Http.Serializers.Body;
+﻿using System.IO;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using Rx.Http.MediaTypes.Abstractions;
+using Rx.Http.Serializers;
+using Rx.Http.Serializers.Interfaces;
 
 namespace Rx.Http.MediaTypes
 {
-    public class TextHttpMediaType : HttpMediaType
+    public class TextHttpMediaType : IHttpMediaType
     {
-        public TextHttpMediaType() : base(new TextBodySerializer())
+        private ITwoWaysSerializable serializer;
+        public TextHttpMediaType()
         {
+            serializer = new TextSerializer();
         }
 
-        public override string[] SupportedMimeTypes => new string[]
+        public T Deserialize<T>(Stream stream) where T : class
         {
-            "text/css",
-            "text/csv",
-            "text/html",
-            "text/javascript",
-            "text/plain",
-            "text/xml"
-        };
+            return serializer.Deserialize<T>(stream);
+        }
+
+        public HttpContent Serialize(object obj)
+        {
+            var content = new StreamContent(this.serializer.Serialize(obj));
+            content.Headers.ContentType = new MediaTypeHeaderValue(MediaType.Text.Plain);
+            return content;
+            
+        }
     }
 }

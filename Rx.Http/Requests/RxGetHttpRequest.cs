@@ -24,6 +24,6 @@ namespace Rx.Http.Requests
 
         internal override string MethodName { get; set; } = "GET";
 
-        internal override Task<HttpResponseMessage> HttpMethod(string url, HttpContent content) => this.http.GetAsync(url);
+        internal override Task<HttpResponseMessage> DoRequest(string url, HttpContent content) => this.http.GetAsync(url);
     }
 }

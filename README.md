@@ -11,13 +11,13 @@ A lightweight library that is inpired in [Angular Http Client](https://angular.i
 If you are using Package Manager:
 
 ```
-Install-Package Rx.Http -Version 0.9.4
+Install-Package Rx.Http -Version 0.9.5
 ```
 
 If you are using .NET CLI
 
 ```
-dotnet add package Rx.Http --version 0.9.4
+dotnet add package Rx.Http --version 0.9.5
 ```
 
 
@@ -59,7 +59,7 @@ The media type represents a structure that is used to translate a mime type to a
 
 **ResponseMediaType** is used to deserialize your body content. **By default it use the serializer based on mime type from response.**
 
-You can customize your own *Media Type* by implementing the abstract class **HttpMediaType**.
+You can customize your own *Media Type* by implementing the interface **IHttpMediaType**.
 
 ## Consumers
 
@@ -115,7 +115,7 @@ The code above shows how to use Consumers and Interceptors.
  * [x] **Logging**
  * [x] **Consumers and Interceptors implementation**
  * [x] **Error handling**
- * [ ] **Native support for x-www-form-urlencoded and form-data**
+ * [x] **Native support for x-www-form-urlencoded and form-data**
 
 #### Version 2.x
 

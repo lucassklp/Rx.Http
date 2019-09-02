@@ -7,23 +7,23 @@ namespace Rx.Http.MediaTypes
     public static class MediaTypesMap
     {
 
-        public static HttpMediaType TextMediaType = new TextHttpMediaType();
-        private static HttpMediaType JsonMediaType = new JsonHttpMediaType();
+        public static IHttpMediaType TextMediaType = new TextHttpMediaType();
+        private static IHttpMediaType JsonMediaType = new JsonHttpMediaType();
 
-        private static Dictionary<string, HttpMediaType> mediaTypes =
-            new Dictionary<string, HttpMediaType>()
+        private static Dictionary<string, IHttpMediaType> mediaTypes =
+            new Dictionary<string, IHttpMediaType>()
             {
-                {"application/json", JsonMediaType},
-                {"text/css", TextMediaType},
-                {"text/csv", TextMediaType},
-                {"text/html", TextMediaType},
-                {"text/javascript", TextMediaType},
-                {"text/plain", TextMediaType},
-                {"text/xml", TextMediaType}
+                {MediaType.Application.Json, JsonMediaType},
+                {MediaType.Text.Css, TextMediaType},
+                {MediaType.Text.Csv, TextMediaType},
+                {MediaType.Text.Html, TextMediaType},
+                {MediaType.Text.Javascript, TextMediaType},
+                {MediaType.Text.Plain, TextMediaType},
+                {MediaType.Text.Xml, TextMediaType}
             };
 
 
-        public static HttpMediaType GetMediaType(string mimeType) => mediaTypes[mimeType];
+        public static IHttpMediaType GetMediaType(string mimeType) => mediaTypes[mimeType];
 
         public static string[] GetAllMimeTypes() => mediaTypes.Keys.ToArray();
     }
