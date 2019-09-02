@@ -1,17 +1,32 @@
-﻿using Rx.Http.MediaTypes.Abstractions;
+﻿using System.IO;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using Rx.Http.MediaTypes.Abstractions;
 using Rx.Http.Serializers;
-using Rx.Http.Serializers.Body;
+using Rx.Http.Serializers.Interfaces;
 
 namespace Rx.Http.MediaTypes
 {
-    public class JsonHttpMediaType : HttpMediaType
+    public class JsonHttpMediaType : IHttpMediaType
     {
-
-        public JsonHttpMediaType() : base(new JsonBodySerializer(new JsonSerializer()))
+        private ITwoWaysSerializable serializer;
+        public JsonHttpMediaType()
         {
+            serializer = new JsonSerializer();
         }
 
-        public override string[] SupportedMimeTypes => new string[] { "application/json" };
+        public T Deserialize<T>(Stream stream)
+            where T: class
+        {
+            return serializer.Deserialize<T>(stream);
+        }
 
+        public HttpContent Serialize(object obj)
+        {
+            var stream = this.serializer.Serialize(obj);
+            var content = new StreamContent(stream);
+            content.Headers.ContentType = new MediaTypeHeaderValue(MediaType.Application.Json);
+            return content;
+        }
     }
 }

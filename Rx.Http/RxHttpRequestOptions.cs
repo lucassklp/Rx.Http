@@ -9,15 +9,15 @@ namespace Rx.Http
 {
     public class RxHttpRequestOptions
     {
-        public HttpMediaType RequestMediaType { get; set; }
-        public HttpMediaType ResponseMediaType { get; set; }
+        public IHttpMediaType RequestMediaType { get; set; }
+        public IHttpMediaType ResponseMediaType { get; set; }
         internal HttpHeaders Headers { get; private set; }
         public Dictionary<string, string> QueryStrings { get; private set; }
 
-        public RxHttpRequestOptions(HttpHeaders headers)
+        public RxHttpRequestOptions(HttpHeaders headers, Dictionary<string, string> queryStrings)
         {
             this.Headers = headers;
-            this.QueryStrings = new Dictionary<string, string>();
+            this.QueryStrings = queryStrings;
         }
 
         public void AddHeader(string key, string value)

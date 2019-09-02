@@ -25,6 +25,6 @@ namespace Rx.Http.Requests
 
         internal override string MethodName { get; set; } = "DELETE";
 
-        internal override Task<HttpResponseMessage> HttpMethod(string url, HttpContent content) => http.DeleteAsync(url);
+        internal override Task<HttpResponseMessage> DoRequest(string url, HttpContent content) => http.DeleteAsync(url);
     }
 }

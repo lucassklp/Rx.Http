@@ -43,14 +43,14 @@ namespace Rx.Http.Samples
 
                     var item = await tmdbConsumer.ListMovies();
 
-                    var postWithId = await httpClient.Post<Identifiable>(@"https://jsonplaceholder.typicode.com/posts", new Post()
+                    httpClient.Post<Identifiable>(@"https://jsonplaceholder.typicode.com/posts", new Post()
                     {
                         Title = "Foo",
                         Body = "Bar",
                         UserId = 3
-                    });
+                    }).Subscribe();
 
-                    var rsd = await httpClient.Post(@"https://postman-echo.com/post");
+                    var postmanRequest = await httpClient.Post(@"https://postman-echo.com/post");
                 }
 
                 Thread.Sleep(1000);
