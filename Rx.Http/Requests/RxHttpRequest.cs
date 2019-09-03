@@ -32,6 +32,7 @@ namespace Rx.Http.Requests
 
         public RxHttpRequest(HttpClient http)
         {
+            http.DefaultRequestHeaders.Clear();
             this.Headers = http.DefaultRequestHeaders;
             this.QueryStrings = new Dictionary<string, string>();
             this.http = http;
@@ -39,6 +40,7 @@ namespace Rx.Http.Requests
 
         public RxHttpRequest(HttpClient http, ILogger logger)
         {
+            http.DefaultRequestHeaders.Clear();
             this.Headers = http.DefaultRequestHeaders;
             this.QueryStrings = new Dictionary<string, string>();
             this.http = http;
@@ -73,9 +75,6 @@ namespace Rx.Http.Requests
 
         private void Setup()
         {
-            this.Headers.Clear();
-            this.QueryStrings.Clear();
-
             var options = new RxHttpRequestOptions(this.Headers, this.QueryStrings);
             optionsCallback?.Invoke(options);
        

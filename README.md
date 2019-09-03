@@ -11,13 +11,13 @@ A lightweight library that is inpired in [Angular Http Client](https://angular.i
 If you are using Package Manager:
 
 ```
-Install-Package Rx.Http -Version 0.9.5
+Install-Package Rx.Http -Version 0.9.6
 ```
 
 If you are using .NET CLI
 
 ```
-dotnet add package Rx.Http --version 0.9.5
+dotnet add package Rx.Http --version 0.9.6
 ```
 
 
