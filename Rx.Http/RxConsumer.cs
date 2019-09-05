@@ -1,6 +1,8 @@
+using Microsoft.Extensions.Logging;
 using Rx.Http.Interceptors;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 
 namespace Rx.Http
 {
@@ -10,14 +12,10 @@ namespace Rx.Http
 
         private RxHttpClient http;
 
-        public RxConsumer(RxHttpClient http)
+        public RxConsumer(HttpClient http, ILogger logger)
         {
-            this.http = http;
-            var conventions = Setup();
-            if (conventions != null)
-            {
-                ApplyConventions(conventions);
-            }
+            this.http = new RxHttpClient(http, logger);
+            Setup(new RxHttpRequestConventions());
         }
 
 
@@ -82,15 +80,11 @@ namespace Rx.Http
             return request.Request();
         }
 
-        public abstract RxHttpRequestConventions Setup();
+        public virtual void Setup(RxHttpRequestConventions conventions) => ApplyConventions(conventions);
 
         private void ApplyConventions(RxHttpRequestConventions conventions)
         {
             this.interceptors = conventions.Interceptors;
-            if (!string.IsNullOrWhiteSpace(conventions.BaseUrl))
-            {
-                this.http.BaseAddress = new UriBuilder(conventions.BaseUrl).Uri;
-            }
         }
     }
 }

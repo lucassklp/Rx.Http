@@ -5,13 +5,13 @@ using Rx.Http.Interceptors;
 using Rx.Http.Requests;
 using Rx.Http.Tests.Models;
 
-namespace Rx.Http.Samples.Consumers
+namespace Rx.Http.Tests.Consumers
 {
     public class TheMovieDatabaseConsumer : RxConsumer
     {
-        public TheMovieDatabaseConsumer(HttpClient http): base(http, null)
+        public TheMovieDatabaseConsumer(HttpClient http, ILogger logger): base(http, logger)
         {
-            http.BaseAddress = new Uri(@"https://api.themoviedb.org/3/");
+
         }
         public override void Setup(RxHttpRequestConventions conventions)
         {
@@ -29,4 +29,5 @@ namespace Rx.Http.Samples.Consumers
             request.QueryStrings.Add("api_key", "key");
         }
     }
+
 }

@@ -5,7 +5,6 @@ namespace Rx.Http
 {
     public class RxHttpRequestConventions
     {
-        public string BaseUrl { get; set; }
         public List<RxInterceptor> Interceptors { get; set; }
 
         public RxHttpRequestConventions()

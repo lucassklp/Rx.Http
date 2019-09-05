@@ -14,10 +14,8 @@ namespace Rx.Http.Samples
     class Example
     {
         private TheMovieDatabaseConsumer tmdbConsumer;
-        private ILogger<RxHttpClient> logger;
-        public Example(ILogger<RxHttpClient> logger, TheMovieDatabaseConsumer tmdbConsumer)
+        public Example(TheMovieDatabaseConsumer tmdbConsumer)
         {
-            this.logger = logger;
             this.tmdbConsumer = tmdbConsumer;
         }
 
@@ -25,7 +23,7 @@ namespace Rx.Http.Samples
         {
             while(true)
             {
-                using (var httpClient = new RxHttpClient(new HttpClient(), logger))
+                using (var httpClient = new RxHttpClient(new HttpClient(), null))
                 {
                     //Get the html code from the google home page
                     var response = await httpClient.Get("http://www.google.com");

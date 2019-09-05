@@ -16,16 +16,10 @@ namespace Rx.Http
             set => http.BaseAddress = value;
         }
 
-        public RxHttpClient(HttpClient http, ILogger<RxHttpClient> logger)
+        public RxHttpClient(HttpClient http, ILogger logger)
         {
             this.http = http;
             this.logger = logger;
-        }
-
-        public RxHttpClient(HttpClient http)
-        {
-            this.http = http;
-            this.logger = null;
         }
 
         public IObservable<string> Get(string url, Action<RxHttpRequestOptions> opts = null)

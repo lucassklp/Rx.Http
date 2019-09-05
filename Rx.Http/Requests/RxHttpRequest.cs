@@ -15,7 +15,7 @@ namespace Rx.Http.Requests
     public abstract class RxHttpRequest
     {
         private string url;
-        public string Url { get => GetUri().AbsoluteUri; set => this.url = value; }
+        public string Url { get => GetUri(); set => this.url = value; }
         public Dictionary<string, string> QueryStrings { get; set; }
         public HttpHeaders Headers { get; set; }
 
@@ -48,18 +48,10 @@ namespace Rx.Http.Requests
         internal abstract string MethodName { get; set; }
         internal abstract Task<HttpResponseMessage> DoRequest(string url, HttpContent content);
 
-        public Uri GetUri()
+        public string GetUri()
         {
-            UriBuilder builder = null;
-            if (http?.BaseAddress != null)
-            {
-                builder = new UriBuilder(http.BaseAddress.AbsoluteUri + url);
-            }
-            else
-            {
-                builder = new UriBuilder(url);
-            }
-
+            UriBuilder builder = new UriBuilder(url);
+            
             var query = HttpUtility.ParseQueryString(builder.Query);
 
             foreach (var entry in QueryStrings)
@@ -68,7 +60,9 @@ namespace Rx.Http.Requests
             }
 
             builder.Query = query.ToString();
-            return builder.Uri;
+
+            var urlFull = url + builder.Query;
+            return urlFull;
         }
 
         private void Setup()
@@ -92,7 +86,7 @@ namespace Rx.Http.Requests
             return SingleObservable.Create(async () =>
             {
                 var uri = GetUri();
-                logger?.LogInformation($"{MethodName.ToUpper()} {uri.AbsoluteUri}");
+                logger?.LogInformation($"{MethodName.ToUpper()} {http.BaseAddress.AbsoluteUri + uri}");
 
                 HttpContent httpContent = null;
 
@@ -121,7 +115,7 @@ namespace Rx.Http.Requests
 
                 Stopwatch requestWatch = new Stopwatch();
                 requestWatch.Start();
-                var response = await DoRequest(uri.AbsoluteUri, httpContent);
+                var response = await DoRequest(uri, httpContent);
                 requestWatch.Stop();
 
                 logger?.LogInformation($"Server response: {response.ReasonPhrase}({(int)response.StatusCode}) => {response.Content.Headers.ContentType} in {requestWatch.ElapsedMilliseconds}ms");
@@ -151,7 +145,7 @@ namespace Rx.Http.Requests
             return SingleObservable.Create(async () =>
             {
                 var uri = GetUri();
-                logger?.LogInformation($"{MethodName.ToUpper()} {uri.AbsoluteUri}");
+                logger?.LogInformation($"{MethodName.ToUpper()} {http.BaseAddress.AbsoluteUri + uri}");
 
 
                 logger?.LogTrace("Getting the RequestMediaType");
@@ -184,7 +178,7 @@ namespace Rx.Http.Requests
 
                 Stopwatch requestWatch = new Stopwatch();
                 requestWatch.Start();
-                var response = await DoRequest(uri.AbsoluteUri, httpContent);
+                var response = await DoRequest(uri, httpContent);
                 requestWatch.Stop();
 
                 logger?.LogInformation($"Server response: {response.ReasonPhrase}({(int)response.StatusCode}) => {response.Content.Headers.ContentType} in {requestWatch.ElapsedMilliseconds}ms");
