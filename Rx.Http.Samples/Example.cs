@@ -14,44 +14,45 @@ namespace Rx.Http.Samples
     class Example
     {
         private TheMovieDatabaseConsumer tmdbConsumer;
-        public Example(TheMovieDatabaseConsumer tmdbConsumer)
+        private RxHttpClient httpClient;
+        public Example(TheMovieDatabaseConsumer tmdbConsumer, RxHttpClient httpClient)
         {
+            this.httpClient = httpClient;
             this.tmdbConsumer = tmdbConsumer;
         }
 
-        public async Task Execute()
+        public void Execute()
         {
+            int i = 0;
             while(true)
             {
-                using (var httpClient = new RxHttpClient(new HttpClient(), null))
+                //Get the html code from the google home page
+                httpClient.Get("http://www.google.com").Subscribe();
+
+                //Asynchronously, get the json from jsonplaceholder and serialize it. 
+                httpClient.Get<List<Todo>>("https://jsonplaceholder.typicode.com/todos/", options => 
                 {
-                    //Get the html code from the google home page
-                    var response = await httpClient.Get("http://www.google.com");
+                    options.RequestMediaType = new JsonHttpMediaType();
+                    options.AddHeader("Authorization", "Bearer <token>");
+                    options.QueryStrings.Add("name", "John Doe");
+                }).Subscribe(itens =>
+                {
+                    Console.WriteLine("Json request finished!");
+                });
 
-                    //Asynchronously, get the json from jsonplaceholder and serialize it. 
-                    httpClient.Get<List<Todo>>("https://jsonplaceholder.typicode.com/todos/", options => 
-                    {
-                        options.RequestMediaType = new JsonHttpMediaType();
-                        options.AddHeader("Authorization", "Bearer <token>");
-                        options.QueryStrings.Add("name", "John Doe");
-                    }).Subscribe(itens =>
-                    {
-                        Console.WriteLine("Json request finished!");
-                    });
+                tmdbConsumer.ListMovies().Subscribe();
 
-                    var item = await tmdbConsumer.ListMovies();
+                httpClient.Post<Identifiable>(@"https://jsonplaceholder.typicode.com/posts", new Post()
+                {
+                    Title = "Foo",
+                    Body = "Bar",
+                    UserId = 3
+                }).Subscribe();
 
-                    httpClient.Post<Identifiable>(@"https://jsonplaceholder.typicode.com/posts", new Post()
-                    {
-                        Title = "Foo",
-                        Body = "Bar",
-                        UserId = 3
-                    }).Subscribe();
+                httpClient.Post(@"https://postman-echo.com/post").Subscribe();
 
-                    var postmanRequest = await httpClient.Post(@"https://postman-echo.com/post");
-                }
-
-                Thread.Sleep(1000);
+                i += 4;
+                Console.WriteLine(i); 
             }
         }
     }

@@ -4,9 +4,9 @@ using Rx.Http.MediaTypes.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -76,64 +76,6 @@ namespace Rx.Http.Requests
             this.ResponseMediaType = this.ResponseMediaType ?? options.ResponseMediaType;
         }
 
-        internal IObservable<string> Request()
-        {
-            logger?.LogTrace("Applying the options");
-            Setup();
-            logger?.LogTrace("The options were applied, executing the request");
-
-            return SingleObservable.Create(async () =>
-            {
-                var uri = GetUri();
-                logger?.LogInformation($"{MethodName.ToUpper()} {http.BaseAddress.AbsoluteUri + uri}");
-
-                HttpContent httpContent = null;
-
-                if(obj != null)
-                {
-                    if (obj is HttpContent)
-                    {
-                        httpContent = obj as HttpContent;
-                    }
-                    else
-                    {
-                        if (RequestMediaType == null)
-                        {
-                            logger?.LogTrace("RequestMediaType is null, using the default (application/json)");
-                            RequestMediaType = MediaTypesMap.GetMediaType(MediaType.Application.Json);
-                        }
-
-                        Stopwatch serializeWatch = new Stopwatch();
-                        serializeWatch.Start();
-                        httpContent = RequestMediaType.Serialize(this.obj);
-                        serializeWatch.Stop();
-                        logger?.LogInformation($"Serialization completed successfully in {serializeWatch.ElapsedMilliseconds}ms");
-                        logger?.LogTrace($"Request content: {await httpContent.ReadAsStringAsync()}");
-                    }
-                }
-
-                Stopwatch requestWatch = new Stopwatch();
-                requestWatch.Start();
-                var response = await DoRequest(uri, httpContent);
-                requestWatch.Stop();
-
-                logger?.LogInformation($"Server response: {response.ReasonPhrase}({(int)response.StatusCode}) => {response.Content.Headers.ContentType} in {requestWatch.ElapsedMilliseconds}ms");
-
-                Stopwatch deserializerWatch = new Stopwatch();
-                deserializerWatch.Start();
-                string bodyAsText = await response.Content.ReadAsStringAsync();
-                deserializerWatch.Stop();
-                logger?.LogInformation($"Deserialization completed successfully in {deserializerWatch.ElapsedMilliseconds}ms");
-
-
-                logger?.LogTrace($"Server response body: { bodyAsText }");
-                response.EnsureSuccessStatusCode();
-
-
-                return bodyAsText;
-            });
-        }
-
         internal IObservable<TResponse> Request<TResponse>()
             where TResponse : class
         {
@@ -141,43 +83,14 @@ namespace Rx.Http.Requests
             Setup();
             logger?.LogTrace("The options were applied, executing the request");
 
-            return SingleObservable.Create(async () =>
+            async Task<TResponse> Create()
             {
                 var uri = GetUri();
-                logger?.LogInformation($"{MethodName.ToUpper()} {http.BaseAddress.AbsoluteUri + uri}");
-
-
-                logger?.LogTrace("Getting the RequestMediaType");
-
-                HttpContent httpContent = null;
-
-                if(obj != null)
-                {
-                    if (obj is HttpContent)
-                    {
-                        httpContent = obj as HttpContent;
-                    }
-                    else
-                    {
-                        if (RequestMediaType == null)
-                        {
-                            logger?.LogTrace("RequestMediaType is null, using the default (application/json)");
-                            RequestMediaType = MediaTypesMap.GetMediaType(MediaType.Application.Json);
-                        }
-
-                        Stopwatch serializeWatch = new Stopwatch();
-                        serializeWatch.Start();
-                        httpContent = RequestMediaType.Serialize(this.obj);
-                        serializeWatch.Stop();
-                        logger?.LogInformation($"Serialization completed successfully in {serializeWatch.ElapsedMilliseconds}ms");
-                        logger?.LogTrace($"Request content: {await httpContent.ReadAsStringAsync()}");
-                    }
-                }
-
+                logger?.LogInformation($"{MethodName.ToUpper()} {http?.BaseAddress?.AbsoluteUri ?? string.Empty + uri}");
 
                 Stopwatch requestWatch = new Stopwatch();
                 requestWatch.Start();
-                var response = await DoRequest(uri, httpContent);
+                var response = await DoRequest(uri, await GetContent());
                 requestWatch.Stop();
 
                 logger?.LogInformation($"Server response: {response.ReasonPhrase}({(int)response.StatusCode}) => {response.Content.Headers.ContentType} in {requestWatch.ElapsedMilliseconds}ms");
@@ -200,7 +113,46 @@ namespace Rx.Http.Requests
                 logger?.LogInformation($"Deserialization completed successfully in {deserializerWatch.ElapsedMilliseconds}ms");
 
                 return responseObject;
-            });
+            }
+
+            return Create().ToObservable();
+        }
+
+        private async Task<HttpContent> GetContent()
+        {
+            HttpContent httpContent = null;
+
+            if (obj != null)
+            {
+                if (obj is HttpContent)
+                {
+                    httpContent = obj as HttpContent;
+                }
+                else
+                {
+                    if (RequestMediaType == null)
+                    {
+                        logger?.LogTrace($"RequestMediaType is null, using the default {MediaType.Application.Json}");
+                        RequestMediaType = MediaTypesMap.GetMediaType(MediaType.Application.Json);
+                    }
+
+                    Stopwatch serializeWatch = new Stopwatch();
+                    serializeWatch.Start();
+                    httpContent = RequestMediaType.Serialize(this.obj);
+                    serializeWatch.Stop();
+                    logger?.LogInformation($"Serialization completed successfully in {serializeWatch.ElapsedMilliseconds}ms");
+                    logger?.LogTrace($"Request content: {await httpContent.ReadAsStringAsync()}");
+                }
+            }
+
+            return httpContent;
+        }
+
+
+        internal IObservable<string> Request()
+        {
+            async Task<string> ReqAsync() => await (await DoRequest(GetUri(), await GetContent())).Content.ReadAsStringAsync();
+            return ReqAsync().ToObservable();
         }
     }
 }

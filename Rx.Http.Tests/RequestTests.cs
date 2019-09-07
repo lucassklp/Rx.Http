@@ -15,7 +15,7 @@ namespace Rx.Http.Tests
         RxHttpClient http;
         public RequestTests()
         {
-            http = new RxHttpClient(new HttpClient());
+            //http = new RxHttpClient(new HttpClient());
         }
 
         [Fact]

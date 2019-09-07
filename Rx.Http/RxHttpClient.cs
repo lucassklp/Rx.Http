@@ -9,14 +9,14 @@ namespace Rx.Http
     public class RxHttpClient : IDisposable
     {
         private HttpClient http;
-        private ILogger logger;
+        private ILoggerFactory logger;
         public Uri BaseAddress
         {
             get => http.BaseAddress;
             set => http.BaseAddress = value;
         }
 
-        public RxHttpClient(HttpClient http, ILogger logger)
+        public RxHttpClient(HttpClient http, ILoggerFactory logger)
         {
             this.http = http;
             this.logger = logger;

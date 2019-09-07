@@ -9,9 +9,8 @@ namespace Rx.Http.Samples.Consumers
 {
     public class TheMovieDatabaseConsumer : RxConsumer
     {
-        public TheMovieDatabaseConsumer(HttpClient http): base(http, null)
+        public TheMovieDatabaseConsumer(IContainer<TheMovieDatabaseConsumer> container) : base(container)
         {
-            http.BaseAddress = new Uri(@"https://api.themoviedb.org/3/");
         }
         public override void Setup(RxHttpRequestConventions conventions)
         {

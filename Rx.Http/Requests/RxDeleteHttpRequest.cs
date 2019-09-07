@@ -15,7 +15,7 @@ namespace Rx.Http.Requests
             this.QueryStrings = new Dictionary<string, string>();
         }
 
-        public RxDeleteHttpRequest(HttpClient http, ILogger logger, string url, Action<RxHttpRequestOptions> options = null) : base(http, logger)
+        public RxDeleteHttpRequest(HttpClient http, ILoggerFactory logger, string url, Action<RxHttpRequestOptions> options = null) : base(http, logger.CreateLogger<RxHttpClient>())
         {
             this.optionsCallback = options;
             this.Url = url;

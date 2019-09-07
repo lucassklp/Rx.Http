@@ -16,7 +16,7 @@ namespace Rx.Http.Requests
             this.QueryStrings = new Dictionary<string, string>();
         }
 
-        public RxPutHttpRequest(HttpClient http, ILogger logger, string url, object obj = null, Action<RxHttpRequestOptions> options = null) : base(http, logger)
+        public RxPutHttpRequest(HttpClient http, ILoggerFactory logger, string url, object obj = null, Action<RxHttpRequestOptions> options = null) : base(http, logger?.CreateLogger<RxHttpClient>())
         {
             this.Url = url;
             this.obj = obj;

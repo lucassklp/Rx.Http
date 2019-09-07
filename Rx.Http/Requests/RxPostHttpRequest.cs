@@ -17,7 +17,7 @@ namespace Rx.Http.Requests
             this.http = http;
         }
 
-        public RxPostHttpRequest(HttpClient http, ILogger logger, string url, object obj = null, Action<RxHttpRequestOptions> options = null) : base(http, logger)
+        public RxPostHttpRequest(HttpClient http, ILoggerFactory logger, string url, object obj = null, Action<RxHttpRequestOptions> options = null) : base(http, logger?.CreateLogger<RxHttpClient>())
         {
             this.Url = url;
             this.obj = obj;

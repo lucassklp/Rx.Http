@@ -9,7 +9,7 @@ namespace Rx.Http.Tests.Consumers
 {
     public class TheMovieDatabaseConsumer : RxConsumer
     {
-        public TheMovieDatabaseConsumer(HttpClient http, ILogger logger): base(http, logger)
+        public TheMovieDatabaseConsumer(IContainer<TheMovieDatabaseConsumer> http, ILoggerFactory logger): base(http, logger)
         {
 
         }

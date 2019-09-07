@@ -12,14 +12,20 @@ namespace Rx.Http
 
         private RxHttpClient http;
 
-        public RxConsumer(HttpClient http, ILogger logger)
+        // public RxConsumer()
+        // {
+        //     this.interceptors = new List<RxInterceptor>();
+        //     Setup(new RxHttpRequestConventions());
+        // }
+
+        public RxConsumer(IContainer<RxConsumer> http, ILoggerFactory logger = null)
         {
-            this.http = new RxHttpClient(http, logger);
+            this.interceptors = new List<RxInterceptor>();
+            this.http = new RxHttpClient(http.Http, logger);
             Setup(new RxHttpRequestConventions());
         }
 
-
-        public IObservable<TResponse> Get<TResponse>(string url, Action<RxHttpRequestOptions> opts = null)
+        protected IObservable<TResponse> Get<TResponse>(string url, Action<RxHttpRequestOptions> opts = null)
             where TResponse : class
         {
             var request = http.CreateGetRequest(url, opts);
