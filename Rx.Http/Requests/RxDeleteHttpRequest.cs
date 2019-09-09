@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -15,16 +14,8 @@ namespace Rx.Http.Requests
             this.QueryStrings = new Dictionary<string, string>();
         }
 
-        public RxDeleteHttpRequest(HttpClient http, ILoggerFactory logger, string url, Action<RxHttpRequestOptions> options = null) : base(http, logger.CreateLogger<RxHttpClient>())
-        {
-            this.optionsCallback = options;
-            this.Url = url;
-            this.QueryStrings = new Dictionary<string, string>();
-        }
+        protected override string MethodName { get; set; } = "DELETE";
 
-
-        internal override string MethodName { get; set; } = "DELETE";
-
-        internal override Task<HttpResponseMessage> DoRequest(string url, HttpContent content) => http.DeleteAsync(url);
+        protected override Task<HttpResponseMessage> DoRequest(string url, HttpContent content) => http.DeleteAsync(url);
     }
 }

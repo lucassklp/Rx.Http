@@ -1,15 +1,14 @@
-using System;
-using System.Net.Http;
 using Microsoft.Extensions.Logging;
 using Rx.Http.Interceptors;
 using Rx.Http.Requests;
 using Rx.Http.Tests.Models;
+using System;
 
 namespace Rx.Http.Tests.Consumers
 {
     public class TheMovieDatabaseConsumer : RxConsumer
     {
-        public TheMovieDatabaseConsumer(IContainer<TheMovieDatabaseConsumer> http, ILoggerFactory logger): base(http, logger)
+        public TheMovieDatabaseConsumer(IConsumerConfiguration<TheMovieDatabaseConsumer> http, ILoggerFactory logger) : base(http, logger)
         {
 
         }

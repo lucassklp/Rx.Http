@@ -1,8 +1,7 @@
 ﻿namespace Rx.Http.Tests
 {
-    class ConsumersTests
+    class InterceptorsTests
     {
-
 
     }
 }

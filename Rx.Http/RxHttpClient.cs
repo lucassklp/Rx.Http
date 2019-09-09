@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using Rx.Http.Requests;
+﻿using Rx.Http.Requests;
 using System;
 using System.Net.Http;
 
@@ -9,17 +8,16 @@ namespace Rx.Http
     public class RxHttpClient : IDisposable
     {
         private HttpClient http;
-        private ILoggerFactory logger;
+
         public Uri BaseAddress
         {
             get => http.BaseAddress;
             set => http.BaseAddress = value;
         }
 
-        public RxHttpClient(HttpClient http, ILoggerFactory logger)
+        public RxHttpClient(HttpClient http)
         {
             this.http = http;
-            this.logger = logger;
         }
 
         public IObservable<string> Get(string url, Action<RxHttpRequestOptions> opts = null)
@@ -35,7 +33,7 @@ namespace Rx.Http
 
         internal RxGetHttpRequest CreateGetRequest(string url, Action<RxHttpRequestOptions> opts = null)
         {
-            return new RxGetHttpRequest(this.http, this.logger, url, opts);
+            return new RxGetHttpRequest(this.http, url, opts);
         }
 
         public IObservable<TResponse> Post<TResponse>(string url, object obj = null, Action<RxHttpRequestOptions> options = null) where TResponse : class
@@ -49,7 +47,7 @@ namespace Rx.Http
         }
 
         public IObservable<T> Post<T>(string url, HttpContent form, Action<RxHttpRequestOptions> options = null)
-            where T: class
+            where T : class
         {
             return CreatePostRequest(url, form, options).Request<T>();
         }
@@ -61,7 +59,7 @@ namespace Rx.Http
 
         internal RxPostHttpRequest CreatePostRequest(string url, object obj = null, Action<RxHttpRequestOptions> options = null)
         {
-            return new RxPostHttpRequest(http, logger, url, obj, options);
+            return new RxPostHttpRequest(http, url, obj, options);
         }
 
         public IObservable<TResponse> Put<TResponse>(string url, object obj = null, Action<RxHttpRequestOptions> options = null) where TResponse : class
@@ -88,7 +86,7 @@ namespace Rx.Http
 
         internal RxPutHttpRequest CreatePutRequest(string url, object obj = null, Action<RxHttpRequestOptions> options = null)
         {
-            return new RxPutHttpRequest(http, logger, url, obj, options);
+            return new RxPutHttpRequest(http, url, obj, options);
         }
 
         public IObservable<TResponse> Delete<TResponse>(string url, Action<RxHttpRequestOptions> options = null) where TResponse : class
@@ -103,7 +101,7 @@ namespace Rx.Http
 
         internal RxDeleteHttpRequest CreateDeleteRequest(string url, Action<RxHttpRequestOptions> opts = null)
         {
-            return new RxDeleteHttpRequest(this.http, this.logger, url, opts);
+            return new RxDeleteHttpRequest(http, url, opts);
         }
 
         public void Dispose()

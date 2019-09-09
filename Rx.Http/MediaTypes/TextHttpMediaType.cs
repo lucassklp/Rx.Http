@@ -1,9 +1,9 @@
-﻿using System.IO;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using Rx.Http.MediaTypes.Abstractions;
+﻿using Rx.Http.MediaTypes.Abstractions;
 using Rx.Http.Serializers;
 using Rx.Http.Serializers.Interfaces;
+using System.IO;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace Rx.Http.MediaTypes
 {
@@ -25,7 +25,7 @@ namespace Rx.Http.MediaTypes
             var content = new StreamContent(this.serializer.Serialize(obj));
             content.Headers.ContentType = new MediaTypeHeaderValue(MediaType.Text.Plain);
             return content;
-            
+
         }
     }
 }

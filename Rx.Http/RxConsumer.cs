@@ -1,8 +1,6 @@
-using Microsoft.Extensions.Logging;
 using Rx.Http.Interceptors;
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
 
 namespace Rx.Http
 {
@@ -12,17 +10,11 @@ namespace Rx.Http
 
         private RxHttpClient http;
 
-        // public RxConsumer()
-        // {
-        //     this.interceptors = new List<RxInterceptor>();
-        //     Setup(new RxHttpRequestConventions());
-        // }
-
-        public RxConsumer(IContainer<RxConsumer> http, ILoggerFactory logger = null)
+        public RxConsumer(IConsumerConfiguration<RxConsumer> configuration)
         {
-            this.interceptors = new List<RxInterceptor>();
-            this.http = new RxHttpClient(http.Http, logger);
-            Setup(new RxHttpRequestConventions());
+            interceptors = configuration.Interceptors;
+            this.http = new RxHttpClient(configuration.Http);
+            
         }
 
         protected IObservable<TResponse> Get<TResponse>(string url, Action<RxHttpRequestOptions> opts = null)
@@ -84,13 +76,6 @@ namespace Rx.Http
             var request = http.CreateDeleteRequest(url, opts);
             this.interceptors.ForEach(x => x.Intercept(request));
             return request.Request();
-        }
-
-        public virtual void Setup(RxHttpRequestConventions conventions) => ApplyConventions(conventions);
-
-        private void ApplyConventions(RxHttpRequestConventions conventions)
-        {
-            this.interceptors = conventions.Interceptors;
         }
     }
 }

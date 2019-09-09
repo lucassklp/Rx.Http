@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Rx.Http.Tests.Models
+﻿namespace Rx.Http.Tests.Models
 {
     public class Post
     {

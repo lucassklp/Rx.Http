@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -16,16 +15,8 @@ namespace Rx.Http.Requests
             this.QueryStrings = new Dictionary<string, string>();
         }
 
-        public RxPutHttpRequest(HttpClient http, ILoggerFactory logger, string url, object obj = null, Action<RxHttpRequestOptions> options = null) : base(http, logger?.CreateLogger<RxHttpClient>())
-        {
-            this.Url = url;
-            this.obj = obj;
-            this.optionsCallback = options;
-            this.QueryStrings = new Dictionary<string, string>();
-        }
+        protected override string MethodName { get; set; } = "PUT";
 
-        internal override string MethodName { get; set; } = "PUT";
-
-        internal override Task<HttpResponseMessage> DoRequest(string url, HttpContent content) => http.PutAsync(url, content);
+        protected override Task<HttpResponseMessage> DoRequest(string url, HttpContent content) => http.PutAsync(url, content);
     }
 }

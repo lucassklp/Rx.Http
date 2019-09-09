@@ -1,21 +1,15 @@
-using System;
-using System.Net.Http;
-using Microsoft.Extensions.Logging;
 using Rx.Http.Interceptors;
 using Rx.Http.Requests;
 using Rx.Http.Tests.Models;
+using System;
 
 namespace Rx.Http.Samples.Consumers
 {
     public class TheMovieDatabaseConsumer : RxConsumer
     {
-        public TheMovieDatabaseConsumer(IContainer<TheMovieDatabaseConsumer> container) : base(container)
+        public TheMovieDatabaseConsumer(IConsumerConfiguration<TheMovieDatabaseConsumer> container) : base(container)
         {
-        }
-        public override void Setup(RxHttpRequestConventions conventions)
-        {
-            conventions.Interceptors.Add(new TheMovieDatabaseInterceptor());
-            base.Setup(conventions);
+            container.AddInterceptors(new TheMovieDatabaseInterceptor());
         }
 
         public IObservable<Result> ListMovies() => Get<Result>("movie/popular");

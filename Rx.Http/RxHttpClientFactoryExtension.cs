@@ -1,26 +1,33 @@
-﻿#if NETSTANDARD2_0
-
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Http;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Rx.Http.Interceptors;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 
 namespace Rx.Http
 {
-    public interface IContainer<out T>
+    public interface IConsumerConfiguration<out T>
     {
-        HttpClient Http {get;set;}
+        List<RxInterceptor> Interceptors { get; set; }
+        void AddInterceptors(params RxInterceptor[] interceptors);
+        HttpClient Http { get; }
     }
 
-    public class Container<T> : IContainer<T>
+    public class ConsumerConfiguration<T> : IConsumerConfiguration<T>
     {
-        public Container(HttpClient http)
+        public List<RxInterceptor> Interceptors { get; set; }
+        public ConsumerConfiguration(HttpClient http)
         {
+            Interceptors = new List<RxInterceptor>();
             Http = http;
         }
-        public HttpClient Http { get; set; }
+
+        public void AddInterceptors(params RxInterceptor[] interceptors)
+        {
+            this.Interceptors.AddRange(interceptors);
+        }
+
+        public HttpClient Http { get; private set; }
     }
 
     public static class RxHttpClientFactoryExtension
@@ -28,10 +35,9 @@ namespace Rx.Http
         public static IServiceCollection AddConsumer<TConsumer>(this IServiceCollection services, Action<HttpClient> configure)
             where TConsumer : RxConsumer
         {
-            services.AddHttpClient<IContainer<TConsumer>, Container<TConsumer>>(configure);
+            services.AddHttpClient<IConsumerConfiguration<TConsumer>, ConsumerConfiguration<TConsumer>>(configure);
             services.AddScoped<TConsumer>();
             return services;
         }
     }
 }
-#endif

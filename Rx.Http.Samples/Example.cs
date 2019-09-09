@@ -1,13 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
-using Rx.Http.MediaTypes;
+﻿using Rx.Http.MediaTypes;
 using Rx.Http.Samples.Consumers;
 using Rx.Http.Tests.Models;
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Reactive.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Rx.Http.Samples
 {
@@ -24,21 +20,18 @@ namespace Rx.Http.Samples
         public void Execute()
         {
             int i = 0;
-            while(true)
+            while (true)
             {
                 //Get the html code from the google home page
                 httpClient.Get("http://www.google.com").Subscribe();
 
                 //Asynchronously, get the json from jsonplaceholder and serialize it. 
-                httpClient.Get<List<Todo>>("https://jsonplaceholder.typicode.com/todos/", options => 
+                httpClient.Get<List<Todo>>("https://jsonplaceholder.typicode.com/todos/", options =>
                 {
                     options.RequestMediaType = new JsonHttpMediaType();
                     options.AddHeader("Authorization", "Bearer <token>");
                     options.QueryStrings.Add("name", "John Doe");
-                }).Subscribe(itens =>
-                {
-                    Console.WriteLine("Json request finished!");
-                });
+                }).Subscribe();
 
                 tmdbConsumer.ListMovies().Subscribe();
 
@@ -51,8 +44,8 @@ namespace Rx.Http.Samples
 
                 httpClient.Post(@"https://postman-echo.com/post").Subscribe();
 
-                i += 4;
-                Console.WriteLine(i); 
+                i += 5;
+                Console.WriteLine(i);
             }
         }
     }
