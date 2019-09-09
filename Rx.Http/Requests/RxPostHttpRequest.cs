@@ -9,10 +9,10 @@ namespace Rx.Http.Requests
     {
         public RxPostHttpRequest(HttpClient http, string url, object obj = null, Action<RxHttpRequestOptions> options = null) : base(http)
         {
-            this.Url = url;
+            Url = url;
             this.obj = obj;
-            this.optionsCallback = options;
-            this.QueryStrings = new Dictionary<string, string>();
+            optionsCallback = options;
+            QueryStrings = new Dictionary<string, string>();
             this.http = http;
         }
 

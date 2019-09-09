@@ -19,7 +19,6 @@ namespace Rx.Http.Samples
 
         public void Execute()
         {
-            int i = 0;
             while (true)
             {
                 //Get the html code from the google home page
@@ -43,9 +42,6 @@ namespace Rx.Http.Samples
                 }).Subscribe();
 
                 httpClient.Post(@"https://postman-echo.com/post").Subscribe();
-
-                i += 5;
-                Console.WriteLine(i);
             }
         }
     }

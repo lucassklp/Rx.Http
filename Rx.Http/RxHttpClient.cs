@@ -33,7 +33,7 @@ namespace Rx.Http
 
         internal RxGetHttpRequest CreateGetRequest(string url, Action<RxHttpRequestOptions> opts = null)
         {
-            return new RxGetHttpRequest(this.http, url, opts);
+            return new RxGetHttpRequest(http, url, opts);
         }
 
         public IObservable<TResponse> Post<TResponse>(string url, object obj = null, Action<RxHttpRequestOptions> options = null) where TResponse : class
@@ -106,7 +106,7 @@ namespace Rx.Http
 
         public void Dispose()
         {
-            this.http.Dispose();
+            http.Dispose();
         }
     }
 }

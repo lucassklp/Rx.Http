@@ -9,9 +9,9 @@ namespace Rx.Http.Requests
     {
         public RxDeleteHttpRequest(HttpClient http, string url, Action<RxHttpRequestOptions> options) : base(http)
         {
-            this.Url = url;
-            this.optionsCallback = options;
-            this.QueryStrings = new Dictionary<string, string>();
+            Url = url;
+            optionsCallback = options;
+            QueryStrings = new Dictionary<string, string>();
         }
 
         protected override string MethodName { get; set; } = "DELETE";

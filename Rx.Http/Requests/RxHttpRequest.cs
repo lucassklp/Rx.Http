@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -13,7 +12,7 @@ namespace Rx.Http.Requests
     public abstract class RxHttpRequest
     {
         private string url;
-        public string Url { get => GetUri(); set => this.url = value; }
+        public string Url { get => GetUri(); set => url = value; }
         public Dictionary<string, string> QueryStrings { get; set; }
         public HttpHeaders Headers { get; set; }
 
@@ -29,8 +28,8 @@ namespace Rx.Http.Requests
         public RxHttpRequest(HttpClient http)
         {
             http.DefaultRequestHeaders.Clear();
-            this.Headers = http.DefaultRequestHeaders;
-            this.QueryStrings = new Dictionary<string, string>();
+            Headers = http.DefaultRequestHeaders;
+            QueryStrings = new Dictionary<string, string>();
             this.http = http;
         }
 
@@ -40,16 +39,16 @@ namespace Rx.Http.Requests
         public string GetUri()
         {
 
-/* Unmerged change from project 'Rx.Http (net45)'
-Before:
-            UriBuilder builder = new UriBuilder(url);
-            
-            var query = HttpUtility.ParseQueryString(builder.Query);
-After:
-            UriBuilder builder = new UriBuilder(url);
+            /* Unmerged change from project 'Rx.Http (net45)'
+            Before:
+                        UriBuilder builder = new UriBuilder(url);
 
-            var query = HttpUtility.ParseQueryString(builder.Query);
-*/
+                        var query = HttpUtility.ParseQueryString(builder.Query);
+            After:
+                        UriBuilder builder = new UriBuilder(url);
+
+                        var query = HttpUtility.ParseQueryString(builder.Query);
+            */
             UriBuilder builder = new UriBuilder(url);
 
             var query = HttpUtility.ParseQueryString(builder.Query);
@@ -67,11 +66,11 @@ After:
 
         private void Setup()
         {
-            var options = new RxHttpRequestOptions(this.Headers, this.QueryStrings);
+            var options = new RxHttpRequestOptions(Headers, QueryStrings);
             optionsCallback?.Invoke(options);
 
-            this.RequestMediaType = this.RequestMediaType ?? options.RequestMediaType;
-            this.ResponseMediaType = this.ResponseMediaType ?? options.ResponseMediaType;
+            RequestMediaType = RequestMediaType ?? options.RequestMediaType;
+            ResponseMediaType = ResponseMediaType ?? options.ResponseMediaType;
         }
 
         internal IObservable<TResponse> Request<TResponse>()
@@ -79,7 +78,7 @@ After:
         {
             Setup();
 
-            async Task<TResponse> Create()
+            return SingleObservable.Create(async () =>
             {
                 var response = await DoRequest(GetUri(), GetContent());
                 response.EnsureSuccessStatusCode();
@@ -92,9 +91,7 @@ After:
 
                 var responseObject = ResponseMediaType.Deserialize<TResponse>(await response.Content.ReadAsStreamAsync());
                 return responseObject;
-            }
-
-            return Create().ToObservable();
+            });
         }
 
         private HttpContent GetContent()
@@ -113,8 +110,8 @@ After:
                     {
                         RequestMediaType = MediaTypesMap.GetMediaType(MediaType.Application.Json);
                     }
-                    httpContent = RequestMediaType.Serialize(this.obj);
 
+                    httpContent = RequestMediaType.Serialize(obj);
                 }
             }
 
@@ -124,7 +121,7 @@ After:
         internal IObservable<string> Request()
         {
             async Task<string> ReqAsync() => await (await DoRequest(GetUri(), GetContent())).Content.ReadAsStringAsync();
-            return ReqAsync().ToObservable();
+            return SingleObservable.Create(ReqAsync);
         }
     }
 }

@@ -22,7 +22,7 @@ namespace Rx.Http.MediaTypes
 
         public HttpContent Serialize(object obj)
         {
-            var content = new StreamContent(this.serializer.Serialize(obj));
+            var content = new StreamContent(serializer.Serialize(obj));
             content.Headers.ContentType = new MediaTypeHeaderValue(MediaType.Text.Plain);
             return content;
 
