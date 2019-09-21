@@ -9,7 +9,7 @@ namespace Rx.Http.MediaTypes
         private static readonly IHttpMediaType JsonMediaType = new JsonHttpMediaType();
 
         public static Dictionary<string, IHttpMediaType> List() =>
-            new Dictionary<string, IHttpMediaType>()
+            new Dictionary<string, IHttpMediaType>
             {
                 {MediaType.Application.Json, JsonMediaType},
                 {MediaType.Text.Css, TextMediaType},
