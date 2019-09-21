@@ -10,7 +10,7 @@ namespace Rx.Http
 
         private readonly RxHttpClient http;
 
-        public RxConsumer(IConsumerConfiguration<RxConsumer> configuration)
+        protected RxConsumer(IConsumerConfiguration<RxConsumer> configuration)
         {
             interceptors = configuration.Interceptors;
             http = new RxHttpClient(configuration.Http);
