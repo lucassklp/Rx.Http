@@ -16,9 +16,6 @@ namespace Rx.Http.Requests
             this.http = http;
         }
 
-
-        protected override string MethodName { get; set; } = "POST";
-
         protected override Task<HttpResponseMessage> DoRequest(string url, HttpContent content) => http.PostAsync(url, content);
     }
 }

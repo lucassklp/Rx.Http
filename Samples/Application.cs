@@ -1,28 +1,30 @@
-﻿using Rx.Http.MediaTypes;
-using Rx.Http.Samples.Consumers;
-using Rx.Http.Tests.Models;
+﻿using Models;
+using Rx.Http;
+using Rx.Http.MediaTypes;
+using Samples.Consumers;
 using System;
 using System.Collections.Generic;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 
-namespace Rx.Http.Samples
+namespace Samples
 {
-    class Example
+    class Application
     {
         private TheMovieDatabaseConsumer tmdbConsumer;
         private RxHttpClient httpClient;
-        public Example(TheMovieDatabaseConsumer tmdbConsumer, RxHttpClient httpClient)
+        public Application(TheMovieDatabaseConsumer tmdbConsumer, RxHttpClient httpClient)
         {
             this.httpClient = httpClient;
             this.tmdbConsumer = tmdbConsumer;
         }
 
-        public void Execute()
+        public async Task Execute()
         {
             while (true)
             {
                 //Get the html code from the google home page
-                httpClient.Get("http://www.google.com").Subscribe();
+                await httpClient.Get("http://www.google.com");
 
                 //Asynchronously, get the json from jsonplaceholder and serialize it. 
                 httpClient.Get<List<Todo>>("https://jsonplaceholder.typicode.com/todos/", options =>
@@ -41,7 +43,7 @@ namespace Rx.Http.Samples
                     UserId = 3
                 }).Subscribe();
 
-                httpClient.Post(@"https://postman-echo.com/post").Subscribe();
+                await httpClient.Post(@"https://postman-echo.com/post");
             }
         }
     }

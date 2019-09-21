@@ -1,3 +1,4 @@
+using Rx.Http.Exceptions;
 using Rx.Http.MediaTypes;
 using Rx.Http.MediaTypes.Abstractions;
 using System;
@@ -33,23 +34,11 @@ namespace Rx.Http.Requests
             this.http = http;
         }
 
-        protected abstract string MethodName { get; set; }
         protected abstract Task<HttpResponseMessage> DoRequest(string url, HttpContent content);
 
         public string GetUri()
         {
-
-            /* Unmerged change from project 'Rx.Http (net45)'
-            Before:
-                        UriBuilder builder = new UriBuilder(url);
-
-                        var query = HttpUtility.ParseQueryString(builder.Query);
-            After:
-                        UriBuilder builder = new UriBuilder(url);
-
-                        var query = HttpUtility.ParseQueryString(builder.Query);
-            */
-            UriBuilder builder = new UriBuilder(url);
+            var builder = new UriBuilder(url);
 
             var query = HttpUtility.ParseQueryString(builder.Query);
 
@@ -80,18 +69,40 @@ namespace Rx.Http.Requests
 
             return SingleObservable.Create(async () =>
             {
-                var response = await DoRequest(GetUri(), GetContent());
-                response.EnsureSuccessStatusCode();
+                var response = await GetResponse();
 
                 if (ResponseMediaType == null)
                 {
                     var mimeType = response.Content.Headers.ContentType.MediaType;
-                    ResponseMediaType = MediaTypesMap.GetMediaType(mimeType);
+                    ResponseMediaType = MediaTypesMap.Get(mimeType);
                 }
 
                 var responseObject = ResponseMediaType.Deserialize<TResponse>(await response.Content.ReadAsStreamAsync());
                 return responseObject;
             });
+        }
+
+        internal IObservable<string> Request()
+        {
+            return SingleObservable.Create(async () => 
+            {
+                var response = await GetResponse();
+                return await response.Content.ReadAsStringAsync();
+            });
+        }
+
+        private async Task<HttpResponseMessage> GetResponse()
+        {
+            var response = await DoRequest(GetUri(), GetContent());
+            try
+            {
+                response.EnsureSuccessStatusCode();
+            }
+            catch (Exception exception)
+            {
+                throw new RxHttpRequestException(response, exception);
+            }
+            return response;
         }
 
         private HttpContent GetContent()
@@ -108,7 +119,7 @@ namespace Rx.Http.Requests
                 {
                     if (RequestMediaType == null)
                     {
-                        RequestMediaType = MediaTypesMap.GetMediaType(MediaType.Application.Json);
+                        RequestMediaType = MediaTypesMap.Get(MediaType.Application.Json);
                     }
 
                     httpContent = RequestMediaType.Serialize(obj);
@@ -116,12 +127,6 @@ namespace Rx.Http.Requests
             }
 
             return httpContent;
-        }
-
-        internal IObservable<string> Request()
-        {
-            async Task<string> ReqAsync() => await (await DoRequest(GetUri(), GetContent())).Content.ReadAsStringAsync();
-            return SingleObservable.Create(ReqAsync);
         }
     }
 }

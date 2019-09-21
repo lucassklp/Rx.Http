@@ -2,8 +2,9 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp2.2</TargetFramework>
-
         <IsPackable>false</IsPackable>
+        <AssemblyName>Tests</AssemblyName>
+        <RootNamespace>Tests</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -13,7 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Rx.Http.Tests.Models\Rx.Http.Tests.Models.csproj" />
+        <ProjectReference Include="..\Models\Models.csproj" />
         <ProjectReference Include="..\Rx.Http\Rx.Http.csproj" />
     </ItemGroup>
 

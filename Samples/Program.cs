@@ -2,20 +2,22 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Logging.Debug;
-using Rx.Http.Samples.Consumers;
+using Rx.Http;
+using Samples.Consumers;
+using System;
+using System.Threading.Tasks;
 
-namespace Rx.Http.Samples
+namespace Samples
 {
     class Program
     {
-        static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var serviceCollection = new ServiceCollection();
             ConfigureServices(serviceCollection);
             var serviceProvider = serviceCollection.BuildServiceProvider();
-            var example = serviceProvider.GetService<Example>();
-            example.Execute();
-
+            var application = serviceProvider.GetService<Application>();
+            await application.Execute();
         }
 
         private static void ConfigureServices(ServiceCollection services)
@@ -36,9 +38,9 @@ namespace Rx.Http.Samples
 
             services.AddConsumer<TheMovieDatabaseConsumer>(http =>
             {
-                http.BaseAddress = new System.Uri(@"https://api.themoviedb.org/3/");
+                http.BaseAddress = new Uri(@"https://api.themoviedb.org/3/");
             })
-            .AddTransient<Example>();
+            .AddTransient<Application>();
         }
 
     }

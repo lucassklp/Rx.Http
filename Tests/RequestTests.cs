@@ -1,6 +1,9 @@
-using Rx.Http.Tests.Models;
-using Rx.Http.Tests.Models.Postman;
+using Models;
+using Models.Postman;
+using Rx.Http.Exceptions;
+using Rx.Http.MediaTypes;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Reactive.Linq;
 using Xunit;
@@ -12,7 +15,7 @@ namespace Rx.Http.Tests
         RxHttpClient http;
         public RequestTests()
         {
-            //http = new RxHttpClient(new HttpClient());
+            http = new RxHttpClient(new HttpClient());
         }
 
         [Fact]
@@ -33,8 +36,12 @@ namespace Rx.Http.Tests
         [Fact]
         public async void TestGet404Error()
         {
-            //Invalid URL
-            await Assert.ThrowsAsync<HttpRequestException>(async () => await http.Get<List<Todo>>(@"https://jsonplaceholder.typicode.com/this_page_dont_exist_hehehe/"));
+            await Assert.ThrowsAsync<RxHttpRequestException>(async () =>
+            {
+                //Invalid URL
+                var url = @"https://jsonplaceholder.typicode.com/this_page_dont_exist_hehehe/";
+                await http.Get<List<Todo>>(url);
+            });
         }
 
         [Fact]
@@ -58,7 +65,7 @@ namespace Rx.Http.Tests
             queryStrings.Add("User", "John Doe");
             queryStrings.Add("Characters", "*&¨%6dbajs&@#chv73*(#Y");
 
-            var headers = await http.Get<GetResponse>(@"https://postman-echo.com/get", opts =>
+            var headers = await http.Get<PostmanEchoResponse>(@"https://postman-echo.com/get", opts =>
             {
                 foreach (var item in queryStrings)
                 {
@@ -76,7 +83,7 @@ namespace Rx.Http.Tests
             headers.Add("Foo", "Bar");
             headers.Add("User", "John Doe");
 
-            var response = await http.Get<GetResponse>(@"https://postman-echo.com/get", opts =>
+            var response = await http.Get<PostmanEchoResponse>(@"https://postman-echo.com/get", opts =>
             {
                 foreach (var item in headers)
                 {
@@ -84,7 +91,27 @@ namespace Rx.Http.Tests
                 }
             });
 
-            Assert.True(response.Headers.ContainsKey("foo") && response.Headers.ContainsKey("user"));
+            var valid = headers.All(i => 
+            {
+                //Postman echo brings lowercase key
+                return response.Headers[i.Key.ToLower()] == i.Value;
+            });
+            Assert.True(valid);
+        }
+
+        [Fact]
+        public async void TestJsonContentTypeInHeader()
+        {
+            var response = await http.Post<PostmanEchoResponse>(@"https://postman-echo.com/post", new
+            {
+                JsonProperty = "Http is nice",
+                AnotherProperty = "But with Rx is awesome"
+            }, opts =>
+            {
+                opts.RequestMediaType = MediaTypesMap.Get(MediaType.Application.Json);
+            });
+
+            Assert.True(response.Headers["content-type"] == MediaType.Application.Json);
         }
     }
 }

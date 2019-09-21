@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Rx.Http.Tests.Models
+namespace Models
 {
     public class Result
     {

@@ -15,8 +15,6 @@ namespace Rx.Http.Requests
             QueryStrings = new Dictionary<string, string>();
         }
 
-        protected override string MethodName { get; set; } = "PUT";
-
         protected override Task<HttpResponseMessage> DoRequest(string url, HttpContent content) => http.PutAsync(url, content);
     }
 }

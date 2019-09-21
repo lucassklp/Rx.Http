@@ -14,8 +14,6 @@ namespace Rx.Http.Requests
             QueryStrings = new Dictionary<string, string>();
         }
 
-        protected override string MethodName { get; set; } = "DELETE";
-
         protected override Task<HttpResponseMessage> DoRequest(string url, HttpContent content) => http.DeleteAsync(url);
     }
 }

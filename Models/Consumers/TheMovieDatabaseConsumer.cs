@@ -1,15 +1,16 @@
 using Rx.Http.Interceptors;
 using Rx.Http.Requests;
-using Rx.Http.Tests.Models;
+using Models;
 using System;
+using Rx.Http;
 
-namespace Rx.Http.Samples.Consumers
+namespace Samples.Consumers
 {
     public class TheMovieDatabaseConsumer : RxConsumer
     {
-        public TheMovieDatabaseConsumer(IConsumerConfiguration<TheMovieDatabaseConsumer> container) : base(container)
+        public TheMovieDatabaseConsumer(IConsumerConfiguration<TheMovieDatabaseConsumer> config) : base(config)
         {
-            container.AddInterceptors(new TheMovieDatabaseInterceptor());
+            config.AddInterceptors(new TheMovieDatabaseInterceptor());
         }
 
         public IObservable<Result> ListMovies() => Get<Result>("movie/popular");

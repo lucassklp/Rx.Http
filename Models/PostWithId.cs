@@ -1,4 +1,4 @@
-﻿namespace Rx.Http.Tests.Models
+﻿namespace Models
 {
     public class Identifiable
     {
