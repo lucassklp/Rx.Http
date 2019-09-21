@@ -2,11 +2,10 @@
   <img src="Resources/rx.http.mini.png">
 </p>
 <p align="center">
-
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/90ffddf0fe1c4bb89e8e7049784ea190)](https://www.codacy.com/manual/lucassklp/Rx.Http?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=lucassklp/Rx.Http&amp;utm_campaign=Badge_Grade)
-
-[![NuGet Downloads](https://img.shields.io/nuget/dt/Rx.Http.svg)](https://www.nuget.org/packages/Rx.Http)
-
+<img alt="nuget" src="https://img.shields.io/nuget/dt/Rx.Http.svg">
+<a href="https://www.codacy.com/manual/lucassklp/Rx.Http?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=lucassklp/Rx.Http&amp;utm_campaign=Badge_Grade"><img src="https://api.codacy.com/project/badge/Grade/90ffddf0fe1c4bb89e8e7049784ea190"/></a>
+<img alt="npm version" src="https://img.shields.io/nuget/v/Rx.Http.svg">
+<img alt="NPM" src="https://img.shields.io/npm/l/npkill.svg">
 </p>
 
 A lightweight library that is inpired in [Angular 2+ Http Client](https://angular.io/guide/http) built on top of [.NET Http Client](https://docs.microsoft.com/pt-br/dotnet/api/system.net.http.httpclient) that help programmers to make asynchronous http requests, 
