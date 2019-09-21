@@ -1,23 +1,36 @@
 <p align="center">
   <img src="Resources/rx.http.mini.png">
 </p>
+<p align="center">
+<img alt="nuget" src="https://img.shields.io/nuget/dt/Rx.Http.svg">
+<a href="https://www.codacy.com/manual/lucassklp/Rx.Http?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=lucassklp/Rx.Http&amp;utm_campaign=Badge_Grade">
+    <img src="https://api.codacy.com/project/badge/Grade/90ffddf0fe1c4bb89e8e7049784ea190"/>
+</a>
+<img alt="npm version" src="https://img.shields.io/nuget/v/Rx.Http.svg">
 
-A lightweight library that is inpired in [Angular Http Client](https://angular.io/guide/http) and help programmers to make asynchronous http requests.
 
-**Note: This project is under development.**
+<!-- snyk does not support .NET Core yet -->
+<!-- https://github.com/snyk/snyk/issues/489 -->
+<!-- <a href="https://snyk.io//test/github/lucassklp/Rx.Http?targetFile=Rx.Http/Rx.Http.csproj"><img src="https://snyk.io//test/github/lucassklp/Rx.Http/badge.svg?targetFile=Rx.Http/Rx.Http.csproj" alt="Known Vulnerabilities" data-canonical-src="https://snyk.io//test/github/lucassklp/Rx.Http?targetFile=Rx.Http/Rx.Http.csproj" style="max-width:100%;"></a> -->
+
+</p>
+
+A lightweight library that is inpired in [Angular 2+ Http Client](https://angular.io/guide/http) built on top of [.NET Http Client](https://docs.microsoft.com/pt-br/dotnet/api/system.net.http.httpclient) that help programmers to make asynchronous http requests, 
+
+**Note: This project is under development and is NOT recommend to use in production environment yet.**
 
 # Installation
 
 If you are using Package Manager:
 
-```
-Install-Package Rx.Http -Version 0.9.6
+```bash
+Install-Package Rx.Http -Version 0.9.7
 ```
 
 If you are using .NET CLI
 
-```
-dotnet add package Rx.Http --version 0.9.6
+```bash
+dotnet add package Rx.Http --version 0.9.7
 ```
 
 
@@ -27,14 +40,22 @@ dotnet add package Rx.Http --version 0.9.6
 using Rx.Http;
 using System.Reactive.Linq;
 
-//Retrieve a list of To-Do item and print the title of each element asynchronously
-request.Get<List<Todo>>("https://jsonplaceholder.typicode.com/todos/").Subscribe(itens => {
-    itens.ForEach(item => Console.WriteLine(item.title));
-});
+public class Program 
+{
+    public static async void Main()
+    {
+        //Initialize the RxHttpClient
+        var http = new RxHttpClient(new HttpClient())
 
-//Making the same request using await
-List<Todo> response = await request.Get<List<Todo>>("https://jsonplaceholder.typicode.com/todos/");
+        //Retrieve a list of To-Do item and print the title of each element asynchronously
+        http.Get<List<Todo>>("https://jsonplaceholder.typicode.com/todos/").Subscribe(itens => {
+            itens.ForEach(item => Console.WriteLine(item.title));
+        });
 
+        //Making the same request using await
+        List<Todo> response = await http.Get<List<Todo>>("https://jsonplaceholder.typicode.com/todos/");
+    }
+}
 ```
 
 ### Options
@@ -44,18 +65,18 @@ You can customize your request by using options. It make possible you set **quer
 #### Let's dive in options
 
 ```csharp
-httpClient.Get<List<Todo>>("https://jsonplaceholder.typicode.com/todos/", options =>
+http.Get<List<Todo>>("https://jsonplaceholder.typicode.com/todos/", options =>
 {
     options.RequestMediaType = new JsonHttpMediaType();
     options.ResponseMediaType = new JsonHttpMediaType();
     options.AddHeader("Authorization", "Bearer <token>");
     options.QueryStrings.Add("name", "John Doe");
-})
+});
 ```
 
 The media type represents a structure that is used to translate a mime type to a object (serializing or deserializing).
 
-**RequestMediaType** is used to serialize your body content. **By default is JsonHttpMediaType**
+**RequestMediaType** is used to serialize your body content. **By default is used JsonHttpMediaType**
 
 **ResponseMediaType** is used to deserialize your body content. **By default it use the serializer based on mime type from response.**
 
@@ -64,7 +85,7 @@ You can customize your own *Media Type* by implementing the interface **IHttpMed
 ## Consumers
 
 A consumer is defined as a service that have common behavior for the requests. You can encapsulate the logic of all those requests in a easy way.
-The main advantage of using consumers is to make a abstraction of the HTTP request and its implementation details, and only work with the results from it.
+The main advantage of using consumers is to abstract the HTTP request and its implementation details, and only work with the results from it.
 
 ### Interceptors
 
@@ -77,19 +98,11 @@ In this example, we need to provide the api key for all requests to [The Movie D
 The code above shows how to use Consumers and Interceptors.
 
 ```csharp
-
     public class TheMovieDatabaseConsumer : RxConsumer
     {
-        public TheMovieDatabaseConsumer(ILogger<RxHttpClient> logger): base(new RxHttpClient(new HttpClient(), logger))
+        public TheMovieDatabaseConsumer(IConsumerConfiguration<TheMovieDatabaseConsumer> configuration): base(configuration)
         {
-
-        }
-        public override RxHttpRequestConventions Setup()
-        {
-            var conventions = new RxHttpRequestConventions();
-            conventions.BaseUrl = @"https://api.themoviedb.org/3/";
-            conventions.Interceptors.Add(new TheMovieDatabaseInterceptor());
-            return conventions;
+            configuration.Interceptors.Add(new TheMovieDatabaseInterceptor());
         }
 
         public IObservable<Result> ListMovies() => Get<Result>("movie/popular");
@@ -102,8 +115,54 @@ The code above shows how to use Consumers and Interceptors.
             request.QueryStrings.Add("api_key", "key");
         }
     }
+```
+
+## RxHttpRequestException
+This exception is threw when the server reply with a HTTP Status different of 2xx. There's two ways to handle this exception:
+
+```csharp
+    var url = @"https://jsonplaceholder.typicode.com/this_page_dont_exist_hehehe/";
+
+    //With traditional try-catch block
+    try
+    {
+        var todos = await http.Get<List<Todo>>(url);
+    }
+    catch(RxHttpRequestException ex)
+    {
+        HttpResponseMessage response = ex.Response;
+        //...
+    }
+
+    //Or using reactive way
+    http.Get<List<Todo>>(url).Subscribe(response => 
+    {
+        //...
+    }, exception => 
+    {
+        HttpResponseMessage response = (exception as RxHttpRequestException)?.Response;
+        //...
+    })
 
 ```
+
+## Working with Dependency Injection
+
+Is strongly recommended to use [DI (Dependency Injection)](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection) with Rx.Http, because of [HttpClientFactory](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/implement-resilient-applications/use-httpclientfactory-to-implement-resilient-http-requests), that improves HttpClient performance. For that, you must do the following:
+
+```csharp
+public void ConfigureServices(ServiceCollection services)
+{
+    services.AddHttpClient<RxHttpClient>();
+
+    //You **must** configure your consumer http client here
+    services.AddConsumer<TheMovieDatabaseConsumer>(http =>
+    {
+        http.BaseAddress = new Uri(@"https://api.themoviedb.org/3/");
+    });
+}
+```
+
 
 ### Roadmap
 

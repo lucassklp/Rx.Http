@@ -16,20 +16,20 @@ namespace Rx.Http
 
         public RxHttpRequestOptions(HttpHeaders headers, Dictionary<string, string> queryStrings)
         {
-            this.Headers = headers;
-            this.QueryStrings = queryStrings;
+            Headers = headers;
+            QueryStrings = queryStrings;
         }
 
         public void AddHeader(string key, string value)
         {
-            this.Headers.Add(key, value);
+            Headers.Add(key, value);
         }
 
         public void UseBasicAuthorization(string user, string key)
         {
             var token = $"{user}:{key}";
             var tokenBase64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(token));
-            this.AddHeader(HeaderNames.Authorization, $"Basic {tokenBase64}");
+            AddHeader(HeaderNames.Authorization, $"Basic {tokenBase64}");
         }
     }
 }

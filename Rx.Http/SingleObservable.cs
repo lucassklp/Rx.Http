@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -34,7 +34,7 @@ namespace Rx.Http
             {
                 try
                 {
-                    observer.OnNext(await task());
+                    observer.OnNext(await task().ConfigureAwait(false));
                 }
                 catch (Exception ex)
                 {

@@ -1,15 +1,15 @@
-﻿using System.IO;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using Rx.Http.MediaTypes.Abstractions;
+﻿using Rx.Http.MediaTypes.Abstractions;
 using Rx.Http.Serializers;
 using Rx.Http.Serializers.Interfaces;
+using System.IO;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace Rx.Http.MediaTypes
 {
     public class TextHttpMediaType : IHttpMediaType
     {
-        private ITwoWaysSerializable serializer;
+        private readonly ITwoWaysSerializable serializer;
         public TextHttpMediaType()
         {
             serializer = new TextSerializer();
@@ -22,10 +22,10 @@ namespace Rx.Http.MediaTypes
 
         public HttpContent Serialize(object obj)
         {
-            var content = new StreamContent(this.serializer.Serialize(obj));
+            var content = new StreamContent(serializer.Serialize(obj));
             content.Headers.ContentType = new MediaTypeHeaderValue(MediaType.Text.Plain);
             return content;
-            
+
         }
     }
 }
