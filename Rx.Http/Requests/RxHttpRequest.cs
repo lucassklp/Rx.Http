@@ -26,7 +26,7 @@ namespace Rx.Http.Requests
 
         protected object obj;
 
-        public RxHttpRequest(HttpClient http)
+        protected RxHttpRequest(HttpClient http)
         {
             http.DefaultRequestHeaders.Clear();
             Headers = http.DefaultRequestHeaders;
@@ -69,7 +69,7 @@ namespace Rx.Http.Requests
 
             return SingleObservable.Create(async () =>
             {
-                var response = await GetResponse();
+                var response = await GetResponse().ConfigureAwait(false);
 
                 if (ResponseMediaType == null)
                 {
@@ -84,16 +84,16 @@ namespace Rx.Http.Requests
 
         internal IObservable<string> Request()
         {
-            return SingleObservable.Create(async () => 
+            return SingleObservable.Create(async () =>
             {
-                var response = await GetResponse();
+                var response = await GetResponse().ConfigureAwait(false);
                 return await response.Content.ReadAsStringAsync();
             });
         }
 
         private async Task<HttpResponseMessage> GetResponse()
         {
-            var response = await DoRequest(GetUri(), GetContent());
+            var response = await DoRequest(GetUri(), GetContent()).ConfigureAwait(false);
             try
             {
                 response.EnsureSuccessStatusCode();

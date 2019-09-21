@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Rx.Http.Requests
 {
-    class RxDeleteHttpRequest : RxHttpRequest
+    internal class RxDeleteHttpRequest : RxHttpRequest
     {
         public RxDeleteHttpRequest(HttpClient http, string url, Action<RxHttpRequestOptions> options) : base(http)
         {

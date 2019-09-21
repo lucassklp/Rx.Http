@@ -7,7 +7,7 @@ namespace Rx.Http
 {
     public class RxHttpClient : IDisposable
     {
-        private HttpClient http;
+        private readonly HttpClient http;
 
         public Uri BaseAddress
         {

@@ -12,7 +12,7 @@ namespace Rx.Http.Tests
 {
     public class RequestTests
     {
-        RxHttpClient http;
+        private readonly RxHttpClient http;
         public RequestTests()
         {
             http = new RxHttpClient(new HttpClient());
@@ -60,10 +60,12 @@ namespace Rx.Http.Tests
         [Fact]
         public async void TestQueryStrings()
         {
-            var queryStrings = new Dictionary<string, string>();
-            queryStrings.Add("Foo", "Bar");
-            queryStrings.Add("User", "John Doe");
-            queryStrings.Add("Characters", "*&¨%6dbajs&@#chv73*(#Y");
+            var queryStrings = new Dictionary<string, string>
+            {
+                { "Foo", "Bar" },
+                { "User", "John Doe" },
+                { "Characters", "*&¨%6dbajs&@#chv73*(#Y" }
+            };
 
             var headers = await http.Get<PostmanEchoResponse>(@"https://postman-echo.com/get", opts =>
             {
@@ -79,9 +81,11 @@ namespace Rx.Http.Tests
         [Fact]
         public async void TestHeaders()
         {
-            var headers = new Dictionary<string, string>();
-            headers.Add("Foo", "Bar");
-            headers.Add("User", "John Doe");
+            var headers = new Dictionary<string, string>
+            {
+                { "Foo", "Bar" },
+                { "User", "John Doe" }
+            };
 
             var response = await http.Get<PostmanEchoResponse>(@"https://postman-echo.com/get", opts =>
             {
@@ -91,7 +95,7 @@ namespace Rx.Http.Tests
                 }
             });
 
-            var valid = headers.All(i => 
+            var valid = headers.All(i =>
             {
                 //Postman echo brings lowercase key
                 return response.Headers[i.Key.ToLower()] == i.Value;

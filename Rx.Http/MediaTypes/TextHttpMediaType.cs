@@ -9,7 +9,7 @@ namespace Rx.Http.MediaTypes
 {
     public class TextHttpMediaType : IHttpMediaType
     {
-        private ITwoWaysSerializable serializer;
+        private readonly ITwoWaysSerializable serializer;
         public TextHttpMediaType()
         {
             serializer = new TextSerializer();

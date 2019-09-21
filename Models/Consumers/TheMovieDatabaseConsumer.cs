@@ -1,8 +1,8 @@
+using Models;
+using Rx.Http;
 using Rx.Http.Interceptors;
 using Rx.Http.Requests;
-using Models;
 using System;
-using Rx.Http;
 
 namespace Samples.Consumers
 {

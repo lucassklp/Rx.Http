@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Rx.Http.Requests
 {
-    class RxPutHttpRequest : RxHttpRequest
+    internal class RxPutHttpRequest : RxHttpRequest
     {
         public RxPutHttpRequest(HttpClient http, string url, object obj = null, Action<RxHttpRequestOptions> options = null) : base(http)
         {

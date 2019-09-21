@@ -9,7 +9,7 @@ namespace Rx.Http.MediaTypes
 {
     public class JsonHttpMediaType : IHttpMediaType
     {
-        private ITwoWaysSerializable serializer;
+        private readonly ITwoWaysSerializable serializer;
         public JsonHttpMediaType()
         {
             serializer = new JsonSerializer();

@@ -6,9 +6,9 @@ namespace Rx.Http
 {
     public abstract class RxConsumer
     {
-        private List<RxInterceptor> interceptors;
+        private readonly List<RxInterceptor> interceptors;
 
-        private RxHttpClient http;
+        private readonly RxHttpClient http;
 
         public RxConsumer(IConsumerConfiguration<RxConsumer> configuration)
         {

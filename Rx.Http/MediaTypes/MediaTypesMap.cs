@@ -1,13 +1,12 @@
 ﻿using Rx.Http.MediaTypes.Abstractions;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Rx.Http.MediaTypes
 {
     public static class MediaTypesMap
     {
-        private static IHttpMediaType TextMediaType = new TextHttpMediaType();
-        private static IHttpMediaType JsonMediaType = new JsonHttpMediaType();
+        private static readonly IHttpMediaType TextMediaType = new TextHttpMediaType();
+        private static readonly IHttpMediaType JsonMediaType = new JsonHttpMediaType();
 
         public static Dictionary<string, IHttpMediaType> List() =>
             new Dictionary<string, IHttpMediaType>()

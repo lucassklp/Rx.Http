@@ -1,6 +1,6 @@
 ﻿namespace Rx.Http.Tests
 {
-    class ConsumersTests
+    internal class ConsumersTests
     {
 
 

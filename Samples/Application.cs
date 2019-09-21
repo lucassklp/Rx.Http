@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace Samples
 {
-    class Application
+    internal class Application
     {
-        private TheMovieDatabaseConsumer tmdbConsumer;
-        private RxHttpClient httpClient;
+        private readonly TheMovieDatabaseConsumer tmdbConsumer;
+        private readonly RxHttpClient httpClient;
         public Application(TheMovieDatabaseConsumer tmdbConsumer, RxHttpClient httpClient)
         {
             this.httpClient = httpClient;
