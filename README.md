@@ -17,13 +17,13 @@ A lightweight library that is inpired in [Angular 2+ Http Client](https://angula
 
 If you are using Package Manager:
 
-```
+```bash
 Install-Package Rx.Http -Version 0.9.7
 ```
 
 If you are using .NET CLI
 
-```
+```bash
 dotnet add package Rx.Http --version 0.9.7
 ```
 
