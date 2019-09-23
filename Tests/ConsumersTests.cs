@@ -21,5 +21,16 @@ namespace Tests
             Assert.NotNull(response);
         }
 
+        [Fact]
+        public async void CheckSameRequestTwice()
+        {
+            var tmdbConsumer = this.injector.Get<TheMovieDatabaseConsumer>();
+            var response1 = await tmdbConsumer.ListMovies();
+            var response2 = await tmdbConsumer.ListMovies();
+
+            Assert.NotNull(response1);
+            Assert.NotNull(response2);
+        }
+
     }
 }
