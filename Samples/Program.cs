@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Logging.Debug;
 using Rx.Http;
-using Samples.Consumers;
+using Models.Consumers;
 using System;
 using System.Threading.Tasks;
 
@@ -42,6 +42,5 @@ namespace Samples
             })
             .AddTransient<Application>();
         }
-
     }
 }

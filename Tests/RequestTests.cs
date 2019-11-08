@@ -1,5 +1,6 @@
 using Models;
 using Models.Postman;
+using Rx.Http;
 using Rx.Http.Exceptions;
 using Rx.Http.MediaTypes;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Net.Http;
 using System.Reactive.Linq;
 using Xunit;
 
-namespace Rx.Http.Tests
+namespace Tests
 {
     public class RequestTests
     {

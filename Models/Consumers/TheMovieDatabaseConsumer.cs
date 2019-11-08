@@ -1,10 +1,9 @@
-using Models;
 using Rx.Http;
 using Rx.Http.Interceptors;
 using Rx.Http.Requests;
 using System;
 
-namespace Samples.Consumers
+namespace Models.Consumers
 {
     public class TheMovieDatabaseConsumer : RxConsumer
     {
@@ -20,7 +19,7 @@ namespace Samples.Consumers
     {
         public void Intercept(RxHttpRequest request)
         {
-            request.QueryStrings.Add("api_key", "key");
+            request.QueryStrings.Add("api_key", "eb7b25db28349bd4eef1498a5be9842f");
         }
     }
 }
