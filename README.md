@@ -17,20 +17,19 @@
 
 A lightweight library that is inpired in [Angular 2+ Http Client](https://angular.io/guide/http) built on top of [.NET Http Client](https://docs.microsoft.com/pt-br/dotnet/api/system.net.http.httpclient) that help programmers to make asynchronous http requests, 
 
-**Note: This project is under development and is NOT recommend to use in production environment yet.**
 
 # Installation
 
 If you are using Package Manager:
 
 ```bash
-Install-Package Rx.Http -Version 0.9.7
+Install-Package Rx.Http -Version 1.0.0
 ```
 
 If you are using .NET CLI
 
 ```bash
-dotnet add package Rx.Http --version 0.9.7
+dotnet add package Rx.Http --version 1.0.0
 ```
 
 
@@ -45,11 +44,11 @@ public class Program
     public static async void Main()
     {
         //Initialize the RxHttpClient
-        var http = new RxHttpClient(new HttpClient())
+        var http = new RxHttpClient(new HttpClient());
 
         //Retrieve a list of To-Do item and print the title of each element asynchronously
-        http.Get<List<Todo>>("https://jsonplaceholder.typicode.com/todos/").Subscribe(itens => {
-            itens.ForEach(item => Console.WriteLine(item.title));
+        http.Get<List<Todo>>("https://jsonplaceholder.typicode.com/todos/").Subscribe(items => {
+            items.ForEach(item => Console.WriteLine(item.title));
         });
 
         //Making the same request using await
