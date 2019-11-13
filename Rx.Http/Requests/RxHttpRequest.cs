@@ -84,6 +84,7 @@ namespace Rx.Http.Requests
 
         internal IObservable<string> Request()
         {
+            Setup();
             return SingleObservable.Create(async () =>
             {
                 var response = await GetResponse().ConfigureAwait(false);
