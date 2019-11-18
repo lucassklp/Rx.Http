@@ -6,29 +6,27 @@ namespace Rx.Http
 {
     public abstract class RxConsumer
     {
-        private readonly List<RxInterceptor> interceptors;
-
-        private readonly RxHttpClient http;
+        private List<RxRequestInterceptor> requestInterceptors;
+        private List<RxResponseInterceptor> responseInterceptors;
+        private RxHttpClient http;
 
         protected RxConsumer(IConsumerConfiguration<RxConsumer> configuration)
         {
-            interceptors = configuration.Interceptors;
+            requestInterceptors = configuration.RequestInterceptors;
+            responseInterceptors = configuration.ResponseInterceptors;
             http = new RxHttpClient(configuration.Http);
-
         }
 
         protected IObservable<TResponse> Get<TResponse>(string url, Action<RxHttpRequestOptions> opts = null)
             where TResponse : class
         {
-            var request = http.CreateGetRequest(url, opts);
-            interceptors.ForEach(x => x.Intercept(request));
+            var request = http.CreateGetRequest(url, opts, requestInterceptors, responseInterceptors);
             return request.Request<TResponse>();
         }
 
         protected IObservable<string> Get(string url, Action<RxHttpRequestOptions> opts = null)
         {
-            var request = http.CreateGetRequest(url, opts);
-            interceptors.ForEach(x => x.Intercept(request));
+            var request = http.CreateGetRequest(url, opts, requestInterceptors, responseInterceptors);
             return request.Request();
         }
 
@@ -37,14 +35,16 @@ namespace Rx.Http
             where TResponse : class
         {
             var request = http.CreatePostRequest(url, obj, opts);
-            interceptors.ForEach(x => x.Intercept(request));
+            requestInterceptors.ForEach(x => request.RequestInterceptors.Add(x));
+            responseInterceptors.ForEach(x => request.ResponseInterceptors.Add(x));
             return request.Request<TResponse>();
         }
 
         protected IObservable<string> Post(string url, object obj = null, Action<RxHttpRequestOptions> opts = null)
         {
             var request = http.CreatePostRequest(url, obj, opts);
-            interceptors.ForEach(x => x.Intercept(request));
+            requestInterceptors.ForEach(x => request.RequestInterceptors.Add(x));
+            responseInterceptors.ForEach(x => request.ResponseInterceptors.Add(x));
             return request.Request();
         }
 
@@ -52,14 +52,16 @@ namespace Rx.Http
             where TResponse : class
         {
             var request = http.CreatePutRequest(url, obj, opts);
-            interceptors.ForEach(x => x.Intercept(request));
+            requestInterceptors.ForEach(x => request.RequestInterceptors.Add(x));
+            responseInterceptors.ForEach(x => request.ResponseInterceptors.Add(x));
             return request.Request<TResponse>();
         }
 
         protected IObservable<string> Put(string url, object obj = null, Action<RxHttpRequestOptions> opts = null)
         {
             var request = http.CreatePutRequest(url, obj, opts);
-            interceptors.ForEach(x => x.Intercept(request));
+            requestInterceptors.ForEach(x => request.RequestInterceptors.Add(x));
+            responseInterceptors.ForEach(x => request.ResponseInterceptors.Add(x));
             return request.Request();
         }
 
@@ -67,14 +69,16 @@ namespace Rx.Http
             where TResponse : class
         {
             var request = http.CreateDeleteRequest(url, opts);
-            interceptors.ForEach(x => x.Intercept(request));
+            requestInterceptors.ForEach(x => request.RequestInterceptors.Add(x));
+            responseInterceptors.ForEach(x => request.ResponseInterceptors.Add(x));
             return request.Request<TResponse>();
         }
 
         protected IObservable<string> Delete(string url, Action<RxHttpRequestOptions> opts = null)
         {
             var request = http.CreateDeleteRequest(url, opts);
-            interceptors.ForEach(x => x.Intercept(request));
+            requestInterceptors.ForEach(x => request.RequestInterceptors.Add(x));
+            responseInterceptors.ForEach(x => request.ResponseInterceptors.Add(x));
             return request.Request();
         }
     }

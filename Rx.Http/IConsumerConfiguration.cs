@@ -6,8 +6,8 @@ namespace Rx.Http
 {
     public interface IConsumerConfiguration<out T>
     {
-        List<RxInterceptor> Interceptors { get; set; }
-        void AddInterceptors(params RxInterceptor[] interceptors);
+        List<RxRequestInterceptor> RequestInterceptors { get; }
+        List<RxResponseInterceptor> ResponseInterceptors { get; }
         HttpClient Http { get; }
     }
 }

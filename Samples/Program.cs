@@ -6,6 +6,7 @@ using Rx.Http;
 using Models.Consumers;
 using System;
 using System.Threading.Tasks;
+using Rx.Http.Extensions;
 
 namespace Samples
 {
@@ -39,6 +40,14 @@ namespace Samples
             services.AddConsumer<TheMovieDatabaseConsumer>(http =>
             {
                 http.BaseAddress = new Uri(@"https://api.themoviedb.org/3/");
+            })
+            .AddConsumer<GoogleConsumer>(http => 
+            {
+                http.BaseAddress = new Uri(@"http://www.google.com.br");
+            })
+            .AddConsumer<JsonPlaceHolderConsumer>(http => 
+            {
+                http.BaseAddress = new Uri(@"https://jsonplaceholder.typicode.com/posts");
             })
             .AddTransient<Application>();
         }

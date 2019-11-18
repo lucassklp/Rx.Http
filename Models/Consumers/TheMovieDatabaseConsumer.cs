@@ -9,13 +9,13 @@ namespace Models.Consumers
     {
         public TheMovieDatabaseConsumer(IConsumerConfiguration<TheMovieDatabaseConsumer> config) : base(config)
         {
-            config.AddInterceptors(new TheMovieDatabaseInterceptor());
+            config.RequestInterceptors.Add(new TheMovieDatabaseInterceptor());
         }
 
         public IObservable<Result> ListMovies() => Get<Result>("movie/popular");
     }
 
-    public class TheMovieDatabaseInterceptor : RxInterceptor
+    public class TheMovieDatabaseInterceptor : RxRequestInterceptor
     {
         public void Intercept(RxHttpRequest request)
         {

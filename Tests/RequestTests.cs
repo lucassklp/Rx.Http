@@ -48,7 +48,7 @@ namespace Tests
         [Fact]
         public async void TestPostWithJson()
         {
-            var postWithId = await http.Post<Identifiable>(@"https://jsonplaceholder.typicode.com/posts", new Post()
+            var postWithId = await http.Post<Identifiable>(@"https://jsonplaceholder.typicode.com/posts/", new Post()
             {
                 Title = "Foo",
                 Body = "Bar",
@@ -65,7 +65,7 @@ namespace Tests
             {
                 { "Foo", "Bar" },
                 { "User", "John Doe" },
-                { "Characters", "*&¨%6dbajs&@#chv73*(#Y" }
+                { "Characters", "*&ï¿½%6dbajs&@#chv73*(#Y" }
             };
 
             var headers = await http.Get<PostmanEchoResponse>(@"https://postman-echo.com/get", opts =>

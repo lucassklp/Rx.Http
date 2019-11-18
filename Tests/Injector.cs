@@ -2,6 +2,7 @@
 using Models.Consumers;
 using Rx.Http;
 using System;
+using Rx.Http.Extensions;
 
 namespace Tests
 {

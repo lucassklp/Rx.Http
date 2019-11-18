@@ -1,4 +1,5 @@
 using Rx.Http.Exceptions;
+using Rx.Http.Interceptors;
 using Rx.Http.MediaTypes;
 using Rx.Http.MediaTypes.Abstractions;
 using System;
@@ -20,21 +21,39 @@ namespace Rx.Http.Requests
         public IHttpMediaType RequestMediaType { get; set; }
         public IHttpMediaType ResponseMediaType { get; set; }
 
+        public List<RxRequestInterceptor> RequestInterceptors { get; set; }
+        public List<RxResponseInterceptor> ResponseInterceptors { get; set; }
+
         protected Action<RxHttpRequestOptions> optionsCallback { get; set; }
 
         protected HttpClient http;
 
         protected object obj;
 
-        protected RxHttpRequest(HttpClient http)
+        private RxHttpRequestOptions requestOptions;
+
+        protected RxHttpRequest(
+            HttpClient http, 
+            string url = null, 
+            List<RxRequestInterceptor> requestInterceptors = null,
+            List<RxResponseInterceptor> responseInterceptors = null,
+            Action<RxHttpRequestOptions> optionsCallback = null)
         {
+            this.http = http;
+            this.RequestInterceptors = requestInterceptors ?? new List<RxRequestInterceptor>();
+            this.ResponseInterceptors = responseInterceptors ?? new List<RxResponseInterceptor>();
+            this.Url = url;
+            this.optionsCallback = optionsCallback;
+
             http.DefaultRequestHeaders.Clear();
             Headers = http.DefaultRequestHeaders;
             QueryStrings = new Dictionary<string, string>();
-            this.http = http;
+
+            this.requestOptions = new RxHttpRequestOptions(Headers, QueryStrings);
+            this.optionsCallback?.Invoke(requestOptions);
         }
 
-        protected abstract Task<HttpResponseMessage> DoRequest(string url, HttpContent content);
+        protected abstract Task<HttpResponseMessage> ExecuteRequest(string url, HttpContent content);
 
         public string GetUri()
         {
@@ -55,11 +74,10 @@ namespace Rx.Http.Requests
 
         private void Setup()
         {
-            var options = new RxHttpRequestOptions(Headers, QueryStrings);
-            optionsCallback?.Invoke(options);
-
-            RequestMediaType = RequestMediaType ?? options.RequestMediaType;
-            ResponseMediaType = ResponseMediaType ?? options.ResponseMediaType;
+            RequestMediaType = requestOptions.RequestMediaType;
+            ResponseMediaType = requestOptions.ResponseMediaType;
+            RequestInterceptors.AddRange(requestOptions.RequestInterceptors);
+            ResponseInterceptors.AddRange(requestOptions.ResponseInterceptors);
         }
 
         internal IObservable<TResponse> Request<TResponse>()
@@ -69,8 +87,10 @@ namespace Rx.Http.Requests
 
             return SingleObservable.Create(async () =>
             {
-                var response = await GetResponse().ConfigureAwait(false);
-
+                this.RequestInterceptors.ForEach(x => x.Intercept(this));
+                var response = await CreateRequest().ConfigureAwait(false);
+                this.ResponseInterceptors.ForEach(x => x.Intercept(response));
+                
                 if (ResponseMediaType == null)
                 {
                     var mimeType = response.Content.Headers.ContentType.MediaType;
@@ -85,16 +105,19 @@ namespace Rx.Http.Requests
         internal IObservable<string> Request()
         {
             Setup();
+
             return SingleObservable.Create(async () =>
             {
-                var response = await GetResponse().ConfigureAwait(false);
+                this.RequestInterceptors.ForEach(x => x.Intercept(this));
+                var response = await CreateRequest().ConfigureAwait(false);
+                this.ResponseInterceptors.ForEach(x => x.Intercept(response));
                 return await response.Content.ReadAsStringAsync();
             });
         }
 
-        private async Task<HttpResponseMessage> GetResponse()
+        private async Task<HttpResponseMessage> CreateRequest()
         {
-            var response = await DoRequest(GetUri(), GetContent()).ConfigureAwait(false);
+            var response = await ExecuteRequest(GetUri(), GetContent()).ConfigureAwait(false);
             try
             {
                 response.EnsureSuccessStatusCode();
