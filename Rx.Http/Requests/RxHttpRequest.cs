@@ -24,13 +24,11 @@ namespace Rx.Http.Requests
         public List<RxRequestInterceptor> RequestInterceptors { get; set; }
         public List<RxResponseInterceptor> ResponseInterceptors { get; set; }
 
-        protected Action<RxHttpRequestOptions> optionsCallback { get; set; }
-
         protected HttpClient http;
 
         protected object obj;
 
-        private RxHttpRequestOptions requestOptions;
+        private readonly RxHttpRequestOptions requestOptions;
 
         protected RxHttpRequest(
             HttpClient http, 
@@ -43,14 +41,13 @@ namespace Rx.Http.Requests
             this.RequestInterceptors = requestInterceptors ?? new List<RxRequestInterceptor>();
             this.ResponseInterceptors = responseInterceptors ?? new List<RxResponseInterceptor>();
             this.Url = url;
-            this.optionsCallback = optionsCallback;
 
             http.DefaultRequestHeaders.Clear();
             Headers = http.DefaultRequestHeaders;
             QueryStrings = new Dictionary<string, string>();
 
             this.requestOptions = new RxHttpRequestOptions(Headers, QueryStrings);
-            this.optionsCallback?.Invoke(requestOptions);
+            optionsCallback?.Invoke(this.requestOptions);
         }
 
         protected abstract Task<HttpResponseMessage> ExecuteRequest(string url, HttpContent content);

@@ -147,19 +147,28 @@ namespace Rx.Http
             return new RxPutHttpRequest(httpClient, url, obj, options, requestInterceptors, responseInterceptors);
         }
 
-        public IObservable<TResponse> Delete<TResponse>(string url, Action<RxHttpRequestOptions> options = null) where TResponse : class
+        public IObservable<TResponse> Delete<TResponse>(string url, 
+            Action<RxHttpRequestOptions> options = null,
+            List<RxRequestInterceptor> requestInterceptors = null,
+            List<RxResponseInterceptor> responseInterceptors = null) where TResponse : class
         {
-            return CreateDeleteRequest(url, options).Request<TResponse>();
+            return CreateDeleteRequest(url, options, requestInterceptors, responseInterceptors).Request<TResponse>();
         }
 
-        public IObservable<string> Delete(string url, Action<RxHttpRequestOptions> options = null)
+        public IObservable<string> Delete(string url, 
+            Action<RxHttpRequestOptions> options = null,
+            List<RxRequestInterceptor> requestInterceptors = null,
+            List<RxResponseInterceptor> responseInterceptors = null)
         {
-            return CreateDeleteRequest(url, options).Request();
+            return CreateDeleteRequest(url, options, requestInterceptors, responseInterceptors).Request();
         }
 
-        internal RxDeleteHttpRequest CreateDeleteRequest(string url, Action<RxHttpRequestOptions> opts = null)
+        internal RxDeleteHttpRequest CreateDeleteRequest(string url,
+            Action<RxHttpRequestOptions> opts = null, 
+            List<RxRequestInterceptor> requestInterceptors = null,
+            List<RxResponseInterceptor> responseInterceptors = null)
         {
-            return new RxDeleteHttpRequest(httpClient, url, opts);
+            return new RxDeleteHttpRequest(httpClient, url, opts, requestInterceptors, responseInterceptors);
         }
 
         public void Dispose()
