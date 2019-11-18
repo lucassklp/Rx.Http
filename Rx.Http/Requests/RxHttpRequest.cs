@@ -30,17 +30,21 @@ namespace Rx.Http.Requests
 
         private readonly RxHttpRequestOptions requestOptions;
 
+        private readonly RxHttpLogging logger;
+
         protected RxHttpRequest(
             HttpClient http, 
             string url = null, 
             List<RxRequestInterceptor> requestInterceptors = null,
             List<RxResponseInterceptor> responseInterceptors = null,
-            Action<RxHttpRequestOptions> optionsCallback = null)
+            Action<RxHttpRequestOptions> optionsCallback = null, 
+            RxHttpLogging logger = null)
         {
             this.http = http;
             this.RequestInterceptors = requestInterceptors ?? new List<RxRequestInterceptor>();
             this.ResponseInterceptors = responseInterceptors ?? new List<RxResponseInterceptor>();
             this.Url = url;
+            this.logger = logger;
 
             http.DefaultRequestHeaders.Clear();
             Headers = http.DefaultRequestHeaders;
@@ -54,7 +58,7 @@ namespace Rx.Http.Requests
 
         public string GetUri()
         {
-            var builder = new UriBuilder(url);
+            var builder = new UriBuilder(http.BaseAddress + url);
 
             var query = HttpUtility.ParseQueryString(builder.Query);
 
@@ -114,9 +118,12 @@ namespace Rx.Http.Requests
 
         private async Task<HttpResponseMessage> CreateRequest()
         {
-            var response = await ExecuteRequest(GetUri(), GetContent()).ConfigureAwait(false);
+            var content = GetContent();
+            logger?.OnSend(content);
+            var response = await ExecuteRequest(Url, content).ConfigureAwait(false);
             try
             {
+                logger?.OnReceive(response);
                 response.EnsureSuccessStatusCode();
             }
             catch (Exception exception)

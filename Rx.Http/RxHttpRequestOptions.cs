@@ -11,14 +11,14 @@ namespace Rx.Http
 {
     public class RxHttpRequestOptions
     {
-        public IHttpMediaType RequestMediaType { get; set; }
-        public IHttpMediaType ResponseMediaType { get; set; }
+        internal IHttpMediaType RequestMediaType { get; set; }
+        internal IHttpMediaType ResponseMediaType { get; set; }
 
-        public List<RxRequestInterceptor> RequestInterceptors { get; set; }
-        public List<RxResponseInterceptor> ResponseInterceptors { get; set; }
+        internal List<RxRequestInterceptor> RequestInterceptors { get; set; }
+        internal List<RxResponseInterceptor> ResponseInterceptors { get; set; }
 
         internal HttpHeaders Headers { get; private set; }
-        public Dictionary<string, string> QueryStrings { get; private set; }
+        internal Dictionary<string, string> QueryStrings { get; set; }
 
         public RxHttpRequestOptions(HttpHeaders headers, Dictionary<string, string> queryStrings)
         {
@@ -26,6 +26,30 @@ namespace Rx.Http
             QueryStrings = queryStrings;
             RequestInterceptors = new List<RxRequestInterceptor>();
             ResponseInterceptors = new List<RxResponseInterceptor>();
+        }
+
+        public RxHttpRequestOptions SetRequestMediaType(IHttpMediaType mediaType)
+        {
+            this.RequestMediaType = mediaType;
+            return this;
+        }
+
+        public RxHttpRequestOptions SetResponseMediaType(IHttpMediaType mediaType)
+        {
+            this.ResponseMediaType = mediaType;
+            return this;
+        }
+
+        public RxHttpRequestOptions AddResponseInterceptor(RxResponseInterceptor interceptor)
+        {
+            this.ResponseInterceptors.Add(interceptor);
+            return this;
+        }
+
+        public RxHttpRequestOptions AddRequestInteceptor(RxRequestInterceptor interceptor) 
+        {
+            this.RequestInterceptors.Add(interceptor);
+            return this;
         }
 
         public RxHttpRequestOptions AddHeader(string key, string value)
@@ -37,6 +61,18 @@ namespace Rx.Http
         public RxHttpRequestOptions AddHeaders(IEnumerable<KeyValuePair<string, string>> pairs)
         {
             pairs.ToList().ForEach(x => AddHeader(x.Key, x.Value));
+            return this;
+        }
+
+        public RxHttpRequestOptions AddQueryString(string key, string value)
+        {
+            this.QueryStrings.Add(key, value);   
+            return this;
+        }
+
+        public RxHttpRequestOptions AddQueryStrings(IEnumerable<KeyValuePair<string, string>> pairs)
+        {
+            pairs.ToList().ForEach(x => AddQueryString(x.Key, x.Value));
             return this;
         }
 

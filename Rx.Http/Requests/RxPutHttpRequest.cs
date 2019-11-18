@@ -13,7 +13,8 @@ namespace Rx.Http.Requests
             object obj = null,
             Action<RxHttpRequestOptions> options = null,
             List<RxRequestInterceptor> requestInterceptors = null,
-            List<RxResponseInterceptor> responseInterceptors = null) : base(http, url, requestInterceptors, responseInterceptors, options)
+            List<RxResponseInterceptor> responseInterceptors = null,
+            RxHttpLogging logger = null) : base(http, url, requestInterceptors, responseInterceptors, options, logger)
         {
             this.obj = obj;
         }

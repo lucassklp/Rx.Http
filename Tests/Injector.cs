@@ -19,7 +19,7 @@ namespace Tests
         private void ConfigureServices(ServiceCollection services)
         {
             services.AddHttpClient<RxHttpClient>();
-
+            services.AddRxHttpLogging<RxHttpDefaultLogging>();
             services.AddConsumer<TheMovieDatabaseConsumer>(http =>
             {
                 http.BaseAddress = new Uri(@"https://api.themoviedb.org/3/");

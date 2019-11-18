@@ -14,7 +14,7 @@ namespace Rx.Http
         {
             requestInterceptors = configuration.RequestInterceptors;
             responseInterceptors = configuration.ResponseInterceptors;
-            http = new RxHttpClient(configuration.Http);
+            http = new RxHttpClient(configuration.Http, configuration.Logger);
         }
 
         protected IObservable<TResponse> Get<TResponse>(string url, Action<RxHttpRequestOptions> opts = null)
@@ -65,9 +65,7 @@ namespace Rx.Http
 
         protected IObservable<string> Delete(string url, Action<RxHttpRequestOptions> opts = null)
         {
-            var request = http.CreateDeleteRequest(url, opts);
-            requestInterceptors.ForEach(x => request.RequestInterceptors.Add(x));
-            responseInterceptors.ForEach(x => request.ResponseInterceptors.Add(x));
+            var request = http.CreateDeleteRequest(url, opts, requestInterceptors, responseInterceptors);
             return request.Request();
         }
     }

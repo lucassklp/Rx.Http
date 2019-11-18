@@ -36,14 +36,14 @@ namespace Samples
             });
 
             services.AddHttpClient<RxHttpClient>();
-
+            services.AddRxHttpLogging<RxHttpDefaultLogging>();
             services.AddConsumer<TheMovieDatabaseConsumer>(http =>
             {
                 http.BaseAddress = new Uri(@"https://api.themoviedb.org/3/");
             })
             .AddConsumer<GoogleConsumer>(http => 
             {
-                http.BaseAddress = new Uri(@"http://www.google.com.br");
+                http.BaseAddress = new Uri(@"http://www.google.com.br/");
             })
             .AddConsumer<JsonPlaceHolderConsumer>(http => 
             {

@@ -1,4 +1,5 @@
-﻿using Rx.Http.Interceptors;
+﻿using Microsoft.Extensions.Logging;
+using Rx.Http.Interceptors;
 using Rx.Http.Requests;
 using System;
 using System.Collections.Generic;
@@ -17,9 +18,12 @@ namespace Rx.Http
             set => httpClient.BaseAddress = value;
         }
 
-        public RxHttpClient(HttpClient http)
+        private RxHttpLogging logger;
+
+        public RxHttpClient(HttpClient http, RxHttpLogging logger = null)
         {
             this.httpClient = http;
+            this.logger = logger;
         }
 
         public IObservable<string> Get(string path,
@@ -45,7 +49,7 @@ namespace Rx.Http
             List<RxRequestInterceptor> requestInterceptors = null,
             List<RxResponseInterceptor> responseInterceptors = null)
         {
-            return new RxGetHttpRequest(httpClient, path, opts, requestInterceptors, responseInterceptors);
+            return new RxGetHttpRequest(httpClient, path, opts, requestInterceptors, responseInterceptors, logger);
         }
 
         public IObservable<TResponse> Post<TResponse>(
@@ -95,7 +99,7 @@ namespace Rx.Http
             List<RxRequestInterceptor> requestInterceptors = null,
             List<RxResponseInterceptor> responseInterceptors = null)
         {
-            return new RxPostHttpRequest(httpClient, url, obj, options, requestInterceptors, responseInterceptors);
+            return new RxPostHttpRequest(httpClient, url, obj, options, requestInterceptors, responseInterceptors, logger);
         }
 
         public IObservable<TResponse> Put<TResponse>(
@@ -144,7 +148,7 @@ namespace Rx.Http
             List<RxRequestInterceptor> requestInterceptors = null,
             List<RxResponseInterceptor> responseInterceptors = null)
         {
-            return new RxPutHttpRequest(httpClient, url, obj, options, requestInterceptors, responseInterceptors);
+            return new RxPutHttpRequest(httpClient, url, obj, options, requestInterceptors, responseInterceptors, logger);
         }
 
         public IObservable<TResponse> Delete<TResponse>(string url, 
@@ -168,7 +172,7 @@ namespace Rx.Http
             List<RxRequestInterceptor> requestInterceptors = null,
             List<RxResponseInterceptor> responseInterceptors = null)
         {
-            return new RxDeleteHttpRequest(httpClient, url, opts, requestInterceptors, responseInterceptors);
+            return new RxDeleteHttpRequest(httpClient, url, opts, requestInterceptors, responseInterceptors, logger);
         }
 
         public void Dispose()

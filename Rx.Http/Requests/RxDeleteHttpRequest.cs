@@ -12,7 +12,8 @@ namespace Rx.Http.Requests
             string url,
             Action<RxHttpRequestOptions> options,
             List<RxRequestInterceptor> requestInterceptors = null, 
-            List<RxResponseInterceptor> responseInterceptors = null) : base(http, url, requestInterceptors, responseInterceptors, options)
+            List<RxResponseInterceptor> responseInterceptors = null,
+            RxHttpLogging logger = null) : base(http, url, requestInterceptors, responseInterceptors, options, logger)
         {
         }
 

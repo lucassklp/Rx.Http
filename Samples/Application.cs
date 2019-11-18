@@ -1,5 +1,6 @@
 ﻿using Models;
 using Models.Consumers;
+using Rx.Http;
 using System;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -11,18 +12,22 @@ namespace Samples
         private readonly TheMovieDatabaseConsumer tmdbConsumer;
         private readonly GoogleConsumer googleConsumer;
         private readonly JsonPlaceHolderConsumer jsonPlaceHolderConsumer;
-        public Application(TheMovieDatabaseConsumer tmdbConsumer, GoogleConsumer googleConsumer, JsonPlaceHolderConsumer jsonPlaceHolderConsumer)
+
+        private readonly RxHttpClient httpClient;
+        public Application(TheMovieDatabaseConsumer tmdbConsumer, GoogleConsumer googleConsumer, JsonPlaceHolderConsumer jsonPlaceHolderConsumer, RxHttpClient httpClient)
         {
             this.tmdbConsumer = tmdbConsumer;
             this.googleConsumer = googleConsumer;
             this.jsonPlaceHolderConsumer = jsonPlaceHolderConsumer;
+            this.httpClient = httpClient;
         }
 
         public async Task Execute()
         {
             while (true)
             {
-                googleConsumer.GetGoogleContent().Subscribe();
+                //httpClient.Get("http://www.google.com.br/");
+
                 tmdbConsumer.ListMovies().Subscribe();
 
                 jsonPlaceHolderConsumer.GetTodos().Subscribe();
@@ -32,8 +37,6 @@ namespace Samples
                     Body = "Bar",
                     UserId = 3
                 }).Subscribe();
-
-                //httpClient.Post(@"https://postman-echo.com/post").Subscribe();
             }
         }
     }
