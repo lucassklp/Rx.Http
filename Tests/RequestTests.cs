@@ -72,7 +72,7 @@ namespace Tests
             {
                 foreach (var item in queryStrings)
                 {
-                    opts.QueryStrings.Add(item.Key, item.Value);
+                    opts.AddQueryString(item.Key, item.Value);
                 }
             });
 
@@ -113,7 +113,7 @@ namespace Tests
                 AnotherProperty = "But with Rx is awesome"
             }, opts =>
             {
-                opts.RequestMediaType = MediaTypesMap.Get(MediaType.Application.Json);
+                opts.SetRequestMediaType(MediaTypesMap.Get(MediaType.Application.Json));
             });
 
             Assert.True(response.Headers["content-type"] == MediaType.Application.Json);

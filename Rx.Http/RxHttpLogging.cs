@@ -11,7 +11,7 @@ namespace Rx.Http
     {
         protected readonly ILogger<RxHttpLogging> logger;
 
-        public RxHttpLogging(ILogger<RxHttpLogging> logger)
+        protected RxHttpLogging(ILogger<RxHttpLogging> logger)
         {
             this.logger = logger;
         }

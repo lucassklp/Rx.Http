@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if NETSTANDARD2_0
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,8 +12,10 @@ namespace Rx.Http.Extensions
         public static IServiceCollection AddRxHttpLogging<TLogging>(this IServiceCollection services)
             where TLogging : RxHttpLogging
         {
-            services.AddTransient<RxHttpLogging, TLogging>();
+            services.AddScoped<RxHttpLogging, TLogging>();
             return services;
         }
     }
 }
+
+#endif

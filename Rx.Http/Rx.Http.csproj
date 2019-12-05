@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
-        <Version>1.0.1</Version>
+        <Version>1.2.0-beta</Version>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Authors>Lucas Simas</Authors>
         <Description>A lightweight library that is inpired in Angular Http Client built on top of .NET HttpClient that and help programmers to make asynchronous http requests.</Description>
@@ -19,6 +19,7 @@
       <PackageReference Include="System.Net.Http" Version="4.3.4" />
       <PackageReference Include="System.Reactive" Version="4.1.6" />
       <PackageReference Include="Microsoft.Extensions.Http" Version="2.2.0" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard3.0'">
@@ -28,6 +29,7 @@
       <PackageReference Include="System.Net.Http" Version="4.3.4" />
       <PackageReference Include="System.Reactive" Version="4.1.6" />
       <PackageReference Include="Microsoft.Extensions.Http" Version="2.2.0" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'net45'">

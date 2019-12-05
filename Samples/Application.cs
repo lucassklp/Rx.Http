@@ -26,7 +26,6 @@ namespace Samples
         {
             while (true)
             {
-                //httpClient.Get("http://www.google.com.br/");
 
                 tmdbConsumer.ListMovies().Subscribe();
 
