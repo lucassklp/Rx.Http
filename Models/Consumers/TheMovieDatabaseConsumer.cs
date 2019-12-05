@@ -17,9 +17,9 @@ namespace Models.Consumers
 
     public class TheMovieDatabaseInterceptor : RxRequestInterceptor
     {
-        public void Intercept(RxHttpRequest request)
+        public void Intercept(RxHttpRequestOptions request)
         {
-            request.QueryStrings.Add("api_key", "eb7b25db28349bd4eef1498a5be9842f");
+            request.AddQueryString("api_key", "eb7b25db28349bd4eef1498a5be9842f");
         }
     }
 }

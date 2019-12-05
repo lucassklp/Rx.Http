@@ -1,93 +1,54 @@
-using Microsoft.Net.Http.Headers;
-using Rx.Http.Interceptors;
+﻿using Rx.Http.Interceptors;
 using Rx.Http.MediaTypes.Abstractions;
 using System;
 using System.Collections.Generic;
-using System.Net.Http.Headers;
 using System.Text;
-using System.Linq;
 
 namespace Rx.Http
 {
-    public class RxHttpRequestOptions
+    public abstract class RxHttpRequestOptions
     {
-        internal IHttpMediaType RequestMediaType { get; set; }
-        internal IHttpMediaType ResponseMediaType { get; set; }
+        public abstract RxHttpRequestOptions SetRequestMediaType(IHttpMediaType mediaType);
 
-        internal List<RxRequestInterceptor> RequestInterceptors { get; set; }
-        internal List<RxResponseInterceptor> ResponseInterceptors { get; set; }
+        public abstract RxHttpRequestOptions SetResponseMediaType(IHttpMediaType mediaType);
 
-        internal HttpHeaders Headers { get; private set; }
-        internal Dictionary<string, string> QueryStrings { get; set; }
+        public abstract RxHttpRequestOptions AddResponseInterceptor(RxResponseInterceptor interceptor);
 
-        public RxHttpRequestOptions(HttpHeaders headers, Dictionary<string, string> queryStrings)
+        public abstract RxHttpRequestOptions AddRequestInteceptor(RxRequestInterceptor interceptor);
+
+        public abstract RxHttpRequestOptions AddHeader(string key, string value);
+
+        public abstract RxHttpRequestOptions AddHeader(IEnumerable<KeyValuePair<string, string>> pairs);
+
+        public abstract RxHttpRequestOptions AddHeader(object obj);
+
+        public abstract RxHttpRequestOptions AddQueryString(string key, string value);
+
+        public abstract RxHttpRequestOptions AddQueryString(IEnumerable<KeyValuePair<string, string>> pairs);
+
+        public abstract RxHttpRequestOptions AddQueryString(object obj);
+
+        public abstract RxHttpRequestOptions UseBasicAuthorization(string user, string key);
+
+        public abstract RxHttpRequestOptions UseBearerAuthorization(string token);
+
+        protected IList<KeyValuePair<string, string>> GetKeysByObject(object obj)
         {
-            Headers = headers;
-            QueryStrings = queryStrings;
-            RequestInterceptors = new List<RxRequestInterceptor>();
-            ResponseInterceptors = new List<RxResponseInterceptor>();
-        }
+            var keys = new List<KeyValuePair<string, string>>();
 
-        public RxHttpRequestOptions SetRequestMediaType(IHttpMediaType mediaType)
-        {
-            this.RequestMediaType = mediaType;
-            return this;
-        }
+            var type = obj.GetType();
 
-        public RxHttpRequestOptions SetResponseMediaType(IHttpMediaType mediaType)
-        {
-            this.ResponseMediaType = mediaType;
-            return this;
-        }
+            foreach (var field in type.GetFields())
+            {
+                keys.Add(new KeyValuePair<string, string>(field.Name, field.GetValue(obj).ToString()));
+            }
 
-        public RxHttpRequestOptions AddResponseInterceptor(RxResponseInterceptor interceptor)
-        {
-            this.ResponseInterceptors.Add(interceptor);
-            return this;
-        }
+            foreach (var property in type.GetProperties())
+            {
+                keys.Add(new KeyValuePair<string, string>(property.Name, property.GetValue(obj).ToString()));
+            }
 
-        public RxHttpRequestOptions AddRequestInteceptor(RxRequestInterceptor interceptor) 
-        {
-            this.RequestInterceptors.Add(interceptor);
-            return this;
-        }
-
-        public RxHttpRequestOptions AddHeader(string key, string value)
-        {
-            Headers.Add(key, value);
-            return this;
-        }
-
-        public RxHttpRequestOptions AddHeaders(IEnumerable<KeyValuePair<string, string>> pairs)
-        {
-            pairs.ToList().ForEach(x => AddHeader(x.Key, x.Value));
-            return this;
-        }
-
-        public RxHttpRequestOptions AddQueryString(string key, string value)
-        {
-            this.QueryStrings.Add(key, value);   
-            return this;
-        }
-
-        public RxHttpRequestOptions AddQueryStrings(IEnumerable<KeyValuePair<string, string>> pairs)
-        {
-            pairs.ToList().ForEach(x => AddQueryString(x.Key, x.Value));
-            return this;
-        }
-
-        public RxHttpRequestOptions UseBasicAuthorization(string user, string key)
-        {
-            var token = $"{user}:{key}";
-            var tokenBase64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(token));
-            AddHeader(HeaderNames.Authorization, $"Basic {tokenBase64}");
-            return this;
-        }
-
-        public RxHttpRequestOptions UseBearerAuthorization(string token)
-        {
-            AddHeader(HeaderNames.Authorization, $"Bearer {token}");
-            return this;
+            return keys;
         }
     }
 }

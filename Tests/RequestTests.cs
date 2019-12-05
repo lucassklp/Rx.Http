@@ -2,7 +2,9 @@ using Models;
 using Models.Postman;
 using Rx.Http;
 using Rx.Http.Exceptions;
+using Rx.Http.Interceptors;
 using Rx.Http.MediaTypes;
+using Rx.Http.Requests;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -70,10 +72,32 @@ namespace Tests
 
             var headers = await http.Get<PostmanEchoResponse>(@"https://postman-echo.com/get", opts =>
             {
-                foreach (var item in queryStrings)
-                {
-                    opts.AddQueryString(item.Key, item.Value);
-                }
+                opts.AddQueryString(queryStrings);
+            });
+
+            Assert.Equal(headers.Args, queryStrings);
+        }
+
+        [Fact]
+        public async void TestQueryStringsWithObject()
+        {
+            var queryStrings = new Dictionary<string, string>
+            {
+                { "Foo", "Bar" },
+                { "User", "John Doe" },
+                { "Characters", "*&�%6dbajs&@#chv73*(#Y" }
+            };
+
+            var queryStringsObj = new 
+            {
+                Foo = "Bar",
+                User = "John Doe",
+                Characters = "*&�%6dbajs&@#chv73*(#Y"
+            };
+
+            var headers = await http.Get<PostmanEchoResponse>(@"https://postman-echo.com/get", opts =>
+            {
+                opts.AddQueryString(queryStringsObj);
             });
 
             Assert.Equal(headers.Args, queryStrings);
@@ -90,10 +114,35 @@ namespace Tests
 
             var response = await http.Get<PostmanEchoResponse>(@"https://postman-echo.com/get", opts =>
             {
-                foreach (var item in headers)
-                {
-                    opts.AddHeader(item.Key, item.Value);
-                }
+                opts.AddHeader(headers);
+            });
+
+            var valid = headers.All(i =>
+            {
+                //Postman echo brings lowercase key
+                return response.Headers[i.Key.ToLower()] == i.Value;
+            });
+            Assert.True(valid);
+        }
+
+        [Fact]
+        public async void TestHeadersWithObject()
+        {
+            var headers = new Dictionary<string, string>
+            {
+                { "Foo", "Bar" },
+                { "User", "John Doe" }
+            };
+
+            var headersObj = new 
+            {
+                Foo = "Bar",
+                User = "John Doe"
+            };
+
+            var response = await http.Get<PostmanEchoResponse>(@"https://postman-echo.com/get", opts =>
+            {
+                opts.AddHeader(headersObj);
             });
 
             var valid = headers.All(i =>
@@ -117,6 +166,27 @@ namespace Tests
             });
 
             Assert.True(response.Headers["content-type"] == MediaType.Application.Json);
+        }
+
+
+        [Fact]
+        public async void TestRequestInterceptor()
+        {
+            var response = await http.Post<PostmanEchoResponse>(@"https://postman-echo.com/post", null, opts =>
+            {
+                opts.AddRequestInteceptor(new TestInterceptor());
+            });
+
+            Assert.True(response.Headers["accept"] == MediaType.Application.Json);
+        }
+
+
+        public class TestInterceptor : RxRequestInterceptor
+        {
+            public void Intercept(RxHttpRequestOptions request)
+            {
+                request.AddHeader("Accept", MediaType.Application.Json);
+            }
         }
     }
 }

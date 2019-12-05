@@ -1,4 +1,5 @@
 ﻿using Rx.Http.Interceptors;
+using Rx.Http.MediaTypes.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
