@@ -66,10 +66,16 @@ You can customize your request by using options. It make possible you set **quer
 ```csharp
 http.Get<List<Todo>>("https://jsonplaceholder.typicode.com/todos/", options =>
 {
-    options.RequestMediaType = new JsonHttpMediaType();
-    options.ResponseMediaType = new JsonHttpMediaType();
-    options.AddHeader("Authorization", "Bearer <token>");
-    options.QueryStrings.Add("name", "John Doe");
+    options.SetRequestMediaType(new JsonHttpMediaType())
+        .SetResponseMediaType(new JsonHttpMediaType())
+        .AddHeader(new {
+            Authorization = "Bearer <token>"
+            Accept = "application/json"
+        })
+        .AddQueryString(new {
+            name = "John Doe",
+            index = 1
+        });
 });
 ```
 
@@ -101,7 +107,7 @@ The code above shows how to use Consumers and Interceptors.
     {
         public TheMovieDatabaseConsumer(IConsumerConfiguration<TheMovieDatabaseConsumer> configuration): base(configuration)
         {
-            configuration.Interceptors.Add(new TheMovieDatabaseInterceptor());
+            configuration.AddRequestInterceptors(new TheMovieDatabaseInterceptor());
         }
 
         public IObservable<Result> ListMovies() => Get<Result>("movie/popular");
@@ -111,7 +117,7 @@ The code above shows how to use Consumers and Interceptors.
     {
         public void Intercept(RxHttpRequest request)
         {
-            request.QueryStrings.Add("api_key", "key");
+            request.AddQueryString("api_key", "key");
         }
     }
 ```
@@ -162,6 +168,18 @@ public void ConfigureServices(ServiceCollection services)
 }
 ```
 
+## Logging
+
+You can implement your own custom logging mechanism by implementing the interface RxHttpLogging. 
+We provide a built-in logging mechanism called "RxHttpDefaultLogging".
+
+Here is a example that show how to use RxHttpDefaultLogging mechanism. If you have a custom logging mechanism you must replace RxHttpDefaultLogging for your class implementation.
+```csharp
+private static void ConfigureServices(ServiceCollection services)
+{
+    services.AddRxHttpLogging<RxHttpDefaultLogging>();
+}
+```
 
 ### Roadmap
 
