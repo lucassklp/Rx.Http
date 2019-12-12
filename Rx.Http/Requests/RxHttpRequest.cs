@@ -150,7 +150,6 @@ namespace Rx.Http.Requests
         {
             Headers.Add(key, value);
             return this;
-
         }
 
         public override RxHttpRequestOptions AddHeader(IEnumerable<KeyValuePair<string, string>> pairs)

@@ -9,11 +9,11 @@ namespace Rx.Http
 {
     public abstract class RxHttpLogging
     {
-        protected readonly ILogger<RxHttpLogging> logger;
+        protected ILogger<RxHttpLogging> Logger { get; private set; }
 
         protected RxHttpLogging(ILogger<RxHttpLogging> logger)
         {
-            this.logger = logger;
+            this.Logger = logger;
         }
 
         public abstract Task OnSend(HttpContent httpContent);

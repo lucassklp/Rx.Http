@@ -17,11 +17,11 @@ namespace Rx.Http
             {
                 var json = await httpResponse.Content.ReadAsStringAsync();
                 var formatted = FormatJson(json);
-                logger.LogInformation(formatted);
+                Logger.LogInformation(formatted);
             }
             else
             {
-                logger.LogInformation(await httpResponse.Content.ReadAsStringAsync());
+                Logger.LogInformation(await httpResponse.Content.ReadAsStringAsync());
             }
         }
 
@@ -31,11 +31,11 @@ namespace Rx.Http
             {
                 var json = await httpContent.ReadAsStringAsync();
                 var formatted = FormatJson(json);
-                logger.LogInformation(formatted);
+                Logger.LogInformation(formatted);
             }
             else
             {
-                logger.LogInformation(await httpContent.ReadAsStringAsync());
+                Logger.LogInformation(await httpContent.ReadAsStringAsync());
             }
         }
 

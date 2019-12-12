@@ -48,6 +48,22 @@ namespace Tests
         }
 
         [Fact]
+        public void TestBodyWithJson()
+        {
+            var todo = new Todo
+            {
+                Id = 12,
+                Title = "Testing with special characters: àáç~ã*+ü?<>!ºªª",
+                IsCompleted = true,
+                UserId = 20
+            };
+            var response = http.Post<PostResponse<Todo>>("https://postman-echo.com/post", todo).Wait();
+
+            Assert.True(response.Data.Equals(todo));
+        }
+
+
+        [Fact]
         public async void TestPostWithJson()
         {
             var postWithId = await http.Post<Identifiable>(@"https://jsonplaceholder.typicode.com/posts/", new Post()
