@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Rx.Http.Requests
@@ -19,6 +20,6 @@ namespace Rx.Http.Requests
             this.obj = obj;
         }
 
-        protected override Task<HttpResponseMessage> ExecuteRequest(string url, HttpContent content) => http.PostAsync(url, content);
+        protected override Task<HttpResponseMessage> ExecuteRequest(string url, HttpContent content, CancellationTokenSource cancellationTokenSource) => http.PostAsync(url, content, cancellationTokenSource.Token);
     }
 }

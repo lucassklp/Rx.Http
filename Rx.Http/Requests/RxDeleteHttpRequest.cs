@@ -3,6 +3,7 @@ using Rx.Http.MediaTypes.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Rx.Http.Requests
@@ -18,6 +19,6 @@ namespace Rx.Http.Requests
         {
         }
 
-        protected override Task<HttpResponseMessage> ExecuteRequest(string url, HttpContent content) => http.DeleteAsync(url);
+        protected override Task<HttpResponseMessage> ExecuteRequest(string url, HttpContent content, CancellationTokenSource cancellationToken) => http.DeleteAsync(url, cancellationToken.Token);
     }
 }

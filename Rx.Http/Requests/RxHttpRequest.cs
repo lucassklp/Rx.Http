@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -32,6 +33,7 @@ namespace Rx.Http.Requests
         protected object obj;
 
         private readonly RxHttpLogging logger;
+        internal CancellationTokenSource CancellationToken { get; private set; }
 
         protected RxHttpRequest(
             HttpClient http, 
@@ -46,7 +48,7 @@ namespace Rx.Http.Requests
             this.ResponseInterceptors = responseInterceptors ?? new List<RxResponseInterceptor>();
             this.Url = url;
             this.logger = logger;
-
+            this.CancellationToken = new CancellationTokenSource();
             http.DefaultRequestHeaders.Clear();
             Headers = http.DefaultRequestHeaders;
             QueryStrings = new Dictionary<string, string>();
@@ -54,7 +56,7 @@ namespace Rx.Http.Requests
             optionsCallback?.Invoke(this);
         }
 
-        protected abstract Task<HttpResponseMessage> ExecuteRequest(string url, HttpContent content);
+        protected abstract Task<HttpResponseMessage> ExecuteRequest(string url, HttpContent content, CancellationTokenSource cancellationToken);
 
         public string GetUri()
         {
@@ -73,42 +75,22 @@ namespace Rx.Http.Requests
             return urlFull;
         }
 
-        internal IObservable<TResponse> Request<TResponse>()
+        internal HttpObservable<TResponse> Request<TResponse>()
             where TResponse : class
         {
-            return SingleObservable.Create(async () =>
-            {
-                this.RequestInterceptors.ForEach(x => x.Intercept(this));
-                var response = await CreateRequest().ConfigureAwait(false);
-                this.ResponseInterceptors.ForEach(x => x.Intercept(response));
-                
-                if (ResponseMediaType == null)
-                {
-                    var mimeType = response.Content.Headers.ContentType.MediaType;
-                    ResponseMediaType = MediaTypesMap.Get(mimeType);
-                }
-
-                var responseObject = ResponseMediaType.Deserialize<TResponse>(await response.Content.ReadAsStreamAsync());
-                return responseObject;
-            });
+            return new HttpObservable<TResponse>(this);
         }
 
-        internal IObservable<string> Request()
+        internal HttpObservable<string> Request()
         {
-            return SingleObservable.Create(async () =>
-            {
-                this.RequestInterceptors.ForEach(x => x.Intercept(this));
-                var response = await CreateRequest().ConfigureAwait(false);
-                this.ResponseInterceptors.ForEach(x => x.Intercept(response));
-                return await response.Content.ReadAsStringAsync();
-            });
+            return new HttpObservable<string>(this);
         }
 
-        private async Task<HttpResponseMessage> CreateRequest()
+        internal async Task<HttpResponseMessage> CreateRequest()
         {
             var content = GetContent();
             logger?.OnSend(content);
-            var response = await ExecuteRequest(Url, content).ConfigureAwait(false);
+            var response = await ExecuteRequest(Url, content, this.CancellationToken).ConfigureAwait(false);
             try
             {
                 logger?.OnReceive(response);
@@ -168,14 +150,12 @@ namespace Rx.Http.Requests
         {
             this.QueryStrings.Add(key, value);
             return this;
-
         }
 
         public override RxHttpRequestOptions AddQueryString(IEnumerable<KeyValuePair<string, string>> pairs)
         {
             pairs.ToList().ForEach(x => AddQueryString(x.Key, x.Value));
             return this;
-
         }
 
         public override RxHttpRequestOptions AddQueryString(object obj)
@@ -220,8 +200,6 @@ namespace Rx.Http.Requests
         {
             AddHeader(HeaderNames.Authorization, $"Bearer {token}");
             return this;
-
         }
-
     }
 }
