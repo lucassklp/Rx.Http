@@ -81,11 +81,6 @@ namespace Rx.Http.Requests
             return new HttpObservable<TResponse>(this);
         }
 
-        internal HttpObservable<string> Request()
-        {
-            return new HttpObservable<string>(this);
-        }
-
         internal async Task<HttpResponseMessage> CreateRequest()
         {
             var content = GetContent();

@@ -27,9 +27,8 @@ namespace Rx.Http
         protected IObservable<string> Get(string url, Action<RxHttpRequestOptions> opts = null)
         {
             var request = http.CreateGetRequest(url, opts, requestInterceptors, responseInterceptors);
-            return request.Request();
+            return request.Request<string>();
         }
-
 
         protected IObservable<TResponse> Post<TResponse>(string url, object obj = null, Action<RxHttpRequestOptions> opts = null)
             where TResponse : class
@@ -41,7 +40,7 @@ namespace Rx.Http
         protected IObservable<string> Post(string url, object obj = null, Action<RxHttpRequestOptions> opts = null)
         {
             var request = http.CreatePostRequest(url, obj, opts, requestInterceptors, responseInterceptors);
-            return request.Request();
+            return request.Request<string>();
         }
 
         protected IObservable<TResponse> Put<TResponse>(string url, object obj = null, Action<RxHttpRequestOptions> opts = null)
@@ -53,7 +52,7 @@ namespace Rx.Http
         protected IObservable<string> Put(string url, object obj = null, Action<RxHttpRequestOptions> opts = null)
         {
             var request = http.CreatePutRequest(url, obj, opts, requestInterceptors, responseInterceptors);
-            return request.Request();
+            return request.Request<string>();
         }
 
         protected IObservable<TResponse> Delete<TResponse>(string url, Action<RxHttpRequestOptions> opts = null)
@@ -66,7 +65,7 @@ namespace Rx.Http
         protected IObservable<string> Delete(string url, Action<RxHttpRequestOptions> opts = null)
         {
             var request = http.CreateDeleteRequest(url, opts, requestInterceptors, responseInterceptors);
-            return request.Request();
+            return request.Request<string>();
         }
     }
 }

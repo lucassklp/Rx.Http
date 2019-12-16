@@ -30,17 +30,25 @@ namespace Rx.Http
         {
             task.GetAwaiter().OnCompleted(async () =>
             {
-                var response = task.Result;
-                request.ResponseInterceptors.ForEach(x => x.Intercept(response));
-                if (request.ResponseMediaType == null)
+                try
                 {
-                    var mimeType = response.Content.Headers.ContentType.MediaType;
-                    request.ResponseMediaType = MediaTypesMap.Get(mimeType);
+                    var response = task.Result;
+                    request.ResponseInterceptors.ForEach(x => x.Intercept(response));
+                    if (request.ResponseMediaType == null)
+                    {
+                        var mimeType = response.Content.Headers.ContentType.MediaType;
+                        request.ResponseMediaType = MediaTypesMap.Get(mimeType);
+                    }
+
+                    var responseObject = request.ResponseMediaType.Deserialize<T>(await response.Content.ReadAsStreamAsync());
+                    observer.OnNext(responseObject);
+                    observer.OnCompleted();
+                }
+                catch(Exception ex)
+                {
+                    observer.OnError(ex.InnerException);
                 }
 
-                var responseObject = request.ResponseMediaType.Deserialize<T>(await response.Content.ReadAsStreamAsync());
-                observer.OnNext(responseObject);
-                observer.OnCompleted();
             });
 
             return Disposable.Empty;

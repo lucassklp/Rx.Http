@@ -48,6 +48,16 @@ namespace Tests
         }
 
         [Fact]
+        public void CancelRequestTest()
+        {
+            var todosObservable = http.Get<List<Todo>>(@"https://jsonplaceholder.typicode.com/todos/");
+            var disposable = todosObservable.Cancel();
+
+            Assert.NotNull(disposable);
+        }
+
+
+        [Fact]
         public void TestBodyWithJson()
         {
             var todo = new Todo
