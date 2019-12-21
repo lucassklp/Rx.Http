@@ -8,30 +8,27 @@
 </a>
 <img alt="npm version" src="https://img.shields.io/nuget/v/Rx.Http.svg">
 
-
 <!-- snyk does not support .NET Core yet -->
 <!-- https://github.com/snyk/snyk/issues/489 -->
 <!-- <a href="https://snyk.io//test/github/lucassklp/Rx.Http?targetFile=Rx.Http/Rx.Http.csproj"><img src="https://snyk.io//test/github/lucassklp/Rx.Http/badge.svg?targetFile=Rx.Http/Rx.Http.csproj" alt="Known Vulnerabilities" data-canonical-src="https://snyk.io//test/github/lucassklp/Rx.Http?targetFile=Rx.Http/Rx.Http.csproj" style="max-width:100%;"></a> -->
 
 </p>
 
-A lightweight library that is inpired in [Angular 2+ Http Client](https://angular.io/guide/http) built on top of [.NET Http Client](https://docs.microsoft.com/pt-br/dotnet/api/system.net.http.httpclient) that help programmers to make asynchronous http requests, 
-
+A lightweight library that is inpired in [Angular 2+ Http Client](https://angular.io/guide/http) built on top of [.NET Http Client](https://docs.microsoft.com/pt-br/dotnet/api/system.net.http.httpclient) that help programmers to make asynchronous http requests.
 
 # Installation
 
 If you are using Package Manager:
 
 ```bash
-Install-Package Rx.Http -Version 1.0.1
+Install-Package Rx.Http -Version 1.2.0
 ```
 
 If you are using .NET CLI
 
 ```bash
-dotnet add package Rx.Http --version 1.0.1
+dotnet add package Rx.Http --version 1.2.0
 ```
-
 
 ## Example of use
 
@@ -39,7 +36,7 @@ dotnet add package Rx.Http --version 1.0.1
 using Rx.Http;
 using System.Reactive.Linq;
 
-public class Program 
+public class Program
 {
     public static async void Main()
     {
@@ -123,6 +120,7 @@ The code above shows how to use Consumers and Interceptors.
 ```
 
 ## RxHttpRequestException
+
 This exception is threw when the server reply with a HTTP Status different of 2xx. There's two ways to handle this exception:
 
 ```csharp
@@ -140,10 +138,10 @@ This exception is threw when the server reply with a HTTP Status different of 2x
     }
 
     //Or using reactive way
-    http.Get<List<Todo>>(url).Subscribe(response => 
+    http.Get<List<Todo>>(url).Subscribe(response =>
     {
         //...
-    }, exception => 
+    }, exception =>
     {
         HttpResponseMessage response = (exception as RxHttpRequestException)?.Response;
         //...
@@ -170,10 +168,11 @@ public void ConfigureServices(ServiceCollection services)
 
 ## Logging
 
-You can implement your own custom logging mechanism by implementing the interface RxHttpLogging. 
+You can implement your own custom logging mechanism by implementing the interface RxHttpLogging.
 We provide a built-in logging mechanism called "RxHttpDefaultLogging".
 
 Here is a example that show how to use RxHttpDefaultLogging mechanism. If you have a custom logging mechanism you must replace RxHttpDefaultLogging for your class implementation.
+
 ```csharp
 private static void ConfigureServices(ServiceCollection services)
 {
