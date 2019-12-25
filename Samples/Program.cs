@@ -2,11 +2,11 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Logging.Debug;
-using Rx.Http;
 using Models.Consumers;
+using Rx.Http;
+using Rx.Http.Extensions;
 using System;
 using System.Threading.Tasks;
-using Rx.Http.Extensions;
 
 namespace Samples
 {
@@ -41,11 +41,11 @@ namespace Samples
             {
                 http.BaseAddress = new Uri(@"https://api.themoviedb.org/3/");
             })
-            .AddConsumer<GoogleConsumer>(http => 
+            .AddConsumer<GoogleConsumer>(http =>
             {
                 http.BaseAddress = new Uri(@"http://www.google.com.br/");
             })
-            .AddConsumer<JsonPlaceHolderConsumer>(http => 
+            .AddConsumer<JsonPlaceHolderConsumer>(http =>
             {
                 http.BaseAddress = new Uri(@"https://jsonplaceholder.typicode.com/posts");
             })

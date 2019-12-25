@@ -1,72 +1,59 @@
-using Rx.Http.Interceptors;
 using System;
-using System.Collections.Generic;
 
 namespace Rx.Http
 {
     public abstract class RxConsumer
     {
-        private readonly List<RxRequestInterceptor> requestInterceptors;
-        private readonly List<RxResponseInterceptor> responseInterceptors;
         private readonly RxHttpClient http;
+        private readonly IConsumerConfiguration<RxConsumer> configuration;
 
         protected RxConsumer(IConsumerConfiguration<RxConsumer> configuration)
         {
-            requestInterceptors = configuration.RequestInterceptors;
-            responseInterceptors = configuration.ResponseInterceptors;
-            http = new RxHttpClient(configuration.Http, configuration.Logger);
+            this.configuration = configuration;
+            this.http = new RxHttpClient(configuration.Http, configuration.Logger);
         }
 
         protected IObservable<TResponse> Get<TResponse>(string url, Action<RxHttpRequestOptions> opts = null)
             where TResponse : class
         {
-            var request = http.CreateGetRequest(url, opts, requestInterceptors, responseInterceptors);
-            return request.Request<TResponse>();
+            return http.Get<TResponse>(url, opts, configuration.RequestInterceptors, configuration.ResponseInterceptors);
         }
 
         protected IObservable<string> Get(string url, Action<RxHttpRequestOptions> opts = null)
         {
-            var request = http.CreateGetRequest(url, opts, requestInterceptors, responseInterceptors);
-            return request.Request();
+            return http.Get(url, opts, configuration.RequestInterceptors, configuration.ResponseInterceptors);
         }
-
 
         protected IObservable<TResponse> Post<TResponse>(string url, object obj = null, Action<RxHttpRequestOptions> opts = null)
             where TResponse : class
         {
-            var request = http.CreatePostRequest(url, obj, opts, requestInterceptors, responseInterceptors);
-            return request.Request<TResponse>();
+            return http.Post<TResponse>(url, obj, opts, configuration.RequestInterceptors, configuration.ResponseInterceptors);
         }
 
         protected IObservable<string> Post(string url, object obj = null, Action<RxHttpRequestOptions> opts = null)
         {
-            var request = http.CreatePostRequest(url, obj, opts, requestInterceptors, responseInterceptors);
-            return request.Request();
+            return http.Post(url, obj, opts, configuration.RequestInterceptors, configuration.ResponseInterceptors);
         }
 
         protected IObservable<TResponse> Put<TResponse>(string url, object obj = null, Action<RxHttpRequestOptions> opts = null)
             where TResponse : class
         {
-            var request = http.CreatePutRequest(url, obj, opts, requestInterceptors, responseInterceptors);
-            return request.Request<TResponse>();
+            return http.Put<TResponse>(url, obj, opts, configuration.RequestInterceptors, configuration.ResponseInterceptors);
         }
         protected IObservable<string> Put(string url, object obj = null, Action<RxHttpRequestOptions> opts = null)
         {
-            var request = http.CreatePutRequest(url, obj, opts, requestInterceptors, responseInterceptors);
-            return request.Request();
+            return http.Put(url, obj, opts, configuration.RequestInterceptors, configuration.ResponseInterceptors);
         }
 
         protected IObservable<TResponse> Delete<TResponse>(string url, Action<RxHttpRequestOptions> opts = null)
             where TResponse : class
         {
-            var request = http.CreateDeleteRequest(url, opts, requestInterceptors, responseInterceptors);
-            return request.Request<TResponse>();
+            return http.Delete<TResponse>(url, opts, configuration.RequestInterceptors, configuration.ResponseInterceptors);
         }
 
         protected IObservable<string> Delete(string url, Action<RxHttpRequestOptions> opts = null)
         {
-            var request = http.CreateDeleteRequest(url, opts, requestInterceptors, responseInterceptors);
-            return request.Request();
+            return http.Delete(url, opts, configuration.RequestInterceptors, configuration.ResponseInterceptors);
         }
     }
 }

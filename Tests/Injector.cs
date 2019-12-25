@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Models.Consumers;
 using Rx.Http;
-using System;
 using Rx.Http.Extensions;
+using System;
 
 namespace Tests
 {

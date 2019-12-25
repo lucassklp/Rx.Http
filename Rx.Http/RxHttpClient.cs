@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using Rx.Http.Interceptors;
+﻿using Rx.Http.Interceptors;
 using Rx.Http.Requests;
 using System;
 using System.Collections.Generic;
@@ -11,14 +10,7 @@ namespace Rx.Http
     public class RxHttpClient : IDisposable
     {
         private readonly HttpClient httpClient;
-
-        public Uri BaseAddress
-        {
-            get => httpClient.BaseAddress;
-            set => httpClient.BaseAddress = value;
-        }
-
-        private RxHttpLogging logger;
+        private readonly RxHttpLogging logger;
 
         public RxHttpClient(HttpClient http, RxHttpLogging logger = null)
         {
@@ -26,65 +18,55 @@ namespace Rx.Http
             this.logger = logger;
         }
 
-        public IObservable<string> Get(string path,
-            Action<RxHttpRequestOptions> opts = null,
+        public IObservable<string> Get(string url,
+            Action<RxHttpRequestOptions> options = null,
             List<RxRequestInterceptor> requestInterceptors = null,
             List<RxResponseInterceptor> responseInterceptors = null)
         {
-            return CreateGetRequest(path, opts, requestInterceptors, responseInterceptors).Request();
+            return CreateGetRequest(url, options, requestInterceptors, responseInterceptors).Request();
         }
 
-        public IObservable<TResponse> Get<TResponse>(string path, 
-            Action<RxHttpRequestOptions> opts = null,
+        public IObservable<TResponse> Get<TResponse>(string url,
+            Action<RxHttpRequestOptions> options = null,
             List<RxRequestInterceptor> requestInterceptors = null,
             List<RxResponseInterceptor> responseInterceptors = null)
             where TResponse : class
         {
-            return CreateGetRequest(path, opts, requestInterceptors, responseInterceptors).Request<TResponse>();
+            return CreateGetRequest(url, options, requestInterceptors, responseInterceptors).Request<TResponse>();
         }
 
-        internal RxGetHttpRequest CreateGetRequest(
-            string path, 
-            Action<RxHttpRequestOptions> opts = null, 
+        private RxGetHttpRequest CreateGetRequest(
+            string url,
+            Action<RxHttpRequestOptions> options = null,
             List<RxRequestInterceptor> requestInterceptors = null,
             List<RxResponseInterceptor> responseInterceptors = null)
         {
-            return new RxGetHttpRequest(httpClient, path, opts, requestInterceptors, responseInterceptors, logger);
+            return new RxGetHttpRequest(httpClient, url, options, requestInterceptors, responseInterceptors, logger);
         }
 
         public IObservable<TResponse> Post<TResponse>(
-            string url, 
-            object obj = null, 
+            string url,
+            object content = null,
             Action<RxHttpRequestOptions> options = null,
             List<RxRequestInterceptor> requestInterceptors = null,
             List<RxResponseInterceptor> responseInterceptors = null
             ) where TResponse : class
         {
-            return CreatePostRequest(url, obj, options, requestInterceptors, responseInterceptors).Request<TResponse>();
+            return CreatePostRequest(url, content, options, requestInterceptors, responseInterceptors).Request<TResponse>();
         }
 
-        public IObservable<string> Post(
-            string url, 
-            object obj = null, 
+        public IObservable<TResponse> Post<TResponse>(string url,
+            HttpContent content,
             Action<RxHttpRequestOptions> options = null,
             List<RxRequestInterceptor> requestInterceptors = null,
             List<RxResponseInterceptor> responseInterceptors = null)
+            where TResponse : class
         {
-            return CreatePostRequest(url, obj, options, requestInterceptors, responseInterceptors).Request();
-        }
-
-        public IObservable<T> Post<T>(string url, 
-            HttpContent form, 
-            Action<RxHttpRequestOptions> options = null,
-            List<RxRequestInterceptor> requestInterceptors = null,
-            List<RxResponseInterceptor> responseInterceptors = null)
-            where T : class
-        {
-            return CreatePostRequest(url, form, options, requestInterceptors, responseInterceptors).Request<T>();
+            return CreatePostRequest(url, content, options, requestInterceptors, responseInterceptors).Request<TResponse>();
         }
 
         public IObservable<string> Post(string url,
-            FormUrlEncodedContent content, 
+            object content,
             Action<RxHttpRequestOptions> options = null,
             List<RxRequestInterceptor> requestInterceptors = null,
             List<RxResponseInterceptor> responseInterceptors = null)
@@ -92,47 +74,47 @@ namespace Rx.Http
             return CreatePostRequest(url, content, options, requestInterceptors, responseInterceptors).Request();
         }
 
-        internal RxPostHttpRequest CreatePostRequest(
-            string url, 
-            object obj = null, 
+        public IObservable<string> Post(string url,
+            HttpContent content,
             Action<RxHttpRequestOptions> options = null,
             List<RxRequestInterceptor> requestInterceptors = null,
             List<RxResponseInterceptor> responseInterceptors = null)
         {
-            return new RxPostHttpRequest(httpClient, url, obj, options, requestInterceptors, responseInterceptors, logger);
+            return CreatePostRequest(url, content, options, requestInterceptors, responseInterceptors).Request();
+        }
+
+        private RxPostHttpRequest CreatePostRequest(
+            string url,
+            object content = null,
+            Action<RxHttpRequestOptions> options = null,
+            List<RxRequestInterceptor> requestInterceptors = null,
+            List<RxResponseInterceptor> responseInterceptors = null)
+        {
+            return new RxPostHttpRequest(httpClient, url, content, options, requestInterceptors, responseInterceptors, logger);
         }
 
         public IObservable<TResponse> Put<TResponse>(
-            string url, 
-            object obj = null, 
+            string url,
+            object content = null,
             Action<RxHttpRequestOptions> options = null,
             List<RxRequestInterceptor> requestInterceptors = null,
             List<RxResponseInterceptor> responseInterceptors = null) where TResponse : class
         {
-            return CreatePutRequest(url, obj, options, requestInterceptors, responseInterceptors).Request<TResponse>();
+            return CreatePutRequest(url, content, options, requestInterceptors, responseInterceptors).Request<TResponse>();
         }
 
-        public IObservable<string> Put(string url, 
-            object obj = null, 
+        public IObservable<TResponse> Put<TResponse>(string url,
+            HttpContent content,
             Action<RxHttpRequestOptions> options = null,
             List<RxRequestInterceptor> requestInterceptors = null,
             List<RxResponseInterceptor> responseInterceptors = null)
+            where TResponse : class
         {
-            return CreatePutRequest(url, obj, options, requestInterceptors, responseInterceptors).Request();
+            return CreatePutRequest(url, content, options, requestInterceptors, responseInterceptors).Request<TResponse>();
         }
 
-        public IObservable<T> Put<T>(string url, 
-            FormUrlEncodedContent form, 
-            Action<RxHttpRequestOptions> options = null,
-            List<RxRequestInterceptor> requestInterceptors = null,
-            List<RxResponseInterceptor> responseInterceptors = null)
-            where T : class
-        {
-            return CreatePutRequest(url, form, options, requestInterceptors, responseInterceptors).Request<T>();
-        }
-
-        public IObservable<string> Put(string url, 
-            HttpContent content, 
+        public IObservable<string> Put(string url,
+            object content = null,
             Action<RxHttpRequestOptions> options = null,
             List<RxRequestInterceptor> requestInterceptors = null,
             List<RxResponseInterceptor> responseInterceptors = null)
@@ -140,18 +122,26 @@ namespace Rx.Http
             return CreatePutRequest(url, content, options, requestInterceptors, responseInterceptors).Request();
         }
 
-
-        internal RxPutHttpRequest CreatePutRequest(
-            string url, 
-            object obj = null, 
+        public IObservable<string> Put(string url,
+            HttpContent content,
             Action<RxHttpRequestOptions> options = null,
             List<RxRequestInterceptor> requestInterceptors = null,
             List<RxResponseInterceptor> responseInterceptors = null)
         {
-            return new RxPutHttpRequest(httpClient, url, obj, options, requestInterceptors, responseInterceptors, logger);
+            return CreatePutRequest(url, content, options, requestInterceptors, responseInterceptors).Request();
         }
 
-        public IObservable<TResponse> Delete<TResponse>(string url, 
+        private RxPutHttpRequest CreatePutRequest(
+            string url,
+            object content = null,
+            Action<RxHttpRequestOptions> options = null,
+            List<RxRequestInterceptor> requestInterceptors = null,
+            List<RxResponseInterceptor> responseInterceptors = null)
+        {
+            return new RxPutHttpRequest(httpClient, url, content, options, requestInterceptors, responseInterceptors, logger);
+        }
+
+        public IObservable<TResponse> Delete<TResponse>(string url,
             Action<RxHttpRequestOptions> options = null,
             List<RxRequestInterceptor> requestInterceptors = null,
             List<RxResponseInterceptor> responseInterceptors = null) where TResponse : class
@@ -159,7 +149,7 @@ namespace Rx.Http
             return CreateDeleteRequest(url, options, requestInterceptors, responseInterceptors).Request<TResponse>();
         }
 
-        public IObservable<string> Delete(string url, 
+        public IObservable<string> Delete(string url,
             Action<RxHttpRequestOptions> options = null,
             List<RxRequestInterceptor> requestInterceptors = null,
             List<RxResponseInterceptor> responseInterceptors = null)
@@ -167,12 +157,12 @@ namespace Rx.Http
             return CreateDeleteRequest(url, options, requestInterceptors, responseInterceptors).Request();
         }
 
-        internal RxDeleteHttpRequest CreateDeleteRequest(string url,
-            Action<RxHttpRequestOptions> opts = null, 
+        private RxDeleteHttpRequest CreateDeleteRequest(string url,
+            Action<RxHttpRequestOptions> options = null,
             List<RxRequestInterceptor> requestInterceptors = null,
             List<RxResponseInterceptor> responseInterceptors = null)
         {
-            return new RxDeleteHttpRequest(httpClient, url, opts, requestInterceptors, responseInterceptors, logger);
+            return new RxDeleteHttpRequest(httpClient, url, options, requestInterceptors, responseInterceptors, logger);
         }
 
         public void Dispose()

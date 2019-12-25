@@ -10,15 +10,14 @@ namespace Rx.Http.Requests
     {
         public RxPutHttpRequest(HttpClient http,
             string url,
-            object obj = null,
+            object content = null,
             Action<RxHttpRequestOptions> options = null,
             List<RxRequestInterceptor> requestInterceptors = null,
             List<RxResponseInterceptor> responseInterceptors = null,
-            RxHttpLogging logger = null) : base(http, url, requestInterceptors, responseInterceptors, options, logger)
+            RxHttpLogging logger = null) : base(http, url, content, requestInterceptors, responseInterceptors, options, logger)
         {
-            this.obj = obj;
         }
 
-        protected override Task<HttpResponseMessage> ExecuteRequest(string url, HttpContent content) => http.PutAsync(url, content);
+        protected override Task<HttpResponseMessage> ExecuteRequest(string url, HttpContent content) => Http.PutAsync(url, content);
     }
 }

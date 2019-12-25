@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
+﻿using System.Net.Http;
 
 namespace Rx.Http.Interceptors
 {
     public interface RxResponseInterceptor
     {
-        void Intercept(HttpResponseMessage response); 
+        void Intercept(HttpResponseMessage response);
     }
 }

@@ -4,7 +4,6 @@ using Rx.Http;
 using Rx.Http.Exceptions;
 using Rx.Http.Interceptors;
 using Rx.Http.MediaTypes;
-using Rx.Http.Requests;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -104,7 +103,7 @@ namespace Tests
                 { "Characters", "*&�%6dbajs&@#chv73*(#Y" }
             };
 
-            var queryStringsObj = new 
+            var queryStringsObj = new
             {
                 Foo = "Bar",
                 User = "John Doe",
@@ -150,7 +149,7 @@ namespace Tests
                 { "User", "John Doe" }
             };
 
-            var headersObj = new 
+            var headersObj = new
             {
                 Foo = "Bar",
                 User = "John Doe"

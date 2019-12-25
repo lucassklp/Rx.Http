@@ -9,7 +9,7 @@ namespace Models
 
         [JsonProperty("body")]
         public string Body { get; set; }
-        
+
         [JsonProperty("userId")]
         public int UserId { get; set; }
 

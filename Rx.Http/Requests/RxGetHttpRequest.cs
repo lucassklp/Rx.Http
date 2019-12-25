@@ -13,10 +13,10 @@ namespace Rx.Http.Requests
             Action<RxHttpRequestOptions> options,
             List<RxRequestInterceptor> requestInterceptors = null,
             List<RxResponseInterceptor> responseInterceptors = null,
-            RxHttpLogging logger = null) : base(http, url, requestInterceptors, responseInterceptors, options, logger)
+            RxHttpLogging logger = null) : base(http, url, null, requestInterceptors, responseInterceptors, options, logger)
         {
         }
 
-        protected override Task<HttpResponseMessage> ExecuteRequest(string url, HttpContent content) => http.GetAsync(url);
+        protected override Task<HttpResponseMessage> ExecuteRequest(string url, HttpContent content) => Http.GetAsync(url);
     }
 }

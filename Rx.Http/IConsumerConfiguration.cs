@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using Rx.Http.Interceptors;
+﻿using Rx.Http.Interceptors;
 using System.Collections.Generic;
 using System.Net.Http;
 

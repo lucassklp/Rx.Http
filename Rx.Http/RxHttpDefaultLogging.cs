@@ -13,7 +13,7 @@ namespace Rx.Http
 
         public override async Task OnReceive(HttpResponseMessage httpResponse)
         {
-            if(httpResponse.Content.Headers.ContentType.MediaType == MediaTypes.MediaType.Application.Json)
+            if (httpResponse.Content.Headers.ContentType.MediaType == MediaTypes.MediaType.Application.Json)
             {
                 var json = await httpResponse.Content.ReadAsStringAsync();
                 var formatted = FormatJson(json);
@@ -27,7 +27,7 @@ namespace Rx.Http
 
         public override async Task OnSend(HttpContent httpContent)
         {
-            if(httpContent.Headers.ContentType.MediaType == MediaTypes.MediaType.Application.Json)
+            if (httpContent.Headers.ContentType.MediaType == MediaTypes.MediaType.Application.Json)
             {
                 var json = await httpContent.ReadAsStringAsync();
                 var formatted = FormatJson(json);

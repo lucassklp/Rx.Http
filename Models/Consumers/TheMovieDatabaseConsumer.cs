@@ -1,6 +1,5 @@
 using Rx.Http;
 using Rx.Http.Interceptors;
-using Rx.Http.Requests;
 using System;
 
 namespace Models.Consumers
