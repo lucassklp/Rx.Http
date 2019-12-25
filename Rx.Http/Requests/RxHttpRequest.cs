@@ -110,16 +110,15 @@ namespace Rx.Http.Requests
             var content = GetContent();
             logger?.OnSend(content);
             var response = await ExecuteRequest(GetUri(), content).ConfigureAwait(false);
+            logger?.OnReceive(response);
             try
             {
-                logger?.OnReceive(response);
-                response.EnsureSuccessStatusCode();
+                return response.EnsureSuccessStatusCode();
             }
             catch (Exception exception)
             {
                 throw new RxHttpRequestException(response, exception);
             }
-            return response;
         }
 
         private HttpContent GetContent()
