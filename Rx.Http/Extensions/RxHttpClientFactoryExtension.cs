@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 
-namespace Rx.Http
+namespace Rx.Http.Extensions
 {
     public static class RxHttpClientFactoryExtension
     {

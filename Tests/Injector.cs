@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Models.Consumers;
 using Rx.Http;
+using Rx.Http.Extensions;
 using System;
 
 namespace Tests
@@ -18,7 +19,7 @@ namespace Tests
         private void ConfigureServices(ServiceCollection services)
         {
             services.AddHttpClient<RxHttpClient>();
-
+            services.AddRxHttpLogging<RxHttpDefaultLogging>();
             services.AddConsumer<TheMovieDatabaseConsumer>(http =>
             {
                 http.BaseAddress = new Uri(@"https://api.themoviedb.org/3/");

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Rx.Http.Interceptors;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -7,14 +8,16 @@ namespace Rx.Http.Requests
 {
     internal class RxPutHttpRequest : RxHttpRequest
     {
-        public RxPutHttpRequest(HttpClient http, string url, object obj = null, Action<RxHttpRequestOptions> options = null) : base(http)
+        public RxPutHttpRequest(HttpClient http,
+            string url,
+            object content = null,
+            Action<RxHttpRequestOptions> options = null,
+            List<RxRequestInterceptor> requestInterceptors = null,
+            List<RxResponseInterceptor> responseInterceptors = null,
+            RxHttpLogging logger = null) : base(http, url, content, requestInterceptors, responseInterceptors, options, logger)
         {
-            Url = url;
-            this.obj = obj;
-            optionsCallback = options;
-            QueryStrings = new Dictionary<string, string>();
         }
 
-        protected override Task<HttpResponseMessage> DoRequest(string url, HttpContent content) => http.PutAsync(url, content);
+        protected override Task<HttpResponseMessage> ExecuteRequest(string url, HttpContent content) => Http.PutAsync(url, content);
     }
 }

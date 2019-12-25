@@ -1,35 +1,52 @@
-using Microsoft.Net.Http.Headers;
+﻿using Rx.Http.Interceptors;
 using Rx.Http.MediaTypes.Abstractions;
-using System;
 using System.Collections.Generic;
-using System.Net.Http.Headers;
-using System.Text;
 
 namespace Rx.Http
 {
-    public class RxHttpRequestOptions
+    public abstract class RxHttpRequestOptions
     {
-        public IHttpMediaType RequestMediaType { get; set; }
-        public IHttpMediaType ResponseMediaType { get; set; }
-        internal HttpHeaders Headers { get; private set; }
-        public Dictionary<string, string> QueryStrings { get; private set; }
+        public abstract RxHttpRequestOptions SetRequestMediaType(IHttpMediaType mediaType);
 
-        public RxHttpRequestOptions(HttpHeaders headers, Dictionary<string, string> queryStrings)
-        {
-            Headers = headers;
-            QueryStrings = queryStrings;
-        }
+        public abstract RxHttpRequestOptions SetResponseMediaType(IHttpMediaType mediaType);
 
-        public void AddHeader(string key, string value)
-        {
-            Headers.Add(key, value);
-        }
+        public abstract RxHttpRequestOptions AddResponseInterceptor(RxResponseInterceptor interceptor);
 
-        public void UseBasicAuthorization(string user, string key)
+        public abstract RxHttpRequestOptions AddRequestInteceptor(RxRequestInterceptor interceptor);
+
+        public abstract RxHttpRequestOptions AddHeader(string key, string value);
+
+        public abstract RxHttpRequestOptions AddHeader(IEnumerable<KeyValuePair<string, string>> pairs);
+
+        public abstract RxHttpRequestOptions AddHeader(object obj);
+
+        public abstract RxHttpRequestOptions AddQueryString(string key, string value);
+
+        public abstract RxHttpRequestOptions AddQueryString(IEnumerable<KeyValuePair<string, string>> pairs);
+
+        public abstract RxHttpRequestOptions AddQueryString(object obj);
+
+        public abstract RxHttpRequestOptions UseBasicAuthorization(string user, string key);
+
+        public abstract RxHttpRequestOptions UseBearerAuthorization(string token);
+
+        protected IList<KeyValuePair<string, string>> GetKeysByObject(object obj)
         {
-            var token = $"{user}:{key}";
-            var tokenBase64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(token));
-            AddHeader(HeaderNames.Authorization, $"Basic {tokenBase64}");
+            var keys = new List<KeyValuePair<string, string>>();
+
+            var type = obj.GetType();
+
+            foreach (var field in type.GetFields())
+            {
+                keys.Add(new KeyValuePair<string, string>(field.Name, field.GetValue(obj).ToString()));
+            }
+
+            foreach (var property in type.GetProperties())
+            {
+                keys.Add(new KeyValuePair<string, string>(property.Name, property.GetValue(obj).ToString()));
+            }
+
+            return keys;
         }
     }
 }

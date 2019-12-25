@@ -23,7 +23,7 @@ namespace Rx.Http.Serializers
             where T : class
         {
             var content = JsonConvert.SerializeObject(data);
-            byte[] byteArray = Encoding.ASCII.GetBytes(content);
+            byte[] byteArray = Encoding.UTF8.GetBytes(content);
             return new MemoryStream(byteArray);
         }
     }

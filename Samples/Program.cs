@@ -2,8 +2,9 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Logging.Debug;
-using Rx.Http;
 using Models.Consumers;
+using Rx.Http;
+using Rx.Http.Extensions;
 using System;
 using System.Threading.Tasks;
 
@@ -35,10 +36,18 @@ namespace Samples
             });
 
             services.AddHttpClient<RxHttpClient>();
-
+            services.AddRxHttpLogging<RxHttpDefaultLogging>();
             services.AddConsumer<TheMovieDatabaseConsumer>(http =>
             {
                 http.BaseAddress = new Uri(@"https://api.themoviedb.org/3/");
+            })
+            .AddConsumer<GoogleConsumer>(http =>
+            {
+                http.BaseAddress = new Uri(@"http://www.google.com.br/");
+            })
+            .AddConsumer<JsonPlaceHolderConsumer>(http =>
+            {
+                http.BaseAddress = new Uri(@"https://jsonplaceholder.typicode.com/posts");
             })
             .AddTransient<Application>();
         }

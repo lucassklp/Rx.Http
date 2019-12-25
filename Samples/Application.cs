@@ -1,9 +1,7 @@
 ﻿using Models;
+using Models.Consumers;
 using Rx.Http;
-using Rx.Http.MediaTypes;
-using Samples.Consumers;
 using System;
-using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 
@@ -12,39 +10,34 @@ namespace Samples
     internal class Application
     {
         private readonly TheMovieDatabaseConsumer tmdbConsumer;
+        private readonly GoogleConsumer googleConsumer;
+        private readonly JsonPlaceHolderConsumer jsonPlaceHolderConsumer;
+
         private readonly RxHttpClient httpClient;
-        public Application(TheMovieDatabaseConsumer tmdbConsumer, RxHttpClient httpClient)
+        public Application(TheMovieDatabaseConsumer tmdbConsumer, GoogleConsumer googleConsumer, JsonPlaceHolderConsumer jsonPlaceHolderConsumer, RxHttpClient httpClient)
         {
-            this.httpClient = httpClient;
             this.tmdbConsumer = tmdbConsumer;
+            this.googleConsumer = googleConsumer;
+            this.jsonPlaceHolderConsumer = jsonPlaceHolderConsumer;
+            this.httpClient = httpClient;
         }
 
         public async Task Execute()
         {
             while (true)
             {
-                //Get the html code from the google home page
-                await httpClient.Get("http://www.google.com");
-
-                //Asynchronously, get the json from jsonplaceholder and serialize it. 
-                httpClient.Get<List<Todo>>("https://jsonplaceholder.typicode.com/todos/", options =>
-                {
-                    options.RequestMediaType = new JsonHttpMediaType();
-                    options.AddHeader("Authorization", "Bearer <token>");
-                    options.QueryStrings.Add("name", "John Doe");
-                }).Subscribe();
 
                 tmdbConsumer.ListMovies().Subscribe();
 
-                httpClient.Post<Identifiable>(@"https://jsonplaceholder.typicode.com/posts", new Post()
+                jsonPlaceHolderConsumer.GetTodos().Subscribe();
+                jsonPlaceHolderConsumer.SendPost(new Post()
                 {
                     Title = "Foo",
                     Body = "Bar",
                     UserId = 3
                 }).Subscribe();
-
-                await httpClient.Post(@"https://postman-echo.com/post");
             }
         }
     }
 }
+

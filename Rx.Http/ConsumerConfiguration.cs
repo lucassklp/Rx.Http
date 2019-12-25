@@ -6,18 +6,17 @@ namespace Rx.Http
 {
     public class ConsumerProvider<T> : IConsumerConfiguration<T>
     {
-        public List<RxInterceptor> Interceptors { get; set; }
-        public ConsumerProvider(HttpClient http)
-        {
-            Interceptors = new List<RxInterceptor>();
-            Http = http;
-        }
-
-        public void AddInterceptors(params RxInterceptor[] interceptors)
-        {
-            Interceptors.AddRange(interceptors);
-        }
-
+        public List<RxRequestInterceptor> RequestInterceptors { get; private set; }
+        public List<RxResponseInterceptor> ResponseInterceptors { get; private set; }
         public HttpClient Http { get; private set; }
+        public RxHttpLogging Logger { get; set; }
+
+        public ConsumerProvider(HttpClient http, RxHttpLogging logger = null)
+        {
+            RequestInterceptors = new List<RxRequestInterceptor>();
+            ResponseInterceptors = new List<RxResponseInterceptor>();
+            Http = http;
+            Logger = logger;
+        }
     }
 }

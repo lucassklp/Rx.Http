@@ -31,6 +31,5 @@ namespace Tests
             Assert.NotNull(response1);
             Assert.NotNull(response2);
         }
-
     }
 }

@@ -1,3 +1,4 @@
+using Rx.Http.Interceptors;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -7,13 +8,15 @@ namespace Rx.Http.Requests
 {
     public class RxGetHttpRequest : RxHttpRequest
     {
-        public RxGetHttpRequest(HttpClient http, string url, Action<RxHttpRequestOptions> options) : base(http)
+        public RxGetHttpRequest(HttpClient http,
+            string url,
+            Action<RxHttpRequestOptions> options,
+            List<RxRequestInterceptor> requestInterceptors = null,
+            List<RxResponseInterceptor> responseInterceptors = null,
+            RxHttpLogging logger = null) : base(http, url, null, requestInterceptors, responseInterceptors, options, logger)
         {
-            Url = url;
-            optionsCallback = options;
-            QueryStrings = new Dictionary<string, string>();
         }
 
-        protected override Task<HttpResponseMessage> DoRequest(string url, HttpContent content) => http.GetAsync(url);
+        protected override Task<HttpResponseMessage> ExecuteRequest(string url, HttpContent content) => Http.GetAsync(url);
     }
 }

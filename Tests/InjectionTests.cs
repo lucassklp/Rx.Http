@@ -1,8 +1,5 @@
 ﻿using Models.Consumers;
 using Rx.Http;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace Tests
