@@ -31,6 +31,5 @@ namespace Tests
         {
             return this.serviceProvider.GetService<T>();
         }
-
     }
 }

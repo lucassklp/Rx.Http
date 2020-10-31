@@ -5,15 +5,15 @@ using System.Text;
 
 namespace Rx.Http.Serializers
 {
-    public class JsonSerializer : ITwoWaysSerializable
+    public class NewtonsoftJsonSerializer : ITwoWaysSerializable
     {
-        public T Deserialize<T>(Stream stream) where T : class
+        public T Deserialize<T>(Stream stream)
         {
             using (var sr = new StreamReader(stream))
             {
-                using (var jsonTextReader = new Newtonsoft.Json.JsonTextReader(sr))
+                using (var jsonTextReader = new JsonTextReader(sr))
                 {
-                    var serializer = new Newtonsoft.Json.JsonSerializer();
+                    var serializer = new JsonSerializer();
                     return serializer.Deserialize<T>(jsonTextReader);
                 }
             }

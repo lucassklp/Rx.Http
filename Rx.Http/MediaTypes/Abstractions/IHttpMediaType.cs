@@ -1,11 +1,7 @@
-﻿using System.IO;
-using System.Net.Http;
-
+﻿using System;
 namespace Rx.Http.MediaTypes.Abstractions
 {
-    public interface IHttpMediaType
+    public interface IHttpMediaType: IHttpMediaTypeSerializer, IHttpMediaTypeDeserializer
     {
-        T Deserialize<T>(Stream stream) where T : class;
-        HttpContent Serialize(object obj);
     }
 }

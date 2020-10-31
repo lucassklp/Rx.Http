@@ -1,5 +1,6 @@
 ﻿using Models.Consumers;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Tests
@@ -13,7 +14,7 @@ namespace Tests
         }
 
         [Fact]
-        public async void CheckIfRequestIsWorking()
+        public async Task CheckIfRequestIsWorking()
         {
             var tmdbConsumer = this.injector.Get<TheMovieDatabaseConsumer>();
             var response = await tmdbConsumer.ListMovies();
@@ -22,7 +23,7 @@ namespace Tests
         }
 
         [Fact]
-        public async void CheckSameRequestTwice()
+        public async Task CheckSameRequestTwice()
         {
             var tmdbConsumer = this.injector.Get<TheMovieDatabaseConsumer>();
             var response1 = await tmdbConsumer.ListMovies();

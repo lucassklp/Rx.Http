@@ -1,59 +1,75 @@
 using System;
+using System.Net.Http;
 
 namespace Rx.Http
 {
-    public abstract class RxConsumer
+    public abstract class RxConsumer : IDisposable
     {
         private readonly RxHttpClient http;
-        private readonly IConsumerConfiguration<RxConsumer> configuration;
-
-        protected RxConsumer(IConsumerConfiguration<RxConsumer> configuration)
+        private readonly IConsumerContext<RxConsumer> context;
+        protected RxConsumer(IConsumerContext<RxConsumer> context)
         {
-            this.configuration = configuration;
-            this.http = new RxHttpClient(configuration.Http, configuration.Logger);
+            this.context = context;
+            http = new RxHttpClient(context.Http, context.Logger);
         }
 
-        protected IObservable<TResponse> Get<TResponse>(string url, Action<RxHttpRequestOptions> opts = null)
+        protected IObservable<TResponse> Get<TResponse>(string url, Action<RxHttpRequestOptions> options = null)
             where TResponse : class
         {
-            return http.Get<TResponse>(url, opts, configuration.RequestInterceptors, configuration.ResponseInterceptors);
+            return http.Get<TResponse>(url, ApplyOptions(options));
         }
 
-        protected IObservable<string> Get(string url, Action<RxHttpRequestOptions> opts = null)
+        protected IObservable<HttpResponseMessage> Get(string url, Action<RxHttpRequestOptions> options = null)
         {
-            return http.Get(url, opts, configuration.RequestInterceptors, configuration.ResponseInterceptors);
+            return http.Get(url, ApplyOptions(options));
         }
 
-        protected IObservable<TResponse> Post<TResponse>(string url, object obj = null, Action<RxHttpRequestOptions> opts = null)
+        protected IObservable<TResponse> Post<TResponse>(string url, object obj = null, Action<RxHttpRequestOptions> options = null)
             where TResponse : class
         {
-            return http.Post<TResponse>(url, obj, opts, configuration.RequestInterceptors, configuration.ResponseInterceptors);
+            return http.Post<TResponse>(url, obj, ApplyOptions(options));
         }
 
-        protected IObservable<string> Post(string url, object obj = null, Action<RxHttpRequestOptions> opts = null)
+        protected IObservable<HttpResponseMessage> Post(string url, object obj = null, Action<RxHttpRequestOptions> options = null)
         {
-            return http.Post(url, obj, opts, configuration.RequestInterceptors, configuration.ResponseInterceptors);
+            return http.Post(url, obj, ApplyOptions(options));
         }
 
-        protected IObservable<TResponse> Put<TResponse>(string url, object obj = null, Action<RxHttpRequestOptions> opts = null)
+        protected IObservable<TResponse> Put<TResponse>(string url, object obj = null, Action<RxHttpRequestOptions> options = null)
             where TResponse : class
         {
-            return http.Put<TResponse>(url, obj, opts, configuration.RequestInterceptors, configuration.ResponseInterceptors);
+            return http.Put<TResponse>(url, obj, ApplyOptions(options));
         }
-        protected IObservable<string> Put(string url, object obj = null, Action<RxHttpRequestOptions> opts = null)
+        protected IObservable<HttpResponseMessage> Put(string url, object obj = null, Action<RxHttpRequestOptions> options = null)
         {
-            return http.Put(url, obj, opts, configuration.RequestInterceptors, configuration.ResponseInterceptors);
+            return http.Put(url, obj, ApplyOptions(options));
         }
 
-        protected IObservable<TResponse> Delete<TResponse>(string url, Action<RxHttpRequestOptions> opts = null)
+        protected IObservable<TResponse> Delete<TResponse>(string url, Action<RxHttpRequestOptions> options = null)
             where TResponse : class
         {
-            return http.Delete<TResponse>(url, opts, configuration.RequestInterceptors, configuration.ResponseInterceptors);
+            return http.Delete<TResponse>(url, ApplyOptions(options));
         }
 
-        protected IObservable<string> Delete(string url, Action<RxHttpRequestOptions> opts = null)
+        protected IObservable<HttpResponseMessage> Delete(string url, Action<RxHttpRequestOptions> options = null)
         {
-            return http.Delete(url, opts, configuration.RequestInterceptors, configuration.ResponseInterceptors);
+            return http.Delete(url, ApplyOptions(options));
+        }
+
+        private Action<RxHttpRequestOptions> ApplyOptions(Action<RxHttpRequestOptions> action)
+        {
+            Action<RxHttpRequestOptions> contextOpts = (RxHttpRequestOptions options) =>
+            {
+                context.RequestInterceptors.ForEach(ri => options.AddRequestInteceptor(ri));
+                context.ResponseInterceptors.ForEach(ri => options.AddResponseInterceptor(ri));
+                action?.Invoke(options);
+            };
+            return contextOpts;
+        }
+
+        public void Dispose()
+        {
+            this.http.Dispose();
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Rx.Http.MediaTypes.Abstractions;
-using Rx.Http.Serializers;
 using Rx.Http.Serializers.Interfaces;
 using System.IO;
 using System.Net.Http;
@@ -10,13 +9,12 @@ namespace Rx.Http.MediaTypes
     public class JsonHttpMediaType : IHttpMediaType
     {
         private readonly ITwoWaysSerializable serializer;
-        public JsonHttpMediaType()
+        public JsonHttpMediaType(ITwoWaysSerializable serializer)
         {
-            serializer = new JsonSerializer();
+            this.serializer = serializer;
         }
 
         public T Deserialize<T>(Stream stream)
-            where T : class
         {
             return serializer.Deserialize<T>(stream);
         }
