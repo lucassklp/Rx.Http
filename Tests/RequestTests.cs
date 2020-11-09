@@ -4,11 +4,14 @@ using Rx.Http;
 using Rx.Http.Exceptions;
 using Rx.Http.Interceptors;
 using Rx.Http.MediaTypes;
+using Rx.Http.Extensions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Xunit;
+using System.IO;
 
 namespace Tests
 {
@@ -17,26 +20,26 @@ namespace Tests
         private readonly RxHttpClient http;
         public RequestTests()
         {
-            http = new RxHttpClient(new HttpClient());
+            http = new RxHttpClient(new HttpClient(), null);
         }
 
         [Fact]
-        public async void TestGetAsStringContent()
+        public async Task TestGetAsStringContent()
         {
             var response = await http.Get("http://google.com");
             Assert.NotNull(response);
         }
 
         [Fact]
-        public async void TestGetAsJsonObject()
+        public async Task TestGetAsJsonObject()
         {
-            var todos = await http.Get<List<Todo>>(@"https://jsonplaceholder.typicode.com/todos/");
+            var todos = await http.Get<List<Todo>>("https://jsonplaceholder.typicode.com/todos/");
 
             Assert.NotNull(todos);
         }
 
         [Fact]
-        public async void TestGet404Error()
+        public async Task TestGet404Error()
         {
             await Assert.ThrowsAsync<RxHttpRequestException>(async () =>
             {
@@ -47,7 +50,7 @@ namespace Tests
         }
 
         [Fact]
-        public void TestBodyWithJson()
+        public async Task TestBodyWithJson()
         {
             var todo = new Todo
             {
@@ -56,14 +59,14 @@ namespace Tests
                 IsCompleted = true,
                 UserId = 20
             };
-            var response = http.Post<PostResponse<Todo>>("https://postman-echo.com/post", todo).Wait();
+            var response = await http.Post<PostResponse<Todo>>("https://postman-echo.com/post", todo);
 
             Assert.True(response.Data.Equals(todo));
         }
 
 
         [Fact]
-        public async void TestPostWithJson()
+        public async Task TestPostWithJson()
         {
             var postWithId = await http.Post<Identifiable>(@"https://jsonplaceholder.typicode.com/posts/", new Post()
             {
@@ -76,7 +79,7 @@ namespace Tests
         }
 
         [Fact]
-        public async void TestQueryStrings()
+        public async Task TestQueryStrings()
         {
             var queryStrings = new Dictionary<string, string>
             {
@@ -94,7 +97,7 @@ namespace Tests
         }
 
         [Fact]
-        public async void TestQueryStringsWithObject()
+        public async Task TestQueryStringsWithObject()
         {
             var queryStrings = new Dictionary<string, string>
             {
@@ -119,7 +122,7 @@ namespace Tests
         }
 
         [Fact]
-        public async void TestHeaders()
+        public async Task TestHeaders()
         {
             var headers = new Dictionary<string, string>
             {
@@ -141,7 +144,7 @@ namespace Tests
         }
 
         [Fact]
-        public async void TestHeadersWithObject()
+        public async Task TestHeadersWithObject()
         {
             var headers = new Dictionary<string, string>
             {
@@ -169,15 +172,12 @@ namespace Tests
         }
 
         [Fact]
-        public async void TestJsonContentTypeInHeader()
+        public async Task TestJsonContentTypeInHeader()
         {
             var response = await http.Post<PostmanEchoResponse>(@"https://postman-echo.com/post", new
             {
                 JsonProperty = "Http is nice",
                 AnotherProperty = "But with Rx is awesome"
-            }, opts =>
-            {
-                opts.SetRequestMediaType(MediaTypesMap.Get(MediaType.Application.Json));
             });
 
             Assert.True(response.Headers["content-type"] == MediaType.Application.Json);
@@ -185,9 +185,42 @@ namespace Tests
 
 
         [Fact]
-        public async void TestRequestInterceptor()
+        public async Task TestGetWithJson()
         {
-            var response = await http.Post<PostmanEchoResponse>(@"https://postman-echo.com/post", null, opts =>
+            var response = await http.Get<PostmanEchoResponse>(@"https://postman-echo.com/get", new
+            {
+                JsonProperty = "Http is nice",
+                AnotherProperty = "But with Rx is awesome"
+            });
+
+
+            var isCorrect = response.Args["JsonProperty"] == "Http is nice"
+                && response.Args["AnotherProperty"] == "But with Rx is awesome";
+
+            Assert.True(isCorrect);
+        }
+
+        [Fact]
+        public async Task TestDownloadFile()
+        {
+            var fileName = $"mysql-installer-web-community-8.0.22.0.msi";
+            var directory = Directory.GetCurrentDirectory();
+            var path = Path.Combine(directory, fileName);
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+            await http.Get($@"https://dev.mysql.com/get/Downloads/MySQLInstaller/{fileName}")
+                .ToFile(path);
+
+            Assert.True(File.Exists(path));
+            File.Delete(path);
+        }
+
+        [Fact]
+        public async Task TestRequestInterceptor()
+        {
+            var response = await http.Post<PostmanEchoResponse>(@"https://postman-echo.com/post", opts =>
             {
                 opts.AddRequestInteceptor(new TestInterceptor());
             });

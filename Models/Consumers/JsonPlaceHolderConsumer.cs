@@ -6,7 +6,7 @@ namespace Models.Consumers
 {
     public class JsonPlaceHolderConsumer : RxConsumer
     {
-        public JsonPlaceHolderConsumer(IConsumerConfiguration<JsonPlaceHolderConsumer> configuration) : base(configuration)
+        public JsonPlaceHolderConsumer(IConsumerContext<JsonPlaceHolderConsumer> configuration) : base(configuration)
         {
 
         }

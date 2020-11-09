@@ -6,7 +6,7 @@ namespace Models.Consumers
 {
     public class TheMovieDatabaseConsumer : RxConsumer
     {
-        public TheMovieDatabaseConsumer(IConsumerConfiguration<TheMovieDatabaseConsumer> config) : base(config)
+        public TheMovieDatabaseConsumer(IConsumerContext<TheMovieDatabaseConsumer> config) : base(config)
         {
             config.RequestInterceptors.Add(new TheMovieDatabaseInterceptor());
         }
