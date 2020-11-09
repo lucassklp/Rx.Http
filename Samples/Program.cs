@@ -12,7 +12,7 @@ namespace Samples
 {
     internal class Program
     {
-        public static async Task Main(string[] args)
+        public async static Task Main(string[] args)
         {
             var serviceCollection = new ServiceCollection();
             ConfigureServices(serviceCollection);
@@ -23,31 +23,26 @@ namespace Samples
 
         private static void ConfigureServices(ServiceCollection services)
         {
-
             services.AddLogging(config =>
             {
-                config.AddDebug(); // Log to debug (debug window in Visual Studio or any debugger attached)
-                config.AddConsole(); // Log to console (colored !)
+                config.AddDebug();
+                config.AddConsole();
             })
             .Configure<LoggerFilterOptions>(options =>
             {
-                options.AddFilter<DebugLoggerProvider>(null /* category*/ , LogLevel.Information /* min level */);
-                options.AddFilter<ConsoleLoggerProvider>(null  /* category*/ , LogLevel.Information /* min level */);
+                options.AddFilter<DebugLoggerProvider>(null, LogLevel.Information);
+                options.AddFilter<ConsoleLoggerProvider>(null, LogLevel.Information);
             });
 
-            services.AddHttpClient<RxHttpClient>();
             services.AddRxHttpLogging<RxHttpDefaultLogging>();
             services.AddConsumer<TheMovieDatabaseConsumer>(http =>
             {
                 http.BaseAddress = new Uri(@"https://api.themoviedb.org/3/");
             })
-            .AddConsumer<GoogleConsumer>(http =>
-            {
-                http.BaseAddress = new Uri(@"http://www.google.com.br/");
-            })
+
             .AddConsumer<JsonPlaceHolderConsumer>(http =>
             {
-                http.BaseAddress = new Uri(@"https://jsonplaceholder.typicode.com/posts");
+                http.BaseAddress = new Uri(@"https://jsonplaceholder.typicode.com/");
             })
             .AddTransient<Application>();
         }

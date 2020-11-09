@@ -13,7 +13,7 @@ namespace Rx.Http
             this.Logger = logger;
         }
 
-        public abstract Task OnSend(HttpContent httpContent);
-        public abstract Task OnReceive(HttpResponseMessage httpResponse);
+        public abstract Task OnSend(HttpContent httpContent, string url);
+        public abstract Task OnReceive(HttpResponseMessage httpResponse, string url);
     }
 }

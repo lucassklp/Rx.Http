@@ -4,7 +4,7 @@ using System.Net.Http;
 
 namespace Rx.Http
 {
-    public interface IConsumerConfiguration<out T>
+    public interface IConsumerContext<out T>
     {
         List<RxRequestInterceptor> RequestInterceptors { get; }
         List<RxResponseInterceptor> ResponseInterceptors { get; }

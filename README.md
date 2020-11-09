@@ -2,16 +2,14 @@
   <img src="Resources/rx.http.mini.png">
 </p>
 <p align="center">
-<img alt="nuget" src="https://img.shields.io/nuget/dt/Rx.Http.svg">
-<a href="https://www.codacy.com/manual/lucassklp/Rx.Http?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=lucassklp/Rx.Http&amp;utm_campaign=Badge_Grade">
-    <img src="https://api.codacy.com/project/badge/Grade/90ffddf0fe1c4bb89e8e7049784ea190"/>
-</a>
-<img alt="npm version" src="https://img.shields.io/nuget/v/Rx.Http.svg">
-
-<!-- snyk does not support .NET Core yet -->
-<!-- https://github.com/snyk/snyk/issues/489 -->
-<!-- <a href="https://snyk.io//test/github/lucassklp/Rx.Http?targetFile=Rx.Http/Rx.Http.csproj"><img src="https://snyk.io//test/github/lucassklp/Rx.Http/badge.svg?targetFile=Rx.Http/Rx.Http.csproj" alt="Known Vulnerabilities" data-canonical-src="https://snyk.io//test/github/lucassklp/Rx.Http?targetFile=Rx.Http/Rx.Http.csproj" style="max-width:100%;"></a> -->
-
+    <img alt="nuget" src="https://img.shields.io/nuget/dt/Rx.Http.svg">
+    <a href="https://www.codacy.com/manual/lucassklp/Rx.Http?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=lucassklp/Rx.Http&amp;utm_campaign=Badge_Grade">
+        <img src="https://api.codacy.com/project/badge/Grade/90ffddf0fe1c4bb89e8e7049784ea190"/>
+    </a>
+    <img alt="nuget version" src="https://img.shields.io/nuget/v/Rx.Http.svg">
+    <a href="https://snyk.io/test/github/lucassklp/Rx.Http?targetFile=Rx.Http/Rx.Http.csproj">
+        <img src="https://snyk.io/test/github/lucassklp/Rx.Http/badge.svg?targetFile=Rx.Http/Rx.Http.csproj" alt="Known Vulnerabilities" data-canonical-src="https://snyk.io/test/github/lucassklp/Rx.Http?targetFile=Rx.Http/Rx.Http.csproj" style="max-width:100%;">
+    </a>
 </p>
 
 A lightweight library that is inpired in [Angular 2+ Http Client](https://angular.io/guide/http) built on top of [.NET Http Client](https://docs.microsoft.com/pt-br/dotnet/api/system.net.http.httpclient) that help programmers to make asynchronous http requests.
@@ -21,13 +19,13 @@ A lightweight library that is inpired in [Angular 2+ Http Client](https://angula
 If you are using Package Manager:
 
 ```bash
-Install-Package Rx.Http -Version 1.2.0
+Install-Package Rx.Http -Version 1.3.0
 ```
 
 If you are using .NET CLI
 
 ```bash
-dotnet add package Rx.Http --version 1.2.0
+dotnet add package Rx.Http --version 1.3.0
 ```
 
 ## Example of use
@@ -63,9 +61,7 @@ You can customize your request by using options. It make possible you set **quer
 ```csharp
 http.Get<List<Todo>>("https://jsonplaceholder.typicode.com/todos/", options =>
 {
-    options.SetRequestMediaType(new JsonHttpMediaType())
-        .SetResponseMediaType(new JsonHttpMediaType())
-        .AddHeader(new {
+    options.AddHeader(new {
             Authorization = "Bearer <token>"
             Accept = "application/json"
         })
@@ -76,13 +72,44 @@ http.Get<List<Todo>>("https://jsonplaceholder.typicode.com/todos/", options =>
 });
 ```
 
-The media type represents a structure that is used to translate a mime type to a object (serializing or deserializing).
+### HttpMediaType
 
-**RequestMediaType** is used to serialize your body content. **By default is used JsonHttpMediaType**
+The media type represents a interface that is used to translate a mime type to a object (serializing and deserializing).
 
-**ResponseMediaType** is used to deserialize your body content. **By default it use the serializer based on mime type from response.**
+It's called when you provide a type when you call a request like that:
+```csharp
+var url = "https://myapi.com/names/";
+var parameters = new 
+{
+    Name = "Lucas"
+};
+http.Post<List<string>>(url, parameters)
+//       ^^^^^^^^^^^^^
+```
 
-You can customize your own *Media Type* by implementing the interface **IHttpMediaType**.
+In this case, you're sending an object which contains a property "Name" and a value "Lucas" and you're receiving a List<string> from server.
+
+Supose that the server only does accept XML and reply the request using the CSV format. So, we have to convert the "parameter" object to XML and convert the server reply to List<string> right? That's why we have the interfaces *IHttpMediaTypeSerializer* and *IHttpMediaTypeDeserializer*.
+
+You could create **XmlHttpMediaType** and **CsvHttpMediaType** which implements **IHttpMediaTypeSerializer** and **IHttpMediaTypeDeserializer** to solve this issue. The final code would be like that.
+
+```csharp
+var url = "https://myapi.com/names/";
+var parameters = new 
+{
+    Name = "Lucas"
+};
+http.Get<List<string>>(url, parameters, options =>
+{
+    options.SetRequestMediaType(new XmlHttpMediaType())
+        .SetResponseMediaType(new CsvHttpMediaType())
+});
+```
+
+**RequestMediaType** is used to serialize your body content when you are making a request. It's only called when you provide type on Generic. **By default is used JsonHttpMediaType**
+
+**ResponseMediaType** is used to deserialize the response from server. **By default is used JsonHttpMediaType**
+
 
 ## Consumers
 
@@ -100,23 +127,23 @@ In this example, we need to provide the api key for all requests to [The Movie D
 The code above shows how to use Consumers and Interceptors.
 
 ```csharp
-    public class TheMovieDatabaseConsumer : RxConsumer
+public class TheMovieDatabaseConsumer : RxConsumer
+{
+    public TheMovieDatabaseConsumer(IConsumerContext<TheMovieDatabaseConsumer> configuration): base(configuration)
     {
-        public TheMovieDatabaseConsumer(IConsumerConfiguration<TheMovieDatabaseConsumer> configuration): base(configuration)
-        {
-            configuration.AddRequestInterceptors(new TheMovieDatabaseInterceptor());
-        }
-
-        public IObservable<Result> ListMovies() => Get<Result>("movie/popular");
+        configuration.AddRequestInterceptors(new TheMovieDatabaseInterceptor());
     }
 
-    public class TheMovieDatabaseInterceptor : RxInterceptor
+    public IObservable<Result> ListMovies() => Get<Result>("movie/popular");
+}
+
+public class TheMovieDatabaseInterceptor : RxInterceptor
+{
+    public void Intercept(RxHttpRequest request)
     {
-        public void Intercept(RxHttpRequest request)
-        {
-            request.AddQueryString("api_key", "key");
-        }
+        request.AddQueryString("api_key", "key");
     }
+}
 ```
 
 ## RxHttpRequestException
@@ -180,6 +207,27 @@ private static void ConfigureServices(ServiceCollection services)
 }
 ```
 
+## Global Settings
+
+You can setup default settings by setting the RxDefault like the example below:
+
+```csharp
+RxHttp.Default.RequestMediaType = new JsonHttpMediaType(new NewtonsoftJsonSerializer());
+RxHttp.Default.ResponseMediaType = new JsonHttpMediaType(new NewtonsoftJsonSerializer())
+```
+
+## Save response to file (Download)
+
+You can also download a file using Rx.Http with a code like that:
+
+```csharp
+var fileName = $"mysql-installer-web-community-8.0.22.0.msi";
+var directory = Directory.GetCurrentDirectory();
+var path = Path.Combine(directory, fileName);
+await http.Get($@"https://dev.mysql.com/get/Downloads/MySQLInstaller/{fileName}")
+    .ToFile(path); // Save response to path (download)
+```
+
 ### Roadmap
 
 #### Version 1.x
@@ -193,9 +241,11 @@ private static void ConfigureServices(ServiceCollection services)
  * [x] **Native support for x-www-form-urlencoded and form-data**
 
 #### Version 2.x
-
+ * [x] **Global settings**
+ * [x] **ASP.Net Core native integration (Dependency Injection)**
+ * [x] **Save response to file (download)**
+ * [x] **Provide a alternative for built-in Json serializer: System.Text.Json.JsonSerializer of .NET Core 3**
  * [ ] **Implement cancellation token funcionality**
- * [ ] **Built-in XML support**
- * [ ] **Global settings**
- * [ ] **Provide a alternative for built-in Json serializer: System.Text.Json.JsonSerializer of .NET Core 3**
- * [ ] **ASP.Net Core native integration**
+ * [ ] ~~**Built-in XML support**~~ (Obsolete)
+
+ 

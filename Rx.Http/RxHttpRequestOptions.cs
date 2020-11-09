@@ -6,9 +6,9 @@ namespace Rx.Http
 {
     public abstract class RxHttpRequestOptions
     {
-        public abstract RxHttpRequestOptions SetRequestMediaType(IHttpMediaType mediaType);
+        public abstract RxHttpRequestOptions SetRequestMediaType(IHttpMediaTypeSerializer mediaType);
 
-        public abstract RxHttpRequestOptions SetResponseMediaType(IHttpMediaType mediaType);
+        public abstract RxHttpRequestOptions SetResponseMediaType(IHttpMediaTypeDeserializer mediaType);
 
         public abstract RxHttpRequestOptions AddResponseInterceptor(RxResponseInterceptor interceptor);
 
@@ -25,28 +25,5 @@ namespace Rx.Http
         public abstract RxHttpRequestOptions AddQueryString(IEnumerable<KeyValuePair<string, string>> pairs);
 
         public abstract RxHttpRequestOptions AddQueryString(object obj);
-
-        public abstract RxHttpRequestOptions UseBasicAuthorization(string user, string key);
-
-        public abstract RxHttpRequestOptions UseBearerAuthorization(string token);
-
-        protected IList<KeyValuePair<string, string>> GetKeysByObject(object obj)
-        {
-            var keys = new List<KeyValuePair<string, string>>();
-
-            var type = obj.GetType();
-
-            foreach (var field in type.GetFields())
-            {
-                keys.Add(new KeyValuePair<string, string>(field.Name, field.GetValue(obj).ToString()));
-            }
-
-            foreach (var property in type.GetProperties())
-            {
-                keys.Add(new KeyValuePair<string, string>(property.Name, property.GetValue(obj).ToString()));
-            }
-
-            return keys;
-        }
     }
 }

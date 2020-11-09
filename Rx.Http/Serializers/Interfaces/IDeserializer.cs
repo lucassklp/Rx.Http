@@ -4,6 +4,6 @@ namespace Rx.Http.Serializers.Interfaces
 {
     public interface IDeserializer
     {
-        T Deserialize<T>(Stream stream) where T : class;
+        T Deserialize<T>(Stream stream);
     }
 }
