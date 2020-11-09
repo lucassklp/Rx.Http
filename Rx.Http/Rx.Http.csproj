@@ -1,51 +1,34 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.0</TargetFrameworks>
+        <TargetFrameworks>netstandard2.1</TargetFrameworks>
         <Version>1.3.0</Version>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Authors>Lucas Simas</Authors>
         <Description>A lightweight library that is inpired in Angular Http Client built on top of .NET HttpClient that and help programmers to make asynchronous http requests.</Description>
         <PackageProjectUrl>https://github.com/lucassklp/Rx.Http</PackageProjectUrl>
         <RepositoryUrl>https://github.com/lucassklp/Rx.Http</RepositoryUrl>
-        <PackageIconUrl>https://lucassklp.github.io/Rx.Http/Resources/rx.http.icon.png</PackageIconUrl>
+        <PackageIcon>rx.http.icon.png</PackageIcon>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
     </PropertyGroup>
 
-    <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
-      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.9" />
-      <PackageReference Include="Microsoft.Net.Http.Headers" Version="2.2.0" />
-      <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-      <PackageReference Include="System.Net.Http" Version="4.3.4" />
-      <PackageReference Include="System.Reactive" Version="4.1.6" />
-      <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.9" />
-      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.9" />
-    </ItemGroup>
-
-    <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard3.0'">
-      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.9" />
-      <PackageReference Include="Microsoft.Net.Http.Headers" Version="2.2.0" />
-      <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-      <PackageReference Include="System.Net.Http" Version="4.3.4" />
-      <PackageReference Include="System.Reactive" Version="4.1.6" />
-      <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.9" />
-      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.9" />
-    </ItemGroup>
-
-<!--    <ItemGroup Condition=" '$(TargetFramework)' == 'net45'">
-      <Reference Include="System.Web" />
-      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="1.1.2" />
-      <PackageReference Include="Microsoft.Net.Http.Headers" Version="1.1.2" />
-      <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-      <PackageReference Include="System.Net.Http" Version="4.3.4" />
-      <PackageReference Include="System.Reactive" Version="3.1.1" />
-    </ItemGroup>-->
-  
     <ItemGroup>
-      <None Include="..\LICENSE">
-        <Pack>True</Pack>
-        <PackagePath></PackagePath>
-      </None>
+      <PackageReference Include="Microsoft.Net.Http.Headers" Version="2.2.8"/>
+      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.9" />
+      <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+      <PackageReference Include="System.Net.Http" Version="4.3.4" />
+      <PackageReference Include="System.Reactive" Version="4.1.6" />
+      <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.9" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.9" />
+      <PackageReference Include="System.Text.Json" Version="4.7.2" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Include="..\LICENSE" Pack="true" PackagePath="\" />
+      <None Include="..\Resources\rx.http.icon.png" Pack="true" PackagePath="\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Enums\" />
+    </ItemGroup>
 </Project>

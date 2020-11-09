@@ -50,8 +50,8 @@ namespace Rx.Http
             ResponseInterceptors = new List<RxResponseInterceptor>();
             QueryStrings = new Dictionary<string, string>();
             Headers = new Dictionary<string, List<string>>();
-            RequestMediaType = RxDefaults.DefaultRequestMediaType;
-            ResponseMediaType = RxDefaults.DefaultResponseMediaType;
+            RequestMediaType = RxHttp.Default.RequestMediaType;
+            ResponseMediaType = RxHttp.Default.ResponseMediaType;
         }
 
         internal HttpContent BuildContent()

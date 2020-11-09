@@ -56,17 +56,13 @@ namespace Rx.Http
             return http.Delete(url, ApplyOptions(options));
         }
 
-        private Action<RxHttpRequestOptions> ApplyOptions(Action<RxHttpRequestOptions> action)
+        private Action<RxHttpRequestOptions> ApplyOptions(Action<RxHttpRequestOptions> action) => (RxHttpRequestOptions options) =>
         {
-            Action<RxHttpRequestOptions> contextOpts = (RxHttpRequestOptions options) =>
-            {
-                context.RequestInterceptors.ForEach(ri => options.AddRequestInteceptor(ri));
-                context.ResponseInterceptors.ForEach(ri => options.AddResponseInterceptor(ri));
-                action?.Invoke(options);
-            };
-            return contextOpts;
-        }
-
+            context.RequestInterceptors.ForEach(ri => options.AddRequestInteceptor(ri));
+            context.ResponseInterceptors.ForEach(ri => options.AddResponseInterceptor(ri));
+            action?.Invoke(options);
+        };
+        
         public void Dispose()
         {
             this.http.Dispose();

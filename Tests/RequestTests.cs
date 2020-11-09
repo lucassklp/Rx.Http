@@ -4,7 +4,6 @@ using Rx.Http;
 using Rx.Http.Exceptions;
 using Rx.Http.Interceptors;
 using Rx.Http.MediaTypes;
-using Rx.Http.Serializers;
 using Rx.Http.Extensions;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +11,6 @@ using System.Net.Http;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Xunit;
-using System.Reflection;
 using System.IO;
 
 namespace Tests
@@ -35,7 +33,7 @@ namespace Tests
         [Fact]
         public async Task TestGetAsJsonObject()
         {
-            var todos = await http.Get<List<Todo>>(@"https://jsonplaceholder.typicode.com/todos/");
+            var todos = await http.Get<List<Todo>>("https://jsonplaceholder.typicode.com/todos/");
 
             Assert.NotNull(todos);
         }
@@ -180,12 +178,26 @@ namespace Tests
             {
                 JsonProperty = "Http is nice",
                 AnotherProperty = "But with Rx is awesome"
-            }, opts =>
-            {
-                opts.SetRequestMediaType(new JsonHttpMediaType(new NewtonsoftJsonSerializer()));
             });
 
             Assert.True(response.Headers["content-type"] == MediaType.Application.Json);
+        }
+
+
+        [Fact]
+        public async Task TestGetWithJson()
+        {
+            var response = await http.Get<PostmanEchoResponse>(@"https://postman-echo.com/get", new
+            {
+                JsonProperty = "Http is nice",
+                AnotherProperty = "But with Rx is awesome"
+            });
+
+
+            var isCorrect = response.Args["JsonProperty"] == "Http is nice"
+                && response.Args["AnotherProperty"] == "But with Rx is awesome";
+
+            Assert.True(isCorrect);
         }
 
         [Fact]
@@ -202,6 +214,7 @@ namespace Tests
                 .ToFile(path);
 
             Assert.True(File.Exists(path));
+            File.Delete(path);
         }
 
         [Fact]

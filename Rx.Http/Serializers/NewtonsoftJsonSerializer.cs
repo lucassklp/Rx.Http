@@ -9,14 +9,10 @@ namespace Rx.Http.Serializers
     {
         public T Deserialize<T>(Stream stream)
         {
-            using (var sr = new StreamReader(stream))
-            {
-                using (var jsonTextReader = new JsonTextReader(sr))
-                {
-                    var serializer = new JsonSerializer();
-                    return serializer.Deserialize<T>(jsonTextReader);
-                }
-            }
+            using var sr = new StreamReader(stream);
+            using var jsonTextReader = new JsonTextReader(sr);
+            var serializer = new JsonSerializer();
+            return serializer.Deserialize<T>(jsonTextReader);
         }
 
         public Stream Serialize<T>(T data)

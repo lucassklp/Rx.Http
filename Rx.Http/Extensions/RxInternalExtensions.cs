@@ -2,7 +2,7 @@
 
 namespace Rx.Http.Extensions
 {
-    internal static class InternalExtensions
+    internal static class RxInternalExtensions
     {
         internal static IDictionary<string, string> ToDictionary(this object obj)
         {
