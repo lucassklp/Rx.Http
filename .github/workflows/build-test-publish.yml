@@ -25,6 +25,11 @@ jobs:
     - name: Test
       run: dotnet test --no-restore --verbosity normal
 
+    - name: Build
+      run: |
+        cd Rx.Http
+        dotnet build --configuration Release --no-restore
+
     - name: Pack
       run: |  
           cd Rx.Http
