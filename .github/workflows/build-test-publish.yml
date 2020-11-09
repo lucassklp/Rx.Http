@@ -1,0 +1,45 @@
+name: Build, Test and Publish
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.403
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet publish --configuration Release --no-restore
+    - name: Test
+      run: dotnet test --no-restore --verbosity normal
+
+    - name: Setup .NET environment
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '3.1.403'
+        source-url: https://nuget.pkg.github.com/lucassklp/index.json
+      env:
+        NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+    - name: Build solution and generate NuGet package
+      run: |  
+          cd Rx.Http
+          dotnet pack -c Release -o out  
+
+    - name: Push Rx.Http to GitHub registry
+      run: dotnet nuget push ./Rx.Http/out/*.nupkg --skip-duplicate --no-symbols true
+
+    - name: Publish Rx.Http to nuget.org
+      uses: brandedoutcast/publish-nuget@v2.5.5
+      with:
+          PROJECT_FILE_PATH: Rx.Http/Rx.Http.csproj
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
