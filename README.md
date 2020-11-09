@@ -2,16 +2,14 @@
   <img src="Resources/rx.http.mini.png">
 </p>
 <p align="center">
-<img alt="nuget" src="https://img.shields.io/nuget/dt/Rx.Http.svg">
-<a href="https://www.codacy.com/manual/lucassklp/Rx.Http?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=lucassklp/Rx.Http&amp;utm_campaign=Badge_Grade">
-    <img src="https://api.codacy.com/project/badge/Grade/90ffddf0fe1c4bb89e8e7049784ea190"/>
-</a>
-<img alt="npm version" src="https://img.shields.io/nuget/v/Rx.Http.svg">
-
-<!-- snyk does not support .NET Core yet -->
-<!-- https://github.com/snyk/snyk/issues/489 -->
-<!-- <a href="https://snyk.io//test/github/lucassklp/Rx.Http?targetFile=Rx.Http/Rx.Http.csproj"><img src="https://snyk.io//test/github/lucassklp/Rx.Http/badge.svg?targetFile=Rx.Http/Rx.Http.csproj" alt="Known Vulnerabilities" data-canonical-src="https://snyk.io//test/github/lucassklp/Rx.Http?targetFile=Rx.Http/Rx.Http.csproj" style="max-width:100%;"></a> -->
-
+    <img alt="nuget" src="https://img.shields.io/nuget/dt/Rx.Http.svg">
+    <a href="https://www.codacy.com/manual/lucassklp/Rx.Http?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=lucassklp/Rx.Http&amp;utm_campaign=Badge_Grade">
+        <img src="https://api.codacy.com/project/badge/Grade/90ffddf0fe1c4bb89e8e7049784ea190"/>
+    </a>
+    <img alt="nuget version" src="https://img.shields.io/nuget/v/Rx.Http.svg">
+    <a href="https://snyk.io/test/github/lucassklp/Rx.Http?targetFile=Rx.Http/Rx.Http.csproj">
+        <img src="https://snyk.io/test/github/lucassklp/Rx.Http/badge.svg?targetFile=Rx.Http/Rx.Http.csproj" alt="Known Vulnerabilities" data-canonical-src="https://snyk.io/test/github/lucassklp/Rx.Http?targetFile=Rx.Http/Rx.Http.csproj" style="max-width:100%;">
+    </a>
 </p>
 
 A lightweight library that is inpired in [Angular 2+ Http Client](https://angular.io/guide/http) built on top of [.NET Http Client](https://docs.microsoft.com/pt-br/dotnet/api/system.net.http.httpclient) that help programmers to make asynchronous http requests.
@@ -101,7 +99,7 @@ var parameters = new
 {
     Name = "Lucas"
 };
-http.Get<List<string>>(url, options =>
+http.Get<List<string>>(url, parameters, options =>
 {
     options.SetRequestMediaType(new XmlHttpMediaType())
         .SetResponseMediaType(new CsvHttpMediaType())
@@ -214,8 +212,8 @@ private static void ConfigureServices(ServiceCollection services)
 You can setup default settings by setting the RxDefault like the example below:
 
 ```csharp
-RxHttp.DefaultRequestMediaType = new JsonHttpMediaType(new NewtonsoftJsonSerializer());
-RxHttp.DefaultResponseMediaType = new JsonHttpMediaType(new NewtonsoftJsonSerializer())
+RxHttp.Default.RequestMediaType = new JsonHttpMediaType(new NewtonsoftJsonSerializer());
+RxHttp.Default.ResponseMediaType = new JsonHttpMediaType(new NewtonsoftJsonSerializer())
 ```
 
 ## Save response to file (Download)
