@@ -14,6 +14,14 @@ namespace Rx.Http.Extensions
             return services;
         }
 
+        public static IServiceCollection AddConsumer<TConsumer>(this IServiceCollection services)
+            where TConsumer : RxConsumer
+        {
+            services.AddHttpClient<IConsumerContext<TConsumer>, ConsumerContext<TConsumer>>();
+            services.AddScoped<TConsumer>();
+            return services;
+        }
+
         public static IServiceCollection AddConsumer<TConsumer>(this IServiceCollection services, Action<IServiceProvider, HttpClient> configure)
             where TConsumer : RxConsumer
         {

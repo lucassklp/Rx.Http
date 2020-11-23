@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Models.Postman
 {
-    public class PostmanEchoResponse
+    public class EchoResponse
     {
         [JsonProperty("args")]
         public Dictionary<string, string> Args { get; set; }
