@@ -58,7 +58,6 @@ namespace Tests
             Assert.NotNull(postWithId);
         }
 
-
         [Fact]
         public async Task TestDownloadFile()
         {
