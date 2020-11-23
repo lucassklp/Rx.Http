@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Models
 {
-    public class Result
+    public class Movies
     {
         public int page { get; set; }
 

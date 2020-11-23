@@ -6,18 +6,16 @@ namespace Rx.Http.Extensions
 {
     public static class RxHttpRequestOptionsExtensions
     {
-        public static RxHttpRequestOptions UseBasicAuthorization(this RxHttpRequestOptions opt, string user, string key)
+        public static RxHttpRequestOptions UseBasicAuthorization(this RxHttpRequestOptions options, string user, string key)
         {
             var token = $"{user}:{key}";
             var tokenBase64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(token));
-            opt.AddHeader(HeaderNames.Authorization, $"Basic {tokenBase64}");
-            return opt;
+            return options.AddHeader(HeaderNames.Authorization, $"Basic {tokenBase64}");
         }
 
-        public static RxHttpRequestOptions UseBearerAuthorization(this RxHttpRequestOptions opt, string token)
+        public static RxHttpRequestOptions UseBearerAuthorization(this RxHttpRequestOptions options, string token)
         {
-            opt.AddHeader(HeaderNames.Authorization, $"Bearer {token}");
-            return opt;
+            return options.AddHeader(HeaderNames.Authorization, $"Bearer {token}");
         }
     }
 }

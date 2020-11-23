@@ -21,8 +21,6 @@ namespace Rx.Http
 
         public object Content { get; private set; }
 
-        public string Url { get; private set; }
-
         public RxHttpRequest(string url)
         {
             Initialize();

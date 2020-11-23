@@ -2,7 +2,6 @@
 using Models.Consumers;
 using Rx.Http;
 using Rx.Http.Extensions;
-using System;
 
 namespace Tests
 {
@@ -20,11 +19,9 @@ namespace Tests
         {
             services.AddHttpClient<RxHttpClient>();
             services.AddRxHttpLogging<RxHttpDefaultLogging>();
-            services.AddConsumer<TheMovieDatabaseConsumer>(http =>
-            {
-                http.BaseAddress = new Uri(@"https://api.themoviedb.org/3/");
-            })
-            .AddTransient<ConsumersTests>();
+            services.AddConsumer<TheMovieDatabaseConsumer>();
+            services.AddConsumer<PostmanConsumer>();
+            services.AddTransient<ConsumersTests>();
         }
 
         public T Get<T>()

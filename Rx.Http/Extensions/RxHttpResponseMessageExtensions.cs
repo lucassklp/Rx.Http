@@ -2,12 +2,13 @@
 using System.IO;
 using System.Net.Http;
 using System.Reactive.Linq;
+using HtmlAgilityPack;
 
 namespace Rx.Http.Extensions
 {
     public static class RxHttpResponseMessageExtensions
     {
-        public static IObservable<string> ToString(this IObservable<HttpResponseMessage> response)
+        public static IObservable<string> AsString(this IObservable<HttpResponseMessage> response)
         {
             return response.SelectMany(async (httpResp) =>
             {
@@ -15,7 +16,7 @@ namespace Rx.Http.Extensions
             });
         }
 
-        public static IObservable<FileStream> ToFile(this IObservable<HttpResponseMessage> response, string path)
+        public static IObservable<HttpResponseMessage> ToFile(this IObservable<HttpResponseMessage> response, string path)
         {
             return response.SelectMany(async (httpResp) =>
             {
@@ -24,7 +25,18 @@ namespace Rx.Http.Extensions
                 stream.Seek(0, SeekOrigin.Begin);
                 stream.CopyTo(fileStream);
                 fileStream.Close();
-                return fileStream;
+                return httpResp;
+            });
+        }
+
+        public static IObservable<HtmlDocument> AsHtmlDocument(this IObservable<HttpResponseMessage> response)
+        {
+            return response.SelectMany(async httpResponse =>
+            {
+                var html = await httpResponse.Content.ReadAsStringAsync();
+                var htmlDoc = new HtmlDocument();
+                htmlDoc.LoadHtml(html);
+                return htmlDoc;
             });
         }
     }
