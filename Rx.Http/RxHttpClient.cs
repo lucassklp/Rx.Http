@@ -13,179 +13,213 @@ namespace Rx.Http
 
         public RxHttpClient(HttpClient http, RxHttpLogging logger)
         {
-            this.httpClient = http;
+            httpClient = http;
             this.logger = logger;
         }
 
         public IObservable<HttpResponseMessage> Get(string url)
         {
-            return Request(new RxHttpRequest(url), HttpMethod.Get);
+            return Request(url, HttpMethod.Get);
         }
 
         public IObservable<HttpResponseMessage> Get(string url, object content)
         {
-            return Request(new RxHttpRequest(url, content), HttpMethod.Get);
+            return Request(url, content, HttpMethod.Get);
         }
 
         public IObservable<HttpResponseMessage> Get(string url, object content, Action<RxHttpRequestOptions> options)
         {
-            return Request(new RxHttpRequest(url, content, options), HttpMethod.Get);
+            return Request(url, content, options, HttpMethod.Get);
         }
 
         public IObservable<HttpResponseMessage> Get(string url, Action<RxHttpRequestOptions> options)
         {
-            return Request(new RxHttpRequest(url, null, options), HttpMethod.Get);
+            return Request(url, options, HttpMethod.Get);
         }
-
 
         public IObservable<T> Get<T>(string url)
         {
-            return Request<T>(new RxHttpRequest(url), HttpMethod.Get);
+            return Request<T>(url, HttpMethod.Get);
         }
 
         public IObservable<T> Get<T>(string url, object content)
         {
-            return Request<T>(new RxHttpRequest(url, content), HttpMethod.Get);
+            return Request<T>(url, content, HttpMethod.Get);
         }
 
         public IObservable<T> Get<T>(string url, object content, Action<RxHttpRequestOptions> options)
         {
-            return Request<T>(new RxHttpRequest(url, content, options), HttpMethod.Get);
+            return Request<T>(url, content, options, HttpMethod.Get);
         }
 
         public IObservable<T> Get<T>(string url, Action<RxHttpRequestOptions> options)
         {
-            return Request<T>(new RxHttpRequest(url, null, options), HttpMethod.Get);
+            return Request<T>(url, options, HttpMethod.Get);
         }
-
-
 
         public IObservable<HttpResponseMessage> Post(string url)
         {
-            return Request(new RxHttpRequest(url), HttpMethod.Post);
+            return Request(url, HttpMethod.Post);
         }
 
         public IObservable<HttpResponseMessage> Post(string url, object content)
         {
-            return Request(new RxHttpRequest(url, content), HttpMethod.Post);
+            return Request(url, content, HttpMethod.Post);
         }
 
         public IObservable<HttpResponseMessage> Post(string url, object content, Action<RxHttpRequestOptions> options)
         {
-            return Request(new RxHttpRequest(url, content, options), HttpMethod.Post);
+            return Request(url, content, options, HttpMethod.Post);
         }
 
         public IObservable<HttpResponseMessage> Post(string url, Action<RxHttpRequestOptions> options)
         {
-            return Request(new RxHttpRequest(url, null, options), HttpMethod.Post);
+            return Request(url, options, HttpMethod.Post);
         }
-
 
         public IObservable<T> Post<T>(string url)
         {
-            return Request<T>(new RxHttpRequest(url), HttpMethod.Post);
+            return Request<T>(url, HttpMethod.Post);
         }
 
         public IObservable<T> Post<T>(string url, object content)
         {
-            return Request<T>(new RxHttpRequest(url, content), HttpMethod.Post);
+            return Request<T>(url, content, HttpMethod.Post);
         }
 
         public IObservable<T> Post<T>(string url, object content, Action<RxHttpRequestOptions> options)
         {
-            return Request<T>(new RxHttpRequest(url, content, options), HttpMethod.Post);
+            return Request<T>(url, content, options, HttpMethod.Post);
         }
 
         public IObservable<T> Post<T>(string url, Action<RxHttpRequestOptions> options)
         {
-            return Request<T>(new RxHttpRequest(url, null, options), HttpMethod.Post);
+            return Request<T>(url, options, HttpMethod.Post);
         }
-
 
         public IObservable<HttpResponseMessage> Put(string url)
         {
-            return Request(new RxHttpRequest(url), HttpMethod.Put);
+            return Request(url, HttpMethod.Put);
         }
 
         public IObservable<HttpResponseMessage> Put(string url, object content)
         {
-            return Request(new RxHttpRequest(url, content), HttpMethod.Put);
+            return Request(url, content, HttpMethod.Put);
         }
 
         public IObservable<HttpResponseMessage> Put(string url, object content, Action<RxHttpRequestOptions> options)
         {
-            return Request(new RxHttpRequest(url, content, options), HttpMethod.Put);
+            return Request(url, content, options, HttpMethod.Put);
         }
 
         public IObservable<HttpResponseMessage> Put(string url, Action<RxHttpRequestOptions> options)
         {
-            return Request(new RxHttpRequest(url, null, options), HttpMethod.Put);
+            return Request(url, options, HttpMethod.Put);
         }
 
 
         public IObservable<T> Put<T>(string url)
         {
-            return Request<T>(new RxHttpRequest(url), HttpMethod.Put);
+            return Request<T>(url, HttpMethod.Put);
         }
 
         public IObservable<T> Put<T>(string url, object content)
         {
-            return Request<T>(new RxHttpRequest(url, content), HttpMethod.Put);
+            return Request<T>(url, content, HttpMethod.Put);
         }
 
         public IObservable<T> Put<T>(string url, object content, Action<RxHttpRequestOptions> options)
         {
-            return Request<T>(new RxHttpRequest(url, content, options), HttpMethod.Put);
+            return Request<T>(url, content, options, HttpMethod.Put);
         }
 
         public IObservable<T> Put<T>(string url, Action<RxHttpRequestOptions> options)
         {
-            return Request<T>(new RxHttpRequest(url, null, options), HttpMethod.Put);
+            return Request<T>(url, options, HttpMethod.Put);
         }
-
 
         public IObservable<HttpResponseMessage> Delete(string url)
         {
-            return Request(new RxHttpRequest(url), HttpMethod.Delete);
+            return Request(url, HttpMethod.Delete);
         }
 
         public IObservable<HttpResponseMessage> Delete(string url, object content)
         {
-            return Request(new RxHttpRequest(url, content), HttpMethod.Delete);
+            return Request(url, content, HttpMethod.Delete);
         }
 
         public IObservable<HttpResponseMessage> Delete(string url, object content, Action<RxHttpRequestOptions> options)
         {
-            return Request(new RxHttpRequest(url, content, options), HttpMethod.Delete);
+            return Request(url, content, options, HttpMethod.Delete);
         }
 
         public IObservable<HttpResponseMessage> Delete(string url, Action<RxHttpRequestOptions> options)
         {
-            return Request(new RxHttpRequest(url, null, options), HttpMethod.Delete);
+            return Request(url, options, HttpMethod.Delete);
         }
 
 
         public IObservable<T> Delete<T>(string url)
         {
-            return Request<T>(new RxHttpRequest(url), HttpMethod.Put);
+            return Request<T>(url, HttpMethod.Delete);
         }
 
         public IObservable<T> Delete<T>(string url, object content)
         {
-            return Request<T>(new RxHttpRequest(url, content), HttpMethod.Put);
+            return Request<T>(url, content, HttpMethod.Delete);
         }
 
         public IObservable<T> Delete<T>(string url, object content, Action<RxHttpRequestOptions> options)
         {
-            return Request<T>(new RxHttpRequest(url, content, options), HttpMethod.Put);
+            return Request<T>(url, content, options, HttpMethod.Delete);
         }
 
         public IObservable<T> Delete<T>(string url, Action<RxHttpRequestOptions> options)
         {
-            return Request<T>(new RxHttpRequest(url, null, options), HttpMethod.Put);
+            return Request<T>(url, options, HttpMethod.Delete);
         }
 
-        public IObservable<HttpResponseMessage> Request(RxHttpRequest request, HttpMethod method)
+        public IObservable<T> Request<T>(string url, HttpMethod method)
+        {
+            return Request<T>(new RxHttpRequest(url), method);
+        }
+
+        public IObservable<T> Request<T>(string url, Action<RxHttpRequestOptions> options, HttpMethod method)
+        {
+            return Request<T>(new RxHttpRequest(url, null, options), method);
+        }
+
+        public IObservable<T> Request<T>(string url, object obj, Action<RxHttpRequestOptions> options, HttpMethod method)
+        {
+            return Request<T>(new RxHttpRequest(url, obj, options), method);
+        }
+
+        public IObservable<T> Request<T>(string url, object obj, HttpMethod method)
+        {
+            return Request<T>(new RxHttpRequest(url, obj), method);
+        }
+
+        public IObservable<HttpResponseMessage> Request(string url, HttpMethod method)
+        {
+            return Request(new RxHttpRequest(url), method);
+        }
+
+        public IObservable<HttpResponseMessage> Request(string url, Action<RxHttpRequestOptions> options, HttpMethod method)
+        {
+            return Request(new RxHttpRequest(url, null, options), method);
+        }
+
+        public IObservable<HttpResponseMessage> Request(string url, object obj, Action<RxHttpRequestOptions> options, HttpMethod method)
+        {
+            return Request(new RxHttpRequest(url, obj, options), method);
+        }
+
+        public IObservable<HttpResponseMessage> Request(string url, object obj, HttpMethod method)
+        {
+            return Request(new RxHttpRequest(url, obj), method);
+        }
+
+        private IObservable<HttpResponseMessage> Request(RxHttpRequest request, HttpMethod method)
         {
             return SingleObservable.Create(async () =>
             {
@@ -193,12 +227,16 @@ namespace Rx.Http
                 var message = BuildRequestMessage(request, method);
                 var url = message.RequestUri.AbsoluteUri;
                 logger?.OnSend(message.Content, url);
-                var response = await this.httpClient.SendAsync(message);
+                var response = await httpClient.SendAsync(message);
                 logger?.OnReceive(response, url);
                 request.ResponseInterceptors.ForEach(interceptor => interceptor.Intercept(response));
                 try
                 {
-                    return response.EnsureSuccessStatusCode();
+                    if (response.StatusCode >= System.Net.HttpStatusCode.BadRequest)
+                    {
+                        return response.EnsureSuccessStatusCode();
+                    }
+                    return response;
                 }
                 catch (Exception exception)
                 {

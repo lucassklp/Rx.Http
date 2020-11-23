@@ -6,15 +6,17 @@ namespace Models.Consumers
 {
     public class TheMovieDatabaseConsumer : RxConsumer
     {
-        public TheMovieDatabaseConsumer(IConsumerContext<TheMovieDatabaseConsumer> config) : base(config)
+        public TheMovieDatabaseConsumer(IConsumerContext<TheMovieDatabaseConsumer> context)
+            : base(context)
         {
-            config.RequestInterceptors.Add(new TheMovieDatabaseInterceptor());
+            context.Http.BaseAddress = new Uri(@"https://api.themoviedb.org/3/");
+            context.RequestInterceptors.Add(new TheMovieDatabaseInterceptor());
         }
 
-        public IObservable<Result> ListMovies() => Get<Result>("movie/popular");
+        public IObservable<Movies> ListMovies() => Get<Movies>("movie/popular");
     }
 
-    public class TheMovieDatabaseInterceptor : RxRequestInterceptor
+    internal class TheMovieDatabaseInterceptor : RxRequestInterceptor
     {
         public void Intercept(RxHttpRequestOptions request)
         {

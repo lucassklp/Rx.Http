@@ -6,9 +6,9 @@ namespace Models.Consumers
 {
     public class JsonPlaceHolderConsumer : RxConsumer
     {
-        public JsonPlaceHolderConsumer(IConsumerContext<JsonPlaceHolderConsumer> configuration) : base(configuration)
+        public JsonPlaceHolderConsumer(IConsumerContext<JsonPlaceHolderConsumer> context)
+            : base(context)
         {
-
         }
 
         public IObservable<List<Todo>> GetTodos() => Get<List<Todo>>("todos");
