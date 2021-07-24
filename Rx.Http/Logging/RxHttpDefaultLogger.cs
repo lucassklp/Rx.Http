@@ -5,18 +5,21 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Rx.Http
+namespace Rx.Http.Logging
 {
-    public class RxHttpDefaultLogging : RxHttpLogging
+    public class RxHttpDefaultLogger : RxHttpLogger
     {
-        public RxHttpDefaultLogging(ILogger<RxHttpLogging> logger) : base(logger)
+        private readonly ILogger<RxHttpLogger> logger;
+        public RxHttpDefaultLogger(ILogger<RxHttpLogger> logger)
         {
+            this.logger = logger;
         }
 
         public override async Task OnReceive(HttpResponseMessage httpResponse, string url)
         {
-            var headers = FormatJson2(httpResponse.Headers.ToDictionary(x => x.Key, x => x.Value));
-            Logger.LogInformation($"Response Headers ({httpResponse.StatusCode} - {url}): \n{headers}");
+            var headers = httpResponse.Headers.ToDictionary(x => x.Key, x => x.Value);
+            var headersFormatted = JsonConvert.SerializeObject(headers, Formatting.Indented);
+            this.logger.LogInformation($"Response Headers ({httpResponse.StatusCode} - {url}): \n{headersFormatted}");
 
             string content = string.Empty;
             if (httpResponse.Content.Headers.ContentType.MediaType == MediaType.Application.Json)
@@ -28,13 +31,14 @@ namespace Rx.Http
             {
                 content = await httpResponse.Content.ReadAsStringAsync();
             }
-            Logger.LogInformation($"Response Body ({httpResponse.StatusCode} - {url}): \n{content}");
+            this.logger.LogInformation($"Response Body ({httpResponse.StatusCode} - {url}): \n{content}");
         }
 
         public override async Task OnSend(HttpContent httpContent, string url)
         {
-            var headers = FormatJson2(httpContent.Headers.ToDictionary(x => x.Key, x => x.Value));
-            Logger.LogInformation($"Request Headers ({url}): \n{headers}");
+            var headers = httpContent.Headers.ToDictionary(x => x.Key, x => x.Value);
+            var headersFormatted = JsonConvert.SerializeObject(headers, Formatting.Indented);
+            this.logger.LogInformation($"Request Headers ({url}): \n{headersFormatted}");
 
             string content = string.Empty;
 
@@ -47,7 +51,7 @@ namespace Rx.Http
             {
                 content = await httpContent.ReadAsStringAsync();
             }
-            Logger.LogInformation($"Request Body ({url}): \n{content}");
+            this.logger.LogInformation($"Request Body ({url}): \n{content}");
         }
 
         private string FormatJson(string content)
@@ -58,12 +62,6 @@ namespace Rx.Http
                 TypeNameHandling = TypeNameHandling.All,
                 TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple
             });
-        }
-
-
-        private string FormatJson2(object content)
-        {
-            return JsonConvert.SerializeObject(content, Formatting.Indented);
         }
     }
 }

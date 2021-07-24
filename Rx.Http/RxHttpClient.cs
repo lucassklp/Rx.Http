@@ -1,4 +1,5 @@
 ﻿using Rx.Http.Exceptions;
+using Rx.Http.Logging;
 using System;
 using System.Net.Http;
 using System.Reactive.Linq;
@@ -9,12 +10,18 @@ namespace Rx.Http
     public class RxHttpClient : IDisposable
     {
         private readonly HttpClient httpClient;
-        private readonly RxHttpLogging logger;
+        private RxHttpLogger logger;
 
-        public RxHttpClient(HttpClient http, RxHttpLogging logger)
+        public RxHttpClient(HttpClient http, RxHttpLogger logger)
         {
             httpClient = http;
             this.logger = logger;
+        }
+
+        public RxHttpClient UseLogger(RxHttpLogger logger)
+        {
+            this.logger = logger;
+            return this;
         }
 
         public IObservable<HttpResponseMessage> Get(string url)
@@ -248,7 +255,10 @@ namespace Rx.Http
         public IObservable<T> Request<T>(RxHttpRequest request, HttpMethod method)
         {
             return Request(request, method)
-                .SelectMany(async response => request.ResponseMediaType.Deserialize<T>(await response.Content.ReadAsStreamAsync()));
+                .SelectMany(async response => {
+                    var stream = await response.Content.ReadAsStreamAsync();
+                    return request.ResponseMediaType.Deserialize<T>(stream);
+                });
         }
 
         private string GetUrl(RxHttpRequest request)

@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging.Debug;
 using Models.Consumers;
 using Rx.Http;
 using Rx.Http.Extensions;
+using Rx.Http.Logging;
 using System;
 using System.Threading.Tasks;
 
@@ -34,7 +35,7 @@ namespace Samples
                 options.AddFilter<ConsoleLoggerProvider>(null, LogLevel.Information);
             });
 
-            services.AddRxHttpLogging<RxHttpDefaultLogging>();
+            services.AddRxHttpLogging<RxHttpDefaultLogger>();
             services.AddConsumer<TheMovieDatabaseConsumer>(http =>
             {
                 http.BaseAddress = new Uri(@"https://api.themoviedb.org/3/");

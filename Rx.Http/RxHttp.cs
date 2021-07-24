@@ -1,4 +1,5 @@
-﻿using Rx.Http.MediaTypes;
+﻿using System.Net.Http;
+using Rx.Http.MediaTypes;
 using Rx.Http.MediaTypes.Abstractions;
 using Rx.Http.Serializers;
 using Rx.Http.Serializers.Interfaces;
@@ -13,5 +14,7 @@ namespace Rx.Http
             public static IHttpMediaTypeSerializer RequestMediaType { get; set; } = new JsonHttpMediaType(new NewtonsoftJsonSerializer());
             public static IHttpMediaTypeDeserializer ResponseMediaType { get; set; } = new JsonHttpMediaType(new NewtonsoftJsonSerializer());
         }
+
+        public static RxHttpClient Create() => new RxHttpClient(new HttpClient(), null);
     }
 }
