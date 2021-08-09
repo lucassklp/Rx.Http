@@ -1,4 +1,5 @@
 ﻿using Rx.Http.Exceptions;
+using Rx.Http.Logging;
 using System;
 using System.Net.Http;
 using System.Reactive.Linq;
@@ -8,13 +9,21 @@ namespace Rx.Http
 {
     public class RxHttpClient : IDisposable
     {
-        private readonly HttpClient httpClient;
-        private readonly RxHttpLogging logger;
+        public static RxHttpClient Create() => new RxHttpClient(new HttpClient(), null);
 
-        public RxHttpClient(HttpClient http, RxHttpLogging logger)
+        private readonly HttpClient httpClient;
+        private RxHttpLogger logger;
+
+        public RxHttpClient(HttpClient http, RxHttpLogger logger)
         {
             httpClient = http;
             this.logger = logger;
+        }
+
+        public RxHttpClient UseLogger(RxHttpLogger logger)
+        {
+            this.logger = logger;
+            return this;
         }
 
         public IObservable<HttpResponseMessage> Get(string url)
@@ -223,12 +232,13 @@ namespace Rx.Http
         {
             return SingleObservable.Create(async () =>
             {
+                var requestId = Guid.NewGuid();
                 request.RequestInterceptors.ForEach(interceptor => interceptor.Intercept(request));
                 var message = BuildRequestMessage(request, method);
                 var url = message.RequestUri.AbsoluteUri;
-                logger?.OnSend(message.Content, url);
+                logger?.OnSend(message, requestId);
                 var response = await httpClient.SendAsync(message);
-                logger?.OnReceive(response, url);
+                logger?.OnReceive(response, url, message.Method, requestId);
                 request.ResponseInterceptors.ForEach(interceptor => interceptor.Intercept(response));
                 try
                 {
@@ -248,7 +258,10 @@ namespace Rx.Http
         public IObservable<T> Request<T>(RxHttpRequest request, HttpMethod method)
         {
             return Request(request, method)
-                .SelectMany(async response => request.ResponseMediaType.Deserialize<T>(await response.Content.ReadAsStreamAsync()));
+                .SelectMany(async response => {
+                    var stream = await response.Content.ReadAsStreamAsync();
+                    return request.ResponseMediaType.Deserialize<T>(stream);
+                });
         }
 
         private string GetUrl(RxHttpRequest request)

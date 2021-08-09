@@ -2,6 +2,7 @@
 using Models.Consumers;
 using Rx.Http;
 using Rx.Http.Extensions;
+using Rx.Http.Logging;
 
 namespace Tests
 {
@@ -17,8 +18,8 @@ namespace Tests
 
         private void ConfigureServices(ServiceCollection services)
         {
-            services.AddHttpClient<RxHttpClient>();
-            services.AddRxHttpLogging<RxHttpDefaultLogging>();
+            services.UseRxHttp();
+            services.AddRxHttpLogger<RxHttpDefaultLogger>();
             services.AddConsumer<TheMovieDatabaseConsumer>();
             services.AddConsumer<PostmanConsumer>();
             services.AddTransient<ConsumersTests>();
