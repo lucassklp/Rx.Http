@@ -9,6 +9,8 @@ namespace Rx.Http
 {
     public class RxHttpClient : IDisposable
     {
+        public static RxHttpClient Create() => new RxHttpClient(new HttpClient(), null);
+
         private readonly HttpClient httpClient;
         private RxHttpLogger logger;
 
@@ -230,12 +232,13 @@ namespace Rx.Http
         {
             return SingleObservable.Create(async () =>
             {
+                var requestId = Guid.NewGuid();
                 request.RequestInterceptors.ForEach(interceptor => interceptor.Intercept(request));
                 var message = BuildRequestMessage(request, method);
                 var url = message.RequestUri.AbsoluteUri;
-                logger?.OnSend(message.Content, url);
+                logger?.OnSend(message, requestId);
                 var response = await httpClient.SendAsync(message);
-                logger?.OnReceive(response, url);
+                logger?.OnReceive(response, url, message.Method, requestId);
                 request.ResponseInterceptors.ForEach(interceptor => interceptor.Intercept(response));
                 try
                 {

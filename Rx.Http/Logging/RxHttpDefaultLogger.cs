@@ -1,13 +1,14 @@
 ﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Rx.Http.MediaTypes;
+using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Rx.Http.Logging
 {
-    public class RxHttpDefaultLogger : RxHttpLogger
+    public class RxHttpDefaultLogger : LoggingMessage, RxHttpLogger
     {
         private readonly ILogger<RxHttpLogger> logger;
         public RxHttpDefaultLogger(ILogger<RxHttpLogger> logger)
@@ -15,53 +16,22 @@ namespace Rx.Http.Logging
             this.logger = logger;
         }
 
-        public override async Task OnReceive(HttpResponseMessage httpResponse, string url)
+        public async Task OnReceive(HttpResponseMessage httpResponse, string url, HttpMethod method, Guid requestId)
         {
-            var headers = httpResponse.Headers.ToDictionary(x => x.Key, x => x.Value);
-            var headersFormatted = JsonConvert.SerializeObject(headers, Formatting.Indented);
-            this.logger.LogInformation($"Response Headers ({httpResponse.StatusCode} - {url}): \n{headersFormatted}");
-
-            string content = string.Empty;
-            if (httpResponse.Content.Headers.ContentType.MediaType == MediaType.Application.Json)
-            {
-                var json = await httpResponse.Content.ReadAsStringAsync();
-                content = FormatJson(json);
-            }
-            else
-            {
-                content = await httpResponse.Content.ReadAsStringAsync();
-            }
-            this.logger.LogInformation($"Response Body ({httpResponse.StatusCode} - {url}): \n{content}");
+            var operation = "Response";
+            logger.LogInformation(GetResponseLog(httpResponse, method, url, requestId));
+            logger.LogDebug(GetHeadersLog(httpResponse.Headers, method, url, requestId, operation));
+            logger.LogDebug(await GetBodyLog(httpResponse.Content, method, url, requestId, operation));
         }
 
-        public override async Task OnSend(HttpContent httpContent, string url)
+        public async Task OnSend(HttpRequestMessage httpRequest, Guid requestId)
         {
-            var headers = httpContent.Headers.ToDictionary(x => x.Key, x => x.Value);
-            var headersFormatted = JsonConvert.SerializeObject(headers, Formatting.Indented);
-            this.logger.LogInformation($"Request Headers ({url}): \n{headersFormatted}");
-
-            string content = string.Empty;
-
-            if (httpContent.Headers.ContentType.MediaType == MediaType.Application.Json)
-            {
-                var json = await httpContent.ReadAsStringAsync();
-                content = FormatJson(json);
-            }
-            else
-            {
-                content = await httpContent.ReadAsStringAsync();
-            }
-            this.logger.LogInformation($"Request Body ({url}): \n{content}");
+            var operation = "Request";
+            logger.LogInformation(GetRequestLog(httpRequest, requestId));
+            logger.LogDebug(GetHeadersLog(httpRequest.Headers, httpRequest.Method, httpRequest.RequestUri.AbsoluteUri, requestId, operation));
+            logger.LogDebug(await GetBodyLog(httpRequest.Content, httpRequest.Method, httpRequest.RequestUri.AbsoluteUri, requestId, operation));
         }
 
-        private string FormatJson(string content)
-        {
-            object parsedJson = JsonConvert.DeserializeObject(content);
-            return JsonConvert.SerializeObject(parsedJson, Formatting.Indented, new JsonSerializerSettings
-            {
-                TypeNameHandling = TypeNameHandling.All,
-                TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple
-            });
-        }
+
     }
 }

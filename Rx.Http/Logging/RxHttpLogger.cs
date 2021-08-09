@@ -1,11 +1,12 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Rx.Http.Logging
 {
-    public abstract class RxHttpLogger
+    public interface RxHttpLogger
     {
-        public abstract Task OnSend(HttpContent httpContent, string url);
-        public abstract Task OnReceive(HttpResponseMessage httpResponse, string url);
+        Task OnSend(HttpRequestMessage httpContent, Guid requestId);
+        Task OnReceive(HttpResponseMessage httpResponse, string url, HttpMethod method, Guid requestId);
     }
 }

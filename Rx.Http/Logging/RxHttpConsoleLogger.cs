@@ -7,56 +7,22 @@ using Rx.Http.MediaTypes;
 
 namespace Rx.Http.Logging
 {
-    public class RxHttpConsoleLogger : RxHttpLogger
+    public class RxHttpConsoleLogger : LoggingMessage, RxHttpLogger
     {
-        public override async Task OnReceive(HttpResponseMessage httpResponse, string url)
+        public async Task OnReceive(HttpResponseMessage httpResponse, string url, HttpMethod method, Guid requestId)
         {
-            var headers = httpResponse.Headers.ToDictionary(x => x.Key, x => x.Value);
-            var headersFormatted = JsonConvert.SerializeObject(headers, Formatting.Indented);
-            Console.WriteLine($"Response: ({httpResponse.StatusCode} - {url})");
-            Console.WriteLine($"Response Headers: {headersFormatted}");
-
-            string content = string.Empty;
-            if (httpResponse.Content.Headers.ContentType.MediaType == MediaType.Application.Json)
-            {
-                var json = await httpResponse.Content.ReadAsStringAsync();
-                content = FormatJson(json);
-            }
-            else
-            {
-                content = await httpResponse.Content.ReadAsStringAsync();
-            }
-            Console.WriteLine($"Response Body: {content}");
+            var operation = "Response";
+            Console.WriteLine(GetResponseLog(httpResponse, method, url, requestId));
+            Console.WriteLine(GetHeadersLog(httpResponse.Headers, method, url, requestId, operation));
+            Console.WriteLine(await GetBodyLog(httpResponse.Content, method, url, requestId, operation));
         }
 
-        public override async Task OnSend(HttpContent httpContent, string url)
+        public async Task OnSend(HttpRequestMessage httpRequest, Guid requestId)
         {
-            var headers = httpContent.Headers.ToDictionary(x => x.Key, x => x.Value);
-            var headersFormatted = JsonConvert.SerializeObject(headers, Formatting.Indented);
-            Console.WriteLine($"Request Headers ({url}): \n{headersFormatted}");
-
-            string content = string.Empty;
-
-            if (httpContent.Headers.ContentType.MediaType == MediaType.Application.Json)
-            {
-                var json = await httpContent.ReadAsStringAsync();
-                content = FormatJson(json);
-            }
-            else
-            {
-                content = await httpContent.ReadAsStringAsync();
-            }
-            Console.WriteLine($"Request Body ({url}): \n{content}");
-        }
-
-        private string FormatJson(string content)
-        {
-            object parsedJson = JsonConvert.DeserializeObject(content);
-            return JsonConvert.SerializeObject(parsedJson, Formatting.Indented, new JsonSerializerSettings
-            {
-                TypeNameHandling = TypeNameHandling.All,
-                TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple
-            });
+            var operation = "Request";
+            Console.WriteLine(GetRequestLog(httpRequest, requestId));
+            Console.WriteLine(GetHeadersLog(httpRequest.Headers, httpRequest.Method, httpRequest.RequestUri.AbsoluteUri, requestId, operation));
+            Console.WriteLine(await GetBodyLog(httpRequest.Content, httpRequest.Method, httpRequest.RequestUri.AbsoluteUri, requestId, operation));
         }
     }
 }

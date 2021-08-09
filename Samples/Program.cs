@@ -35,7 +35,13 @@ namespace Samples
                 options.AddFilter<ConsoleLoggerProvider>(null, LogLevel.Information);
             });
 
-            services.AddRxHttpLogging<RxHttpDefaultLogger>();
+            //Add this line to make possible to inject RxHttpClient
+            services.UseRxHttp();
+
+            //Add this line to provide the Logger
+            services.AddRxHttpLogger<RxHttpConsoleLogger>();
+
+            
             services.AddConsumer<TheMovieDatabaseConsumer>(http =>
             {
                 http.BaseAddress = new Uri(@"https://api.themoviedb.org/3/");

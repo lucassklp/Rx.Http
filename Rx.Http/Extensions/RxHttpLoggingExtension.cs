@@ -3,10 +3,10 @@ using Rx.Http.Logging;
 
 namespace Rx.Http.Extensions
 {
-    public static class RxHttpLoggingExtension
+    public static class RxHttpLoggerExtension
     {
-        public static IServiceCollection AddRxHttpLogging<TLogging>(this IServiceCollection services)
-            where TLogging : RxHttpLogger
+        public static IServiceCollection AddRxHttpLogger<TLogging>(this IServiceCollection services)
+            where TLogging : class, RxHttpLogger
         {
             services.AddScoped<RxHttpLogger, TLogging>();
             return services;

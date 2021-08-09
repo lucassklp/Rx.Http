@@ -14,7 +14,5 @@ namespace Rx.Http
             public static IHttpMediaTypeSerializer RequestMediaType { get; set; } = new JsonHttpMediaType(new NewtonsoftJsonSerializer());
             public static IHttpMediaTypeDeserializer ResponseMediaType { get; set; } = new JsonHttpMediaType(new NewtonsoftJsonSerializer());
         }
-
-        public static RxHttpClient Create() => new RxHttpClient(new HttpClient(), null);
     }
 }

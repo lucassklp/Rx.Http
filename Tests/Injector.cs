@@ -18,8 +18,8 @@ namespace Tests
 
         private void ConfigureServices(ServiceCollection services)
         {
-            services.AddHttpClient<RxHttpClient>();
-            services.AddRxHttpLogging<RxHttpDefaultLogger>();
+            services.UseRxHttp();
+            services.AddRxHttpLogger<RxHttpDefaultLogger>();
             services.AddConsumer<TheMovieDatabaseConsumer>();
             services.AddConsumer<PostmanConsumer>();
             services.AddTransient<ConsumersTests>();
