@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
@@ -25,5 +25,4 @@
         <ProjectReference Include="..\Models\Models.csproj" />
         <ProjectReference Include="..\Rx.Http\Rx.Http.csproj" />
     </ItemGroup>
-
 </Project>
