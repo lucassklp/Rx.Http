@@ -23,7 +23,11 @@ jobs:
       run: dotnet restore
 
     - name: Test
-      run: dotnet test --no-restore --verbosity normal
+      run: dotnet test --collect:"XPlat Code Coverage" --no-restore --verbosity normal
+
+    - name: Moving test coverage result to root folder
+      run: |
+        mv Tests/TestResults/**/coverage.cobertura.xml ./
 
     - name: Build
       run: |
@@ -45,3 +49,9 @@ jobs:
       with:
           PROJECT_FILE_PATH: Rx.Http/Rx.Http.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+
+    - name: Run codacy-coverage-reporter
+      uses: codacy/codacy-coverage-reporter-action@v1
+      with:
+        project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+        coverage-reports: coverage.cobertura.xml
