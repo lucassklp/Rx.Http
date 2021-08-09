@@ -1,4 +1,5 @@
 ﻿using Rx.Http.Interceptors;
+using Rx.Http.Logging;
 using System.Collections.Generic;
 using System.Net.Http;
 
@@ -9,7 +10,7 @@ namespace Rx.Http
         List<RxRequestInterceptor> RequestInterceptors { get; }
         List<RxResponseInterceptor> ResponseInterceptors { get; }
         HttpClient Http { get; }
-        RxHttpLogging Logger { get; }
+        RxHttpLogger Logger { get; }
 
     }
 }

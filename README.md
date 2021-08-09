@@ -6,10 +6,10 @@
     <a href="https://www.codacy.com/manual/lucassklp/Rx.Http?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=lucassklp/Rx.Http&amp;utm_campaign=Badge_Grade">
         <img src="https://api.codacy.com/project/badge/Grade/90ffddf0fe1c4bb89e8e7049784ea190"/>
     </a>
+  <a href="https://www.codacy.com/gh/lucassklp/Rx.Http/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=lucassklp/Rx.Http&amp;utm_campaign=Badge_Coverage">
+    <img src="https://app.codacy.com/project/badge/Coverage/90ffddf0fe1c4bb89e8e7049784ea190"/>
+  </a>
     <img alt="nuget version" src="https://img.shields.io/nuget/v/Rx.Http.svg">
-    <a href="https://snyk.io/test/github/lucassklp/Rx.Http?targetFile=Rx.Http/Rx.Http.csproj">
-        <img src="https://snyk.io/test/github/lucassklp/Rx.Http/badge.svg?targetFile=Rx.Http/Rx.Http.csproj" alt="Known Vulnerabilities" data-canonical-src="https://snyk.io/test/github/lucassklp/Rx.Http?targetFile=Rx.Http/Rx.Http.csproj" style="max-width:100%;">
-    </a>
 </p>
 
 A lightweight library that is inpired in [Angular 2+ Http Client](https://angular.io/guide/http) built on top of [.NET Http Client](https://docs.microsoft.com/pt-br/dotnet/api/system.net.http.httpclient) that help programmers to make asynchronous http requests.
@@ -19,13 +19,13 @@ A lightweight library that is inpired in [Angular 2+ Http Client](https://angula
 If you are using Package Manager:
 
 ```bash
-Install-Package Rx.Http -Version 1.3.0
+Install-Package Rx.Http -Version 1.4.0
 ```
 
 If you are using .NET CLI
 
 ```bash
-dotnet add package Rx.Http --version 1.3.0
+dotnet add package Rx.Http --version 1.4.0
 ```
 
 ## Example of use
@@ -39,7 +39,7 @@ public class Program
     public static async void Main()
     {
         //Initialize the RxHttpClient
-        var http = new RxHttpClient(new HttpClient());
+        var http = RxHttpClient.Create();
 
         //Retrieve a list of To-Do item and print the title of each element asynchronously
         http.Get<List<Todo>>("https://jsonplaceholder.typicode.com/todos/").Subscribe(items => {
@@ -89,7 +89,7 @@ http.Post<List<string>>(url, parameters)
 
 In this case, you're sending an object which contains a property "Name" and a value "Lucas" and you're receiving a List<string> from server.
 
-Supose that the server only does accept XML and reply the request using the CSV format. So, we have to convert the "parameter" object to XML and convert the server reply to List<string> right? That's why we have the interfaces *IHttpMediaTypeSerializer* and *IHttpMediaTypeDeserializer*.
+Suppose that the server only does accept XML and reply the request using the CSV format. So, we have to convert the "parameter" object to XML and convert the server reply to List<string> right? That's why we have the interfaces *IHttpMediaTypeSerializer* and *IHttpMediaTypeDeserializer*.
 
 You could create **XmlHttpMediaType** and **CsvHttpMediaType** which implements **IHttpMediaTypeSerializer** and **IHttpMediaTypeDeserializer** to solve this issue. The final code would be like that.
 
@@ -183,7 +183,7 @@ Is strongly recommended to use [DI (Dependency Injection)](https://docs.microsof
 ```csharp
 public void ConfigureServices(ServiceCollection services)
 {
-    services.AddHttpClient<RxHttpClient>();
+    services.UseRxHttp();
 
     //You **must** configure your consumer http client here
     services.AddConsumer<TheMovieDatabaseConsumer>(http =>
@@ -195,15 +195,15 @@ public void ConfigureServices(ServiceCollection services)
 
 ## Logging
 
-You can implement your own custom logging mechanism by implementing the interface RxHttpLogging.
-We provide a built-in logging mechanism called "RxHttpDefaultLogging".
+You can implement your own custom logging mechanism by implementing the interface RxHttpLogger.
+We provide a built-in logging mechanism called "RxHttpDefaultLogger". In case you don't have (Microsoft.Extensions.Logging)[https://www.nuget.org/packages/Microsoft.Extensions.Logging/] added on your project you can use RxHttpConsoleLogger
 
-Here is a example that show how to use RxHttpDefaultLogging mechanism. If you have a custom logging mechanism you must replace RxHttpDefaultLogging for your class implementation.
+Here is a example that show how to use RxHttpDefaultLogger mechanism. If you have a custom logging mechanism you must replace RxHttpDefaultLogging for your class implementation.
 
 ```csharp
 private static void ConfigureServices(ServiceCollection services)
 {
-    services.AddRxHttpLogging<RxHttpDefaultLogging>();
+    services.AddRxHttpLogger<RxHttpDefaultLogger>();
 }
 ```
 
@@ -246,6 +246,4 @@ await http.Get($@"https://dev.mysql.com/get/Downloads/MySQLInstaller/{fileName}"
  * [x] **Save response to file (download)**
  * [x] **Provide a alternative for built-in Json serializer: System.Text.Json.JsonSerializer of .NET Core 3**
  * [ ] **Implement cancellation token funcionality**
- * [ ] ~~**Built-in XML support**~~ (Obsolete)
-
  
