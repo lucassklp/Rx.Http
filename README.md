@@ -6,10 +6,10 @@
     <a href="https://www.codacy.com/manual/lucassklp/Rx.Http?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=lucassklp/Rx.Http&amp;utm_campaign=Badge_Grade">
         <img src="https://api.codacy.com/project/badge/Grade/90ffddf0fe1c4bb89e8e7049784ea190"/>
     </a>
+  <a href="https://www.codacy.com/gh/lucassklp/Rx.Http/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=lucassklp/Rx.Http&amp;utm_campaign=Badge_Coverage">
+    <img src="https://app.codacy.com/project/badge/Coverage/90ffddf0fe1c4bb89e8e7049784ea190"/>
+  </a>
     <img alt="nuget version" src="https://img.shields.io/nuget/v/Rx.Http.svg">
-    <a href="https://snyk.io/test/github/lucassklp/Rx.Http?targetFile=Rx.Http/Rx.Http.csproj">
-        <img src="https://snyk.io/test/github/lucassklp/Rx.Http/badge.svg?targetFile=Rx.Http/Rx.Http.csproj" alt="Known Vulnerabilities" data-canonical-src="https://snyk.io/test/github/lucassklp/Rx.Http?targetFile=Rx.Http/Rx.Http.csproj" style="max-width:100%;">
-    </a>
 </p>
 
 A lightweight library that is inpired in [Angular 2+ Http Client](https://angular.io/guide/http) built on top of [.NET Http Client](https://docs.microsoft.com/pt-br/dotnet/api/system.net.http.httpclient) that help programmers to make asynchronous http requests.
