@@ -58,9 +58,9 @@ namespace Rx.Http
 
             if (Content != null)
             {
-                if (Content is HttpContent)
+                if (Content is HttpContent content)
                 {
-                    httpContent = Content as HttpContent;
+                    httpContent = content;
                 }
                 else
                 {
