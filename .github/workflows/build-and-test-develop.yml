@@ -19,7 +19,19 @@ jobs:
         dotnet-version: 5.0.100
     - name: Install dependencies
       run: dotnet restore
+    
     - name: Build
       run: dotnet build --configuration Release --no-restore
+    
     - name: Test
-      run: dotnet test --no-restore --verbosity normal
+      run: dotnet test --collect:"XPlat Code Coverage" --no-restore --verbosity normal
+
+    - name: Moving test coverage result to root folder
+      run: |
+        mv Tests/TestResults/**/coverage.cobertura.xml ./
+    
+    - name: Run codacy-coverage-reporter
+      uses: codacy/codacy-coverage-reporter-action@v1
+      with:
+        project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+        coverage-reports: coverage.cobertura.xml
