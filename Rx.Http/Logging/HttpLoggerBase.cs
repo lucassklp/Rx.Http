@@ -39,7 +39,7 @@ namespace Rx.Http.Logging
                     {
                         return explanation + FormatJson(content);
                     }
-                    catch
+                    catch(Exception)
                     {
                         return explanation + content;
                     }

@@ -8,7 +8,7 @@ namespace Rx.Http
 {
     public class RxNavigator : RxConsumer
     {
-        private Dictionary<string, HashSet<string>> cookies;
+        private readonly Dictionary<string, HashSet<string>> cookies;
 
         public RxNavigator(IConsumerContext<RxNavigator> context) : base(context)
         {
@@ -208,7 +208,7 @@ namespace Rx.Http
 
     internal class SetCookieInterceptor : RxResponseInterceptor
     {
-        private RxNavigator navigator;
+        private readonly RxNavigator navigator;
 
         public SetCookieInterceptor(RxNavigator navigator)
         {

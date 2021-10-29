@@ -6,10 +6,6 @@ namespace Rx.Http.Serializers
 {
     public class NativeJsonSerializer : ITwoWaysSerializable
     {
-        public NativeJsonSerializer()
-        {
-        }
-
         public T Deserialize<T>(Stream stream)
         {
             StreamReader reader = new StreamReader(stream);

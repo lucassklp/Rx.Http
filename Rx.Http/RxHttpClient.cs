@@ -228,18 +228,18 @@ namespace Rx.Http
             return Request(new RxHttpRequest(url, obj), method);
         }
 
-        private IObservable<HttpResponseMessage> Request(RxHttpRequest request, HttpMethod method)
+        private IObservable<HttpResponseMessage> Request(RxHttpRequest httpRequest, HttpMethod method)
         {
             return SingleObservable.Create(async () =>
             {
                 var requestId = Guid.NewGuid();
-                request.RequestInterceptors.ForEach(interceptor => interceptor.Intercept(request));
-                var message = BuildRequestMessage(request, method);
+                httpRequest.RequestInterceptors.ForEach(interceptor => interceptor.Intercept(httpRequest));
+                var message = BuildRequestMessage(httpRequest, method);
                 var url = message.RequestUri.AbsoluteUri;
                 logger?.OnSend(message, requestId);
                 var response = await httpClient.SendAsync(message);
                 logger?.OnReceive(response, url, message.Method, requestId);
-                request.ResponseInterceptors.ForEach(interceptor => interceptor.Intercept(response));
+                httpRequest.ResponseInterceptors.ForEach(interceptor => interceptor.Intercept(response));
                 try
                 {
                     if (response.StatusCode >= System.Net.HttpStatusCode.BadRequest)
@@ -255,12 +255,12 @@ namespace Rx.Http
             });
         }
 
-        public IObservable<T> Request<T>(RxHttpRequest request, HttpMethod method)
+        public IObservable<T> Request<T>(RxHttpRequest httpRequest, HttpMethod method)
         {
-            return Request(request, method)
+            return Request(httpRequest, method)
                 .SelectMany(async response => {
                     var stream = await response.Content.ReadAsStreamAsync();
-                    return request.ResponseMediaType.Deserialize<T>(stream);
+                    return httpRequest.ResponseMediaType.Deserialize<T>(stream);
                 });
         }
 
