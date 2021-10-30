@@ -22,7 +22,6 @@ namespace Samples
 
         public async Task Execute()
         {
-
             await httpClient.Get("http://google.com");
 
             await tmdbConsumer.ListMovies();
