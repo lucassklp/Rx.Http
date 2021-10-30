@@ -87,9 +87,9 @@ http.Post<List<string>>(url, parameters)
 //       ^^^^^^^^^^^^^
 ```
 
-In this example, you're sending an object which contains a property "Name" and a value "Lucas" and you're expecting to receive a List<string> from server.
+In this example, you're sending an object which contains a property "Name" and a value "Lucas" and you're expecting to receive a `List<string>` from server.
 
-Suppose that the server only does accept XML and reply the request using the CSV format. So, we have to convert the "parameter" object to XML and convert the server reply to List<string> right? That's why we have the interfaces *IHttpMediaTypeSerializer* and *IHttpMediaTypeDeserializer*.
+Suppose that the server only does accept XML and reply the request using the CSV format. So, we have to convert the "parameter" object to XML and convert the server reply to `List<string>` right? That's why we have the interfaces *IHttpMediaTypeSerializer* and *IHttpMediaTypeDeserializer*.
 
 You could create **XmlHttpMediaType** and **CsvHttpMediaType** which implements **IHttpMediaTypeSerializer** and **IHttpMediaTypeDeserializer** to solve this issue. The final code would be like that.
 
