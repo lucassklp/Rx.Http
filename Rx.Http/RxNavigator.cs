@@ -10,6 +10,9 @@ namespace Rx.Http
     {
         private readonly Dictionary<string, HashSet<string>> cookies;
 
+
+        public static RxNavigator Create() => new RxNavigator(new ConsumerContext<RxNavigator>(new HttpClient()));
+
         public RxNavigator(IConsumerContext<RxNavigator> context) : base(context)
         {
             context.RequestInterceptors.Add(new CookieInterceptor(this));
