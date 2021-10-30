@@ -114,7 +114,7 @@ http.Get<List<string>>(url, parameters, options =>
 ## Consumers
 
 A consumer is defined as a service that have common behavior for the requests. You can encapsulate the logic of all those requests in a easy way.
-The main advantage of using consumers is to abstract the HTTP request and its implementation details, and only work with the results from it. The concept is very similar to [FeignClient interface](https://cloud.spring.io/spring-cloud-netflix/multi/multi_spring-cloud-feign.html) from Spring cloud
+The main advantage of using consumers is to abstract the HTTP request and its implementation details, and only work with the results from it. The concept is very similar to [FeignClient interface](https://cloud.spring.io/spring-cloud-netflix/multi/multi_spring-cloud-feign.html) from Spring Cloud
 
 ### Interceptors
 
@@ -196,7 +196,7 @@ public void ConfigureServices(ServiceCollection services)
 ## Logging
 
 You can implement your own custom logging mechanism by implementing the interface RxHttpLogger.
-We provide a built-in logging mechanism called "RxHttpDefaultLogger". In case you don't have (Microsoft.Extensions.Logging)[https://www.nuget.org/packages/Microsoft.Extensions.Logging/] added on your project you can use RxHttpConsoleLogger
+We provide a built-in logging mechanism called "RxHttpDefaultLogger". In case you don't have [Microsoft.Extensions.Logging](https://www.nuget.org/packages/Microsoft.Extensions.Logging/) added on your project you can use RxHttpConsoleLogger
 
 Here is a example that show how to use RxHttpDefaultLogger mechanism. If you have a custom logging mechanism you must replace RxHttpDefaultLogging for your class implementation.
 
@@ -209,7 +209,7 @@ private static void ConfigureServices(ServiceCollection services)
 
 ## Global Settings
 
-You can setup default settings by setting the RxDefault like the example below:
+You can setup default settings by setting the `RxHttp.Default` like the example below:
 
 ```csharp
 RxHttp.Default.RequestMediaType = new JsonHttpMediaType(new NewtonsoftJsonSerializer());
@@ -230,9 +230,7 @@ await http.Get($@"https://dev.mysql.com/get/Downloads/MySQLInstaller/{fileName}"
 
 
 ## Navigator
-The navigator works like a RxHttpClient, but it manage cookies automatically. This is useful when you want to keep session information when you make your requests.
-
-suppose that *mysite* handles the session with cookies and you want to keep your session, so you can do like that:
+The navigator works like a RxHttpClient, but it manage cookies automatically. This is useful when you want to keep session information when you make your requests. Suppose that *mysite* handles the session with cookies and you want to keep your session, so you can do like that:
 
 ```csharp
 var navigator = RxNavigator.Create();
