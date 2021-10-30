@@ -54,7 +54,7 @@ public class Program
 
 ### Options
 
-You can customize your request by using options. It make possible you set **query strings, headers** and **your custom serializer and deserializer for your request or response**.
+You can setup your request by using options. It make possible you set **query strings, headers** and **your custom serializer and deserializer for your request and response**.
 
 #### Let's dive in options
 
@@ -87,7 +87,7 @@ http.Post<List<string>>(url, parameters)
 //       ^^^^^^^^^^^^^
 ```
 
-In this case, you're sending an object which contains a property "Name" and a value "Lucas" and you're receiving a List<string> from server.
+In this example, you're sending an object which contains a property "Name" and a value "Lucas" and you're expecting to receive a List<string> from server.
 
 Suppose that the server only does accept XML and reply the request using the CSV format. So, we have to convert the "parameter" object to XML and convert the server reply to List<string> right? That's why we have the interfaces *IHttpMediaTypeSerializer* and *IHttpMediaTypeDeserializer*.
 
@@ -114,11 +114,11 @@ http.Get<List<string>>(url, parameters, options =>
 ## Consumers
 
 A consumer is defined as a service that have common behavior for the requests. You can encapsulate the logic of all those requests in a easy way.
-The main advantage of using consumers is to abstract the HTTP request and its implementation details, and only work with the results from it.
+The main advantage of using consumers is to abstract the HTTP request and its implementation details, and only work with the results from it. The concept is very similar to [FeignClient interface](https://cloud.spring.io/spring-cloud-netflix/multi/multi_spring-cloud-feign.html) from Spring cloud
 
 ### Interceptors
 
-The interceptors are a pre-processing unit that changes the request before it happens. It can be usefull to configure the pattern for all requests.
+The interceptors are a pre-processing unit that changes the request before it happens. It can be usefull set a standard for all requests.
 
 ### Example of use
 
@@ -227,6 +227,36 @@ var path = Path.Combine(directory, fileName);
 await http.Get($@"https://dev.mysql.com/get/Downloads/MySQLInstaller/{fileName}")
     .ToFile(path); // Save response to path (download)
 ```
+
+
+## Navigator
+The navigator works like a RxHttpClient, but it manage cookies automatically. This is useful when you want to keep session information when you make your requests.
+
+suppose that *mysite* handles the session with cookies and you want to keep your session, so you can do like that:
+
+```csharp
+var navigator = RxNavigator.Create();
+navigator.Post("https://www.mysite.com/login", new 
+{
+    Login = "myLogin",
+    Password = "myPass"
+});
+
+navigator.Post("https://www.mysite.com/create/task", new 
+{
+    Title = "myTitle",
+    Description = "myDescription",
+    Date = DateTime.Now
+});
+```
+
+Note that you did nothing about cookies but could call the endpoint to create a new task using this session.
+
+## Convert to HTML Document
+Suppose that you need to get a specific value from a HTML Element (for example, a label, a link or a div). Rx.Http is integrated with [HtmlAgilityPack.NetCore](https://html-agility-pack.net/). It can be done by calling the Extension Method called `AsHtmlDocument()`. 
+
+:fire: **Pro Tip:** It can be used with `RxNavigator` to automatize some tasks!
+
 
 ### Roadmap
 
