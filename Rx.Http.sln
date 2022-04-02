@@ -1,15 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29215.179
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Tests\Tests.csproj", "{7D26E97A-BA89-446C-BD25-363C9A047D6C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Samples", "Samples\Samples.csproj", "{4C43BBB8-042C-4623-A1ED-14A578B23AB3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csproj", "{6FB19A1B-6211-4AFF-8731-A12E7C6DA854}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csproj", "{6FB19A1B-6211-4AFF-8731-A12E7C6DA854}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rx.Http", "Rx.Http\Rx.Http.csproj", "{983F7ADA-0E80-4941-BA23-1E37C4848885}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rx.Http", "Rx.Http\Rx.Http.csproj", "{983F7ADA-0E80-4941-BA23-1E37C4848885}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

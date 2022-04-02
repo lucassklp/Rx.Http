@@ -1,5 +1,4 @@
-﻿using System.Net.Http;
-using Rx.Http.MediaTypes;
+﻿using Rx.Http.MediaTypes;
 using Rx.Http.MediaTypes.Abstractions;
 using Rx.Http.Serializers;
 using Rx.Http.Serializers.Interfaces;

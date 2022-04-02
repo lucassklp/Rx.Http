@@ -1,16 +1,16 @@
 using Rx.Http;
 using Rx.Http.Interceptors;
 using System;
+using System.Net.Http;
 
 namespace Models.Consumers
 {
-    public class TheMovieDatabaseConsumer : RxConsumer
+    public class TheMovieDatabaseConsumer : RxHttpClient
     {
-        public TheMovieDatabaseConsumer(IConsumerContext<TheMovieDatabaseConsumer> context)
-            : base(context)
+        public TheMovieDatabaseConsumer(HttpClient httpClient): base(httpClient, null)
         {
-            context.Http.BaseAddress = new Uri(@"https://api.themoviedb.org/3/");
-            context.RequestInterceptors.Add(new TheMovieDatabaseInterceptor());
+            httpClient.BaseAddress = new Uri(@"https://api.themoviedb.org/3/");
+            RequestInterceptors.Add(new TheMovieDatabaseInterceptor());
         }
 
         public IObservable<Movies> ListMovies() => Get<Movies>("movie/popular");

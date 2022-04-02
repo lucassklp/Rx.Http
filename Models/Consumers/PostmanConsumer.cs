@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using Models.Postman;
 using Rx.Http;
 
 namespace Models.Consumers
 {
-    public class PostmanConsumer : RxConsumer
+    public class PostmanConsumer : RxHttpClient
     {
-        public PostmanConsumer(IConsumerContext<PostmanConsumer> context)
-            : base(context)
+        public PostmanConsumer(HttpClient httpClient) : base(httpClient, null)
         {
-            context.Http.BaseAddress = new Uri("https://postman-echo.com");
+            httpClient.BaseAddress = new Uri("https://postman-echo.com");
         }
 
         public IObservable<EchoResponse> GetWithQueryString(IDictionary<string, string> query)

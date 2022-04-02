@@ -2,11 +2,8 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Logging.Debug;
-using Models.Consumers;
-using Rx.Http;
 using Rx.Http.Extensions;
 using Rx.Http.Logging;
-using System;
 using System.Threading.Tasks;
 
 namespace Samples
@@ -41,16 +38,7 @@ namespace Samples
             //Add this line to provide the Logger
             services.AddRxHttpLogger<RxHttpConsoleLogger>();
 
-            services.AddConsumer<TheMovieDatabaseConsumer>(http =>
-            {
-                http.BaseAddress = new Uri(@"https://api.themoviedb.org/3/");
-            })
-
-            .AddConsumer<JsonPlaceHolderConsumer>(http =>
-            {
-                http.BaseAddress = new Uri(@"https://jsonplaceholder.typicode.com/");
-            })
-            .AddTransient<Application>();
+            services.AddTransient<Application>();
         }
     }
 }

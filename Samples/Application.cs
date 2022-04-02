@@ -1,7 +1,6 @@
 ﻿using Models;
 using Models.Consumers;
 using Rx.Http;
-using System;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 

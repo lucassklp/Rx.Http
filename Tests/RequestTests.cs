@@ -1,12 +1,8 @@
 using Models;
-using Models.Postman;
 using Rx.Http;
 using Rx.Http.Exceptions;
-using Rx.Http.Interceptors;
-using Rx.Http.MediaTypes;
 using Rx.Http.Extensions;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Reactive.Linq;
 using System.Threading.Tasks;

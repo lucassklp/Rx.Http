@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFrameworks>net6.0</TargetFrameworks>
-        <Version>1.4.2</Version>
+        <Version>2.0.0</Version>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Authors>Lucas Simas</Authors>
         <Description>A lightweight library that is inpired in Angular Http Client built on top of .NET HttpClient that and help programmers to make asynchronous http requests.</Description>
@@ -26,9 +26,5 @@
     <ItemGroup>
       <None Include="..\LICENSE" Pack="true" PackagePath="\" />
       <None Include="..\Resources\rx.http.icon.png" Pack="true" PackagePath="\" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Enums\" />
     </ItemGroup>
 </Project>

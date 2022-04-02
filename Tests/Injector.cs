@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Models.Consumers;
-using Rx.Http;
 using Rx.Http.Extensions;
 using Rx.Http.Logging;
 
@@ -20,9 +19,9 @@ namespace Tests
         {
             services.UseRxHttp();
             services.AddRxHttpLogger<RxHttpDefaultLogger>();
-            services.AddConsumer<TheMovieDatabaseConsumer>();
-            services.AddConsumer<PostmanConsumer>();
-            services.AddTransient<ConsumersTests>();
+            services.AddSingleton<JsonPlaceHolderConsumer>();
+            services.AddSingleton<PostmanConsumer>();
+            services.AddSingleton<TheMovieDatabaseConsumer>();
         }
 
         public T Get<T>()

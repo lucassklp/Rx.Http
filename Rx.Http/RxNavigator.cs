@@ -6,17 +6,14 @@ using Rx.Http.Interceptors;
 
 namespace Rx.Http
 {
-    public class RxNavigator : RxConsumer
+    public class RxNavigator : RxHttpClient
     {
         private readonly Dictionary<string, HashSet<string>> cookies;
 
-
-        public static RxNavigator Create() => new RxNavigator(new ConsumerContext<RxNavigator>(new HttpClient()));
-
-        public RxNavigator(IConsumerContext<RxNavigator> context) : base(context)
+        public RxNavigator(HttpClient client) : base(client, null)
         {
-            context.RequestInterceptors.Add(new CookieInterceptor(this));
-            context.ResponseInterceptors.Add(new SetCookieInterceptor(this));
+            RequestInterceptors.Add(new CookieInterceptor(this));
+            ResponseInterceptors.Add(new SetCookieInterceptor(this));
             cookies = new Dictionary<string, HashSet<string>>();
         }
 
@@ -52,138 +49,6 @@ namespace Rx.Http
             {
                 cookies.Remove(uri.Host);
             }
-        }
-
-        new public IObservable<TResponse> Get<TResponse>(string url)
-            where TResponse : class
-        {
-            return base.Get<TResponse>(url);
-        }
-
-        new public IObservable<TResponse> Get<TResponse>(string url, Action<RxHttpRequestOptions> options)
-            where TResponse : class
-        {
-            return base.Get<TResponse>(url, options);
-        }
-
-        new public IObservable<HttpResponseMessage> Get(string url)
-        {
-            return base.Get(url);
-        }
-
-        new public IObservable<HttpResponseMessage> Get(string url, Action<RxHttpRequestOptions> options)
-        {
-            return base.Get(url, options);
-        }
-
-        new public IObservable<TResponse> Post<TResponse>(string url)
-            where TResponse : class
-        {
-            return base.Post<TResponse>(url);
-        }
-
-        new public IObservable<TResponse> Post<TResponse>(string url, object obj)
-            where TResponse : class
-        {
-            return base.Post<TResponse>(url, obj);
-        }
-
-        new public IObservable<TResponse> Post<TResponse>(string url, object obj, Action<RxHttpRequestOptions> options)
-            where TResponse : class
-        {
-            return base.Post<TResponse>(url, obj, options);
-        }
-
-        new public IObservable<TResponse> Post<TResponse>(string url, Action<RxHttpRequestOptions> options)
-            where TResponse : class
-        {
-            return base.Post<TResponse>(url, options);
-        }
-
-        new public IObservable<HttpResponseMessage> Post(string url)
-        {
-            return base.Post(url);
-        }
-
-        new public IObservable<HttpResponseMessage> Post(string url, object obj)
-        {
-            return base.Post(url, obj);
-        }
-
-        new public IObservable<HttpResponseMessage> Post(string url, object obj, Action<RxHttpRequestOptions> options)
-        {
-            return base.Post(url, obj, options);
-        }
-
-        new public IObservable<HttpResponseMessage> Post(string url, Action<RxHttpRequestOptions> options)
-        {
-            return base.Post(url, options);
-        }
-
-        new public IObservable<TResponse> Put<TResponse>(string url)
-            where TResponse : class
-        {
-            return base.Put<TResponse>(url);
-        }
-
-        new public IObservable<TResponse> Put<TResponse>(string url, object obj)
-            where TResponse : class
-        {
-            return base.Put<TResponse>(url, obj);
-        }
-
-        new public IObservable<TResponse> Put<TResponse>(string url, object obj, Action<RxHttpRequestOptions> options)
-            where TResponse : class
-        {
-            return base.Put<TResponse>(url, obj, options);
-        }
-
-        new public IObservable<TResponse> Put<TResponse>(string url, Action<RxHttpRequestOptions> options)
-            where TResponse : class
-        {
-            return base.Put<TResponse>(url, options);
-        }
-
-        new public IObservable<HttpResponseMessage> Put(string url)
-        {
-            return base.Put(url);
-        }
-
-        new public IObservable<HttpResponseMessage> Put(string url, object obj)
-        {
-            return base.Put(url, obj);
-        }
-
-        new public IObservable<HttpResponseMessage> Put(string url, object obj, Action<RxHttpRequestOptions> options)
-        {
-            return base.Put(url, obj, options);
-        }
-
-        new public IObservable<HttpResponseMessage> Put(string url, Action<RxHttpRequestOptions> options)
-        {
-            return base.Put(url, options);
-        }
-
-        new public IObservable<TResponse> Delete<TResponse>(string url)
-            where TResponse : class
-        {
-            return base.Delete<TResponse>(url);
-        }
-
-        new public IObservable<TResponse> Delete<TResponse>(string url, Action<RxHttpRequestOptions> options)
-            where TResponse : class
-        {
-            return base.Delete<TResponse>(url, options);
-        }
-
-        new public IObservable<HttpResponseMessage> Delete(string url)
-        {
-            return base.Delete(url);
-        }
-
-        new public IObservable<HttpResponseMessage> Delete(string url, Action<RxHttpRequestOptions> options)
-        {
-            return base.Delete(url, options);
         }
     }
 

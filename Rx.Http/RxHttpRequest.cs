@@ -21,31 +21,31 @@ namespace Rx.Http
 
         public object Content { get; private set; }
 
-        public RxHttpRequest(string url)
+        public RxHttpRequest(string url, List<RxRequestInterceptor> requestInterceptors, List<RxResponseInterceptor> responseInterceptors)
         {
-            Initialize();
+            Initialize(requestInterceptors, responseInterceptors);
             Url = url;
         }
 
-        public RxHttpRequest(string url, object content)
+        public RxHttpRequest(string url, List<RxRequestInterceptor> requestInterceptors, List<RxResponseInterceptor> responseInterceptors, object content)
         {
-            Initialize();
+            Initialize(requestInterceptors, responseInterceptors);
             Url = url;
             Content = content;
         }
 
-        public RxHttpRequest(string url, object content, Action<RxHttpRequestOptions> options)
+        public RxHttpRequest(string url, List<RxRequestInterceptor> requestInterceptors, List<RxResponseInterceptor> responseInterceptors, object content, Action<RxHttpRequestOptions> options)
         {
-            Initialize();
+            Initialize(requestInterceptors, responseInterceptors);
             Url = url;
             Content = content;
             options.Invoke(this);
         }
 
-        private void Initialize()
+        private void Initialize(List<RxRequestInterceptor> requestInterceptors, List<RxResponseInterceptor> responseInterceptors)
         {
-            RequestInterceptors = new List<RxRequestInterceptor>();
-            ResponseInterceptors = new List<RxResponseInterceptor>();
+            RequestInterceptors = requestInterceptors;
+            ResponseInterceptors = responseInterceptors;
             QueryStrings = new Dictionary<string, string>();
             Headers = new Dictionary<string, List<string>>();
             RequestMediaType = RxHttp.Default.RequestMediaType;
