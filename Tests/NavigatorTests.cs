@@ -14,7 +14,7 @@ namespace Tests
         private RxNavigator navigator;
         public NavigatorTests()
         {
-            navigator = RxNavigator.Create();
+            navigator = new RxNavigator(new HttpClient());
         }
 
         [Fact]

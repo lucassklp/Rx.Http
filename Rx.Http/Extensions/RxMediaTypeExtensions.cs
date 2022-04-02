@@ -1,5 +1,4 @@
-﻿using System;
-using Rx.Http.MediaTypes;
+﻿using Rx.Http.MediaTypes;
 
 namespace Rx.Http.Extensions
 {

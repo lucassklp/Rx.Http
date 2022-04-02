@@ -27,8 +27,4 @@
       <None Include="..\LICENSE" Pack="true" PackagePath="\" />
       <None Include="..\Resources\rx.http.icon.png" Pack="true" PackagePath="\" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Enums\" />
-    </ItemGroup>
 </Project>
