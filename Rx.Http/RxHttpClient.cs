@@ -15,8 +15,8 @@ namespace Rx.Http
         private readonly HttpClient httpClient;
         private RxHttpLogger logger;
 
-        public List<RxRequestInterceptor> RequestInterceptors;
-        public List<RxResponseInterceptor> ResponseInterceptors;
+        public List<RxRequestInterceptor> RequestInterceptors { get; private set; }
+        public List<RxResponseInterceptor> ResponseInterceptors { get; private set; }
 
         public RxHttpClient(HttpClient httpClient, RxHttpLogger logger)
         {

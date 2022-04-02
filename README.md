@@ -127,23 +127,24 @@ In this example, we need to provide the api key for all requests to [The Movie D
 The code above shows how to use Consumers and Interceptors.
 
 ```csharp
-public class TheMovieDatabaseConsumer : RxConsumer
-{
-    public TheMovieDatabaseConsumer(IConsumerContext<TheMovieDatabaseConsumer> configuration): base(configuration)
+    public class TheMovieDatabaseConsumer : RxHttpClient
     {
-        configuration.AddRequestInterceptors(new TheMovieDatabaseInterceptor());
+        public TheMovieDatabaseConsumer(HttpClient httpClient): base(httpClient, null)
+        {
+            httpClient.BaseAddress = new Uri(@"https://api.themoviedb.org/3/");
+            RequestInterceptors.Add(new TheMovieDatabaseInterceptor());
+        }
+
+        public IObservable<Movies> ListMovies() => Get<Movies>("movie/popular");
     }
 
-    public IObservable<Result> ListMovies() => Get<Result>("movie/popular");
-}
-
-public class TheMovieDatabaseInterceptor : RxInterceptor
-{
-    public void Intercept(RxHttpRequest request)
+    internal class TheMovieDatabaseInterceptor : RxRequestInterceptor
     {
-        request.AddQueryString("api_key", "key");
+        public void Intercept(RxHttpRequestOptions request)
+        {
+            request.AddQueryString("api_key", "eb7b25db28349bd4eef1498a5be9842f");
+        }
     }
-}
 ```
 
 ## RxHttpRequestException
@@ -184,12 +185,7 @@ Is strongly recommended to use [DI (Dependency Injection)](https://docs.microsof
 public void ConfigureServices(ServiceCollection services)
 {
     services.UseRxHttp();
-
-    //You **must** configure your consumer http client here
-    services.AddConsumer<TheMovieDatabaseConsumer>(http =>
-    {
-        http.BaseAddress = new Uri(@"https://api.themoviedb.org/3/");
-    });
+    services.AddSingleton<JsonPlaceHolderConsumer>();
 }
 ```
 

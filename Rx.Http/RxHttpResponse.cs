@@ -5,10 +5,10 @@ using System.Net.Http.Headers;
 
 namespace Rx.Http
 {
-    public class RxHttpResponse
+    public class RxHttpResponse : IDisposable
     {
         public RxHttpRequest Request { get; private set; }
-        private HttpResponseMessage httpResponse;
+        private readonly HttpResponseMessage httpResponse;
 
         public HttpStatusCode StatusCode => httpResponse.StatusCode;
         public HttpContent Content => httpResponse.Content;
