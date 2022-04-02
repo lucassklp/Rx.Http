@@ -35,9 +35,8 @@ jobs:
         coverage-reports: coverage.cobertura.xml
 
     - name: Pack
-      run: |  
-          cd Rx.Http
-          dotnet pack -c Release -o .
+      run: |
+        dotnet pack -c Release -o .
 
     - name: Push Rx.Http to GitHub registry
       run: |
