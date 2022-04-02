@@ -1,8 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFrameworks>net6.0</TargetFrameworks>
-        <Version>2.0.0</Version>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Version>2.0.1</Version>
+        <IsPackable>true</IsPackable>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
         <Authors>Lucas Simas</Authors>
         <Description>A lightweight library that is inpired in Angular Http Client built on top of .NET HttpClient that and help programmers to make asynchronous http requests.</Description>
         <PackageProjectUrl>https://github.com/lucassklp/Rx.Http</PackageProjectUrl>
