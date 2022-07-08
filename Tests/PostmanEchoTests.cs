@@ -11,7 +11,7 @@ using Rx.Http.MediaTypes;
 using Xunit;
 using Rx.Http.Extensions;
 
-namespace Tests
+namespace Rx.Http.Tests
 {
     public class PostmanEchoTests
     {

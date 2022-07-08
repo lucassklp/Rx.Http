@@ -7,7 +7,7 @@ using Newtonsoft.Json.Linq;
 using Rx.Http;
 using Xunit;
 
-namespace Tests
+namespace Rx.Http.Tests
 {
     public class NavigatorTests
     {

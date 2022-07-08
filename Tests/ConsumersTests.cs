@@ -6,7 +6,7 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Tests
+namespace Rx.Http.Tests
 {
     public class ConsumersTests
     {
