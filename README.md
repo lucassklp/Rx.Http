@@ -19,13 +19,13 @@ A lightweight library that is inpired in [Angular 2+ Http Client](https://angula
 If you are using Package Manager:
 
 ```bash
-Install-Package Rx.Http -Version 2.0.2
+Install-Package Rx.Http -Version 2.0.3
 ```
 
 If you are using .NET CLI
 
 ```bash
-dotnet add package Rx.Http --version 2.0.2
+dotnet add package Rx.Http --version 2.0.3
 ```
 
 ## Example of use

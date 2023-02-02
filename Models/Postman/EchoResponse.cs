@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Rx.Http;
 using System.Collections.Generic;
 
 namespace Models.Postman
@@ -10,6 +11,9 @@ namespace Models.Postman
 
         [JsonProperty("headers")]
         public Dictionary<string, string> Headers { get; set; }
+
+        [JsonProperty("cookies")]
+        public ListDictionary<string, string> Cookies { get; set; }
 
         [JsonProperty("url")]
         public string Url { get; set; }

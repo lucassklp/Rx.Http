@@ -21,6 +21,15 @@ namespace Models.Consumers
             });
         }
 
+        public IObservable<EchoResponse> GetWithQueryString(IDictionary<string, List<string>> query)
+        {
+            return Get<EchoResponse>("get", opts =>
+            {
+                opts.AddQueryString(query);
+            });
+        }
+
+
         public IObservable<EchoResponse> GetWithHeaders(IDictionary<string, string> headers)
         {
             return Get<EchoResponse>("get", opts =>
