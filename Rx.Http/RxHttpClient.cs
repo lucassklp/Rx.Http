@@ -257,7 +257,7 @@ namespace Rx.Http
                 .Content<T>();
         }
 
-        private string GetUrl(RxHttpRequest request)
+        private string BuildUrl(RxHttpRequest request)
         {
             var builder = new UriBuilder((httpClient.BaseAddress?.AbsoluteUri ?? string.Empty) + request.Url);
 
@@ -265,17 +265,19 @@ namespace Rx.Http
 
             foreach (var entry in request.QueryStrings)
             {
-                query[entry.Key] = entry.Value;
+                foreach(var param in entry.Value)
+                {
+                    query.Add(entry.Key, param);
+                }
             }
 
             builder.Query = query.ToString();
-
             return builder.Uri.AbsoluteUri;
         }
 
         private HttpRequestMessage BuildRequestMessage(RxHttpRequest request, HttpMethod method)
         {
-            var url = GetUrl(request);
+            var url = BuildUrl(request);
             var content = request.BuildContent();
             var requestMessage = new HttpRequestMessage(method, url);
             requestMessage.Content = content;

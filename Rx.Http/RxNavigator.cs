@@ -88,7 +88,6 @@ namespace Rx.Http
             if(response.Headers.Any(header => header.Key == "Set-Cookie"))
             {
                 var cookies = response.Headers.GetValues("Set-Cookie")
-                    .SelectMany(x => x.Split(";"))
                     .Select(x => x.Trim())
                     .ToArray();
 

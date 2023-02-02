@@ -24,6 +24,8 @@ namespace Rx.Http
 
         public abstract RxHttpRequestOptions AddQueryString(IEnumerable<KeyValuePair<string, string>> pairs);
 
+        public abstract RxHttpRequestOptions AddQueryString(IEnumerable<KeyValuePair<string, List<string>>> pairs);
+
         public abstract RxHttpRequestOptions AddQueryString(object obj);
 
         public string Url { get; protected set; }

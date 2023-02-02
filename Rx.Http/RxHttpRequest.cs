@@ -10,8 +10,8 @@ namespace Rx.Http
 {
     public class RxHttpRequest : RxHttpRequestOptions
     {
-        public Dictionary<string, string> QueryStrings { get; private set; }
-        public Dictionary<string, List<string>> Headers { get; private set; }
+        public ListDictionary<string, string> QueryStrings { get; private set; }
+        public ListDictionary<string, string> Headers { get; private set; }
 
         public IHttpMediaTypeSerializer RequestMediaType { get; private set; }
         public IHttpMediaTypeDeserializer ResponseMediaType { get; set; }
@@ -46,8 +46,8 @@ namespace Rx.Http
         {
             RequestInterceptors = requestInterceptors;
             ResponseInterceptors = responseInterceptors;
-            QueryStrings = new Dictionary<string, string>();
-            Headers = new Dictionary<string, List<string>>();
+            QueryStrings = new ListDictionary<string, string>();
+            Headers = new ListDictionary<string, string>();
             RequestMediaType = RxHttp.Default.RequestMediaType;
             ResponseMediaType = RxHttp.Default.ResponseMediaType;
         }
@@ -75,15 +75,7 @@ namespace Rx.Http
         #region Options
         public override RxHttpRequestOptions AddHeader(string key, string value)
         {
-            if (Headers.ContainsKey(key))
-            {
-                Headers[key].Add(value);
-            }
-            else
-            {
-                Headers.Add(key, new List<string> { value });
-            }
-
+            Headers.Append(key, value);
             return this;
         }
 
@@ -101,13 +93,26 @@ namespace Rx.Http
 
         public override RxHttpRequestOptions AddQueryString(string key, string value)
         {
-            this.QueryStrings.Add(key, value);
+            QueryStrings.Append(key, value);
             return this;
         }
 
         public override RxHttpRequestOptions AddQueryString(IEnumerable<KeyValuePair<string, string>> pairs)
         {
             pairs.ToList().ForEach(x => AddQueryString(x.Key, x.Value));
+            return this;
+        }
+
+        public override RxHttpRequestOptions AddQueryString(IEnumerable<KeyValuePair<string, List<string>>> pairs)
+        {
+            foreach (var pair in pairs)
+            {
+                foreach (var value in pair.Value)
+                {
+                    AddQueryString(pair.Key, value);
+                }
+            }
+
             return this;
         }
 
