@@ -1,15 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>net8.0</TargetFrameworks>
-        <Version>2.0.3</Version>
-        <IsPackable>true</IsPackable>
-        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-        <Authors>Lucas Simas</Authors>
-        <Description>A lightweight library that is inpired in Angular Http Client built on top of .NET HttpClient that and help programmers to make asynchronous http requests.</Description>
-        <PackageProjectUrl>https://github.com/lucassklp/Rx.Http</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/lucassklp/Rx.Http</RepositoryUrl>
-        <PackageIcon>rx.http.icon.png</PackageIcon>
-        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+      <TargetFrameworks>net8.0</TargetFrameworks>
+      <Version>2.0.3</Version>
+      <IsPackable>true</IsPackable>
+      <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+      <Authors>Lucas Simas</Authors>
+      <Description>A lightweight library that is inpired in Angular Http Client built on top of .NET HttpClient that and help programmers to make asynchronous http requests.</Description>
+      <PackageProjectUrl>https://github.com/lucassklp/Rx.Http</PackageProjectUrl>
+      <RepositoryUrl>https://github.com/lucassklp/Rx.Http</RepositoryUrl>
+      <PackageIcon>rx.http.icon.png</PackageIcon>
+      <PackageLicenseFile>LICENSE</PackageLicenseFile>
     </PropertyGroup>
 
     <ItemGroup>

@@ -10,7 +10,7 @@ namespace Rx.Http.Tests
 {
     public class ConsumersTests
     {
-        private Injector injector;
+        private readonly Injector injector;
         public ConsumersTests()
         {
             injector = new Injector();
