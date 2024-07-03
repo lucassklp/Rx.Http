@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Xunit;
 using System.IO;
 
-namespace Tests
+namespace Rx.Http.Tests
 {
     public class RequestTests
     {

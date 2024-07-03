@@ -3,7 +3,7 @@ using Models.Consumers;
 using Rx.Http.Extensions;
 using Rx.Http.Logging;
 
-namespace Tests
+namespace Rx.Http.Tests
 {
     class Injector
     {

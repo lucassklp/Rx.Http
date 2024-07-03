@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Tests\Tests.csproj", "{7D26E97A-BA89-446C-BD25-363C9A047D6C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rx.Http.Tests", "Rx.Http.Tests\Rx.Http.Tests.csproj", "{7D26E97A-BA89-446C-BD25-363C9A047D6C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Samples", "Samples\Samples.csproj", "{4C43BBB8-042C-4623-A1ED-14A578B23AB3}"
 EndProject
