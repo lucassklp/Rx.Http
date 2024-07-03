@@ -8,17 +8,15 @@ namespace Rx.Http.Serializers
     {
         public T Deserialize<T>(Stream stream)
         {
-            StreamReader reader = new StreamReader(stream);
-            string text = reader.ReadToEnd();
-            return JsonSerializer.Deserialize<T>(text);
+            return JsonSerializer.Deserialize<T>(stream);
         }
 
         public Stream Serialize<T>(T data) where T : class
         {
-            var s = JsonSerializer.Serialize(data);
+            var json = JsonSerializer.Serialize(data);
             var stream = new MemoryStream();
             var writer = new StreamWriter(stream);
-            writer.Write(s);
+            writer.Write(json);
             writer.Flush();
             stream.Position = 0;
             return stream;
