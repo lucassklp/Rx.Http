@@ -13,7 +13,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 6.0.400
+        dotnet-version: 8.0.302
         source-url: https://nuget.pkg.github.com/lucassklp/index.json
       env:
         NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
@@ -26,7 +26,7 @@ jobs:
 
     - name: Moving test coverage result to root folder
       run: |
-        mv Tests/TestResults/**/coverage.cobertura.xml ./
+        mv Rx.Http.Tests/TestResults/**/coverage.cobertura.xml ./
 
     - name: Send test coverage to Codacy
       uses: codacy/codacy-coverage-reporter-action@v1

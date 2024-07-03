@@ -112,6 +112,46 @@ namespace Rx.Http
             return Request<T>(url, options, HttpMethod.Post);
         }
 
+        public IObservable<RxHttpResponse> Patch(string url)
+        {
+            return Request(url, HttpMethod.Patch);
+        }
+
+        public IObservable<RxHttpResponse> Patch(string url, object content)
+        {
+            return Request(url, content, HttpMethod.Patch);
+        }
+
+        public IObservable<RxHttpResponse> Patch(string url, object content, Action<RxHttpRequestOptions> options)
+        {
+            return Request(url, content, options, HttpMethod.Patch);
+        }
+
+        public IObservable<RxHttpResponse> Patch(string url, Action<RxHttpRequestOptions> options)
+        {
+            return Request(url, options, HttpMethod.Patch);
+        }
+
+        public IObservable<T> Patch<T>(string url)
+        {
+            return Request<T>(url, HttpMethod.Patch);
+        }
+
+        public IObservable<T> Patch<T>(string url, object content)
+        {
+            return Request<T>(url, content, HttpMethod.Patch);
+        }
+
+        public IObservable<T> Patch<T>(string url, object content, Action<RxHttpRequestOptions> options)
+        {
+            return Request<T>(url, content, options, HttpMethod.Patch);
+        }
+
+        public IObservable<T> Patch<T>(string url, Action<RxHttpRequestOptions> options)
+        {
+            return Request<T>(url, options, HttpMethod.Patch);
+        }
+
         public IObservable<RxHttpResponse> Put(string url)
         {
             return Request(url, HttpMethod.Put);

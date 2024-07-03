@@ -7,7 +7,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using Xunit;
 
-namespace Tests
+namespace Rx.Http.Tests
 {
     public class HttpLoggerBaseTests
     {

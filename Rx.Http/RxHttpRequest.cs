@@ -3,6 +3,7 @@ using Rx.Http.Interceptors;
 using Rx.Http.MediaTypes.Abstractions;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 
@@ -73,17 +74,43 @@ namespace Rx.Http
 
 
         #region Options
-        public override RxHttpRequestOptions AddHeader(string key, string value)
+        public override RxHttpRequestOptions AddHeader<T>(string key, T value)
         {
-            Headers.Append(key, value);
+            Headers.Append(key, ConvertToString(value));
             return this;
         }
 
-        public override RxHttpRequestOptions AddHeader(IEnumerable<KeyValuePair<string, string>> pairs)
+        public override RxHttpRequestOptions AddHeader<T>(string key, IEnumerable<T> values)
         {
-            pairs.ToList().ForEach(x => AddHeader(x.Key, x.Value));
+            foreach (var value in values)
+            {
+                AddHeader(key, value);
+            }
             return this;
         }
+
+        public override RxHttpRequestOptions AddHeader<T>(IEnumerable<KeyValuePair<string, T>> pairs)
+        {
+            foreach (var item in pairs)
+            {
+                AddHeader(item.Key, item.Value);
+            }
+            return this;
+        }
+
+        public override RxHttpRequestOptions AddHeader<T>(IEnumerable<KeyValuePair<string, List<T>>> pairs)
+        {
+            foreach (var pair in pairs)
+            {
+                foreach (var value in pair.Value)
+                {
+                    AddHeader(pair.Key, value);
+                }
+            }
+
+            return this;
+        }
+
 
         public override RxHttpRequestOptions AddHeader(object obj)
         {
@@ -91,19 +118,22 @@ namespace Rx.Http
             return this;
         }
 
-        public override RxHttpRequestOptions AddQueryString(string key, string value)
+        public override RxHttpRequestOptions AddQueryString<T>(string key, T value)
         {
-            QueryStrings.Append(key, value);
+            QueryStrings.Append(key, ConvertToString(value));
             return this;
         }
 
-        public override RxHttpRequestOptions AddQueryString(IEnumerable<KeyValuePair<string, string>> pairs)
+        public override RxHttpRequestOptions AddQueryString<T>(IEnumerable<KeyValuePair<string, T>> pairs)
         {
-            pairs.ToList().ForEach(x => AddQueryString(x.Key, x.Value));
+            foreach (var item in pairs)
+            {
+                AddQueryString(item.Key, item.Value);
+            }
             return this;
         }
 
-        public override RxHttpRequestOptions AddQueryString(IEnumerable<KeyValuePair<string, List<string>>> pairs)
+        public override RxHttpRequestOptions AddQueryString<T>(IEnumerable<KeyValuePair<string, List<T>>> pairs)
         {
             foreach (var pair in pairs)
             {
@@ -113,6 +143,15 @@ namespace Rx.Http
                 }
             }
 
+            return this;
+        }
+
+        public override RxHttpRequestOptions AddQueryString<T>(string key, IEnumerable<T> values)
+        {
+            foreach (var value in values)
+            {
+                AddQueryString(key, value);
+            }
             return this;
         }
 
@@ -144,6 +183,26 @@ namespace Rx.Http
         {
             this.ResponseMediaType = mediaType;
             return this;
+        }
+
+        private string ConvertToString<T>(T value)
+        {
+            if(value is bool)
+            {
+                return value?.ToString()?.ToLower();
+            }
+
+            if(value is double asDouble)
+            {
+                return asDouble.ToString(CultureInfo.InvariantCulture);
+            }
+
+            if(value is float asFloat)
+            {
+                return asFloat.ToString(CultureInfo.InvariantCulture);
+            }
+
+            return value?.ToString();
         }
         #endregion
     }
