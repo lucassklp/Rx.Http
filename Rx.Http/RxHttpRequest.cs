@@ -91,26 +91,36 @@ namespace Rx.Http
             return this;
         }
 
-        public override RxHttpRequestOptions AddQueryString(string key, string value)
+        public override RxHttpRequestOptions AddQueryString<T>(string key, T value)
         {
-            QueryStrings.Append(key, value);
+            QueryStrings.Append(key, value.ToString());
             return this;
         }
 
-        public override RxHttpRequestOptions AddQueryString(IEnumerable<KeyValuePair<string, string>> pairs)
+        public override RxHttpRequestOptions AddQueryString<T>(IEnumerable<KeyValuePair<string, T>> pairs)
         {
-            pairs.ToList().ForEach(x => AddQueryString(x.Key, x.Value));
+            pairs.ToList().ForEach(x => AddQueryString(x.Key, x.Value?.ToString()));
             return this;
         }
 
-        public override RxHttpRequestOptions AddQueryString(IEnumerable<KeyValuePair<string, List<string>>> pairs)
+        public override RxHttpRequestOptions AddQueryString<T>(IEnumerable<KeyValuePair<string, List<T>>> pairs)
         {
             foreach (var pair in pairs)
             {
                 foreach (var value in pair.Value)
                 {
-                    AddQueryString(pair.Key, value);
+                    AddQueryString(pair.Key, value?.ToString());
                 }
+            }
+
+            return this;
+        }
+
+        public override RxHttpRequestOptions AddQueryString<T>(string key, IEnumerable<T> values)
+        {
+            foreach (var value in values)
+            {
+                AddQueryString(key, value.ToString());
             }
 
             return this;

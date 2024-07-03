@@ -13,7 +13,7 @@ namespace Models.Consumers
             httpClient.BaseAddress = new Uri("https://postman-echo.com");
         }
 
-        public IObservable<EchoResponse> GetWithQueryString(IDictionary<string, string> query)
+        public IObservable<EchoResponse> GetWithQueryString<T>(IDictionary<string, T> query)
         {
             return Get<EchoResponse>("get", opts =>
             {
