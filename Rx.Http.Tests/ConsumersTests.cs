@@ -58,16 +58,29 @@ namespace Rx.Http.Tests
         {
             var postmanConsumer = injector.Get<PostmanConsumer>();
 
-            var queryStrings = new Dictionary<string, string>
+            var queryStrings = new Dictionary<string, object>
             {
                 { "Foo", "Bar" },
                 { "User", "John Doe" },
-                { "Characters", "*&�%6dbajs&@#chv73*(#Y" }
+                { "Characters", "*&�%6dbajs&@#chv73*(#Y" },
+                { "Boolean", true },
+                { "Int", 1 },
+                { "Float", 1.8129f },
+                { "Double", 1.8129d },
             };
 
             var headers = await postmanConsumer.GetWithQueryString(queryStrings);
 
-            Assert.Equal(headers.Args, queryStrings);
+            Assert.Equal(headers.Args, new Dictionary<string, string>
+            {
+                { "Foo", "Bar" },
+                { "User", "John Doe" },
+                { "Characters", "*&�%6dbajs&@#chv73*(#Y" },
+                { "Boolean", "true" },
+                { "Int", "1" },
+                { "Float", "1.8129" },
+                { "Double", "1.8129" },
+            });
         }
 
         [Fact]
@@ -75,14 +88,28 @@ namespace Rx.Http.Tests
         {
             var postmanConsumer = injector.Get<PostmanConsumer>();
 
-            var headers = new Dictionary<string, string>
+            var headers = new Dictionary<string, object>
             {
                 { "Foo", "Bar" },
-                { "User", "John Doe" }
+                { "User", "John Doe" },
+                { "Boolean", true },
+                { "Int", 1 },
+                { "Float", 1.8129f },
+                { "Double", 1.8129d },
+            };
+
+            var expected = new Dictionary<string, string>
+            {
+                { "foo", "Bar" },
+                { "user", "John Doe" },
+                { "boolean", "true" },
+                { "int", "1" },
+                { "float", "1.8129" },
+                { "double", "1.8129" },
             };
 
             var response = await postmanConsumer.GetWithHeaders(headers);
-            var valid = headers.All(i => response.Headers[i.Key.ToLower()] == i.Value);
+            var valid = expected.All(pair => response.Headers.ContainsKey(pair.Key) && response.Headers[pair.Key] == pair.Value);
             Assert.True(valid);
         }
     }

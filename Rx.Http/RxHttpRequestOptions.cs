@@ -14,9 +14,13 @@ namespace Rx.Http
 
         public abstract RxHttpRequestOptions AddRequestInteceptor(RxRequestInterceptor interceptor);
 
-        public abstract RxHttpRequestOptions AddHeader(string key, string value);
+        public abstract RxHttpRequestOptions AddHeader<T>(string key, T value);
 
-        public abstract RxHttpRequestOptions AddHeader(IEnumerable<KeyValuePair<string, string>> pairs);
+        public abstract RxHttpRequestOptions AddHeader<T>(string key, IEnumerable<T> values);
+
+        public abstract RxHttpRequestOptions AddHeader<T>(IEnumerable<KeyValuePair<string, T>> pairs);
+
+        public abstract RxHttpRequestOptions AddHeader<T>(IEnumerable<KeyValuePair<string, List<T>>> pairs);
 
         public abstract RxHttpRequestOptions AddHeader(object obj);
 
