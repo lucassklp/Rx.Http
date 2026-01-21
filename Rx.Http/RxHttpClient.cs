@@ -112,44 +112,61 @@ namespace Rx.Http
             return Request<T>(url, options, HttpMethod.Post);
         }
 
+        private HttpMethod GetPatch()
+        {
+            #if NET8_0_OR_GREATER
+            return HttpMethod.Patch;
+            #else
+            return new HttpMethod("PATCH");
+            #endif
+        }
+
         public IObservable<RxHttpResponse> Patch(string url)
         {
-            return Request(url, HttpMethod.Patch);
+            var patch = GetPatch();
+            return Request(url, patch);
         }
 
         public IObservable<RxHttpResponse> Patch(string url, object content)
         {
-            return Request(url, content, HttpMethod.Patch);
+            var patch = GetPatch();
+            return Request(url, content, patch);
         }
 
         public IObservable<RxHttpResponse> Patch(string url, object content, Action<RxHttpRequestOptions> options)
         {
-            return Request(url, content, options, HttpMethod.Patch);
+            var patch = GetPatch();
+            return Request(url, content, options, patch);
         }
 
         public IObservable<RxHttpResponse> Patch(string url, Action<RxHttpRequestOptions> options)
         {
-            return Request(url, options, HttpMethod.Patch);
+            var patch = GetPatch();
+            return Request(url, options, patch);
         }
 
         public IObservable<T> Patch<T>(string url)
         {
-            return Request<T>(url, HttpMethod.Patch);
+            var patch = GetPatch();
+            return Request<T>(url, patch);
         }
 
         public IObservable<T> Patch<T>(string url, object content)
         {
-            return Request<T>(url, content, HttpMethod.Patch);
+            var patch = GetPatch();
+            return Request<T>(url, content, patch);
         }
 
         public IObservable<T> Patch<T>(string url, object content, Action<RxHttpRequestOptions> options)
         {
-            return Request<T>(url, content, options, HttpMethod.Patch);
+            var patch = GetPatch();
+            return Request<T>(url, content, options, patch);
         }
 
         public IObservable<T> Patch<T>(string url, Action<RxHttpRequestOptions> options)
         {
-            return Request<T>(url, options, HttpMethod.Patch);
+            var patch = GetPatch();
+            return Request<T>(url, options, patch);
         }
 
         public IObservable<RxHttpResponse> Put(string url)

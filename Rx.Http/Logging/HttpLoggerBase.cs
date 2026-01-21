@@ -2,8 +2,8 @@ using System;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using Rx.Http.MediaTypes;
 
 namespace Rx.Http.Logging
@@ -23,7 +23,7 @@ namespace Rx.Http.Logging
         public string GetHeadersLog(HttpHeaders httpHeaders, HttpMethod method, string url, Guid requestId, LoggingMessageType messageType)
         {
             var headers = httpHeaders.ToDictionary(x => x.Key, x => x.Value);
-            var headersFormatted = JsonConvert.SerializeObject(headers, Formatting.Indented);
+            var headersFormatted = JsonSerializer.Serialize(headers);
             return $"{messageType} headers for {method.Method} {url} [RequestId = {requestId}]: \n{headersFormatted}";
         }
 
@@ -52,12 +52,9 @@ namespace Rx.Http.Logging
 
         private string FormatJson(string content)
         {
-            object parsedJson = JsonConvert.DeserializeObject(content);
-            return JsonConvert.SerializeObject(parsedJson, Formatting.Indented, new JsonSerializerSettings
-            {
-                TypeNameHandling = TypeNameHandling.All,
-                TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple
-            });
+            var jsonElement = JsonSerializer.Deserialize<JsonElement>(content);
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            return JsonSerializer.Serialize(jsonElement, options);
         }
     }
 }

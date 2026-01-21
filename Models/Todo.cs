@@ -1,20 +1,20 @@
-using Newtonsoft.Json;
 using System;
+using System.Text.Json.Serialization;
 
 namespace Models
 {
     public class Todo : IEquatable<Todo>
     {
-        [JsonProperty("userId")]
+        [JsonPropertyName("userId")]
         public int UserId { get; set; }
 
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public int Id { get; set; }
 
-        [JsonProperty("title")]
+        [JsonPropertyName("title")]
         public string Title { get; set; }
 
-        [JsonProperty("completed")]
+        [JsonPropertyName("completed")]
         public bool IsCompleted { get; set; }
 
         public bool Equals(Todo other)

@@ -9,10 +9,10 @@ namespace Rx.Http.Extensions
 {
     public static class RxHttpResponseMessageExtensions
     {
-        public static IObservable<T> Content<T>(this IObservable<RxHttpResponse> response)
+        public static IObservable<T> Content<T>(this IObservable<RxHttpResponse> responseObs)
         {
 
-            return response.SelectMany(async response => {
+            return responseObs.SelectMany(async response => {
                 try
                 {
                     if (response.StatusCode >= System.Net.HttpStatusCode.BadRequest)

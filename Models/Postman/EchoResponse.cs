@@ -1,30 +1,30 @@
-﻿using Newtonsoft.Json;
-using Rx.Http;
+﻿using Rx.Http;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Models.Postman
 {
     public class EchoResponse
     {
-        [JsonProperty("args")]
+        [JsonPropertyName("args")]
         public Dictionary<string, string> Args { get; set; }
 
-        [JsonProperty("headers")]
+        [JsonPropertyName("headers")]
         public Dictionary<string, string> Headers { get; set; }
 
-        [JsonProperty("cookies")]
+        [JsonPropertyName("cookies")]
         public ListDictionary<string, string> Cookies { get; set; }
 
-        [JsonProperty("url")]
+        [JsonPropertyName("url")]
         public string Url { get; set; }
 
-        [JsonProperty("files")]
+        [JsonPropertyName("files")]
         public Dictionary<string, string> Files { get; set; }
 
-        [JsonProperty("data")]
+        [JsonPropertyName("data")]
         public Dictionary<string, string> Data { get; set; }
 
-        [JsonProperty("json")]
+        [JsonPropertyName("json")]
         public Dictionary<string, string> Json { get; set; }
 
     }

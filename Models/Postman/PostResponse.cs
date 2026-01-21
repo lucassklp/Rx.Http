@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Models.Postman
 {
@@ -10,16 +10,16 @@ namespace Models.Postman
 
     public class PostResponse<T>
     {
-        [JsonProperty("args")]
+        [JsonPropertyName("args")]
         public Dictionary<string, string> Args { get; set; }
 
-        [JsonProperty("data")]
+        [JsonPropertyName("data")]
         public T Data { get; set; }
 
-        [JsonProperty("form")]
+        [JsonPropertyName("form")]
         public Dictionary<string, string> Form { get; set; }
 
-        [JsonProperty("headers")]
+        [JsonPropertyName("headers")]
         public Dictionary<string, string> Headers { get; set; }
     }
 }

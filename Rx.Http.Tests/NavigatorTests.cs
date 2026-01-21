@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Reactive.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Models.Postman;
-using Newtonsoft.Json.Linq;
 using Rx.Http;
 using Xunit;
 
@@ -32,8 +32,8 @@ namespace Rx.Http.Tests
                 options.AddQueryString(values);
             });
 
-            var response = await navigator.Get<JObject>("https://postman-echo.com/cookies");
-            var cookies = response.GetValue("cookies").ToObject<Dictionary<string, string>>();
+            var response = await navigator.Get<JsonDocument>("https://postman-echo.com/cookies");
+            var cookies = response.RootElement.GetProperty("cookies").Deserialize<Dictionary<string, string>>();
             Assert.Equal(cookies, values);
         }
 

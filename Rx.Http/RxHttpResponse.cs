@@ -16,7 +16,6 @@ namespace Rx.Http
         public string ReasonPhrase => httpResponse.ReasonPhrase;
         public HttpResponseHeaders Headers => httpResponse.Headers;
         public HttpRequestMessage RequestMessage => httpResponse.RequestMessage;
-        public HttpResponseHeaders TrailingHeaders => httpResponse.TrailingHeaders;
         public Version Version => httpResponse.Version;
 
         public HttpResponseMessage EnsureSuccessStatusCode() => httpResponse.EnsureSuccessStatusCode();
