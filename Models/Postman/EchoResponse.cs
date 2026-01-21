@@ -13,7 +13,7 @@ namespace Models.Postman
         public Dictionary<string, string> Headers { get; set; }
 
         [JsonPropertyName("cookies")]
-        public ListDictionary<string, string> Cookies { get; set; }
+        public Dictionary<string, object> Cookies { get; set; }
 
         [JsonPropertyName("url")]
         public string Url { get; set; }

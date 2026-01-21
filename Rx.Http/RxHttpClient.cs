@@ -10,8 +10,6 @@ namespace Rx.Http
 {
     public class RxHttpClient : IDisposable
     {
-        public static RxHttpClient Create() => new RxHttpClient(new HttpClient(), null);
-
         private readonly HttpClient httpClient;
         private RxHttpLogger logger;
 

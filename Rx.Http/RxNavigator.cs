@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using Rx.Http.Interceptors;
+using Rx.Http.Logging;
 
 namespace Rx.Http
 {
@@ -11,6 +12,13 @@ namespace Rx.Http
         private readonly Dictionary<string, HashSet<string>> cookies;
 
         public RxNavigator(HttpClient client) : base(client, null)
+        {
+            RequestInterceptors.Add(new CookieInterceptor(this));
+            ResponseInterceptors.Add(new SetCookieInterceptor(this));
+            cookies = new Dictionary<string, HashSet<string>>();
+        }
+        
+        public RxNavigator(HttpClient client, RxHttpLogger logger) : base(client, logger)
         {
             RequestInterceptors.Add(new CookieInterceptor(this));
             ResponseInterceptors.Add(new SetCookieInterceptor(this));
