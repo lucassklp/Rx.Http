@@ -6,6 +6,9 @@
     <a href="https://app.codacy.com/gh/lucassklp/Rx.Http/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade">
         <img src="https://app.codacy.com/project/badge/Grade/7c601dd4b916430e982b5726afb7bd3c"/>
     </a>
+    <a href="https://app.codacy.com/gh/lucassklp/Rx.Http/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage">
+        <img src="https://app.codacy.com/project/badge/Coverage/7c601dd4b916430e982b5726afb7bd3c"/>
+    </a>
     <img alt="nuget version" src="https://img.shields.io/nuget/v/Rx.Http.svg">
 </p>
 
