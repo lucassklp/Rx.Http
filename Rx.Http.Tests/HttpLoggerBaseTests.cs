@@ -5,6 +5,7 @@ using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Rx.Http.Tests
@@ -15,7 +16,7 @@ namespace Rx.Http.Tests
 
 
         [Fact]
-        async void TestIfBodyLogWorksWithNullContent()
+        async Task TestIfBodyLogWorksWithNullContent()
         {
             var guid = Guid.NewGuid();
             var url = "http://google.com";
@@ -27,7 +28,7 @@ namespace Rx.Http.Tests
         }
 
         [Fact]
-        async void TestIfBodyLogWorksWithContent()
+        async Task TestIfBodyLogWorksWithContent()
         {
             var guid = Guid.NewGuid();
             var url = "http://google.com";
@@ -44,7 +45,7 @@ namespace Rx.Http.Tests
         }
 
         [Fact]
-        async void TestIfBodyLogWorksWithWrongContentType()
+        async Task TestIfBodyLogWorksWithWrongContentType()
         {
             var guid = Guid.NewGuid();
             var url = "http://google.com";

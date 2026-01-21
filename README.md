@@ -2,13 +2,10 @@
   <img src="Resources/rx.http.mini.png">
 </p>
 <p align="center">
-    <img alt="nuget" src="https://img.shields.io/nuget/dt/Rx.Http.svg">
-    <a href="https://www.codacy.com/manual/lucassklp/Rx.Http?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=lucassklp/Rx.Http&amp;utm_campaign=Badge_Grade">
-        <img src="https://api.codacy.com/project/badge/Grade/90ffddf0fe1c4bb89e8e7049784ea190"/>
+    <img alt="nuget" src="https://img.shields.io/nuget/dt/Rx.Http.svg" />
+    <a href="https://app.codacy.com/gh/lucassklp/Rx.Http/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade">
+        <img src="https://app.codacy.com/project/badge/Grade/7c601dd4b916430e982b5726afb7bd3c"/>
     </a>
-  <a href="https://www.codacy.com/gh/lucassklp/Rx.Http/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=lucassklp/Rx.Http&amp;utm_campaign=Badge_Coverage">
-    <img src="https://app.codacy.com/project/badge/Coverage/90ffddf0fe1c4bb89e8e7049784ea190"/>
-  </a>
     <img alt="nuget version" src="https://img.shields.io/nuget/v/Rx.Http.svg">
 </p>
 
@@ -19,13 +16,13 @@ A lightweight library that is inpired in [Angular 2+ Http Client](https://angula
 If you are using Package Manager:
 
 ```bash
-Install-Package Rx.Http -Version 2.1.0
+Install-Package Rx.Http -Version 3.0.0
 ```
 
 If you are using .NET CLI
 
 ```bash
-dotnet add package Rx.Http --version 2.1.0
+dotnet add package Rx.Http --version 3.0.0
 ```
 
 ## Example of use
@@ -208,8 +205,8 @@ private static void ConfigureServices(ServiceCollection services)
 You can setup default settings by setting the `RxHttp.Default` like the example below:
 
 ```csharp
-RxHttp.Default.RequestMediaType = new JsonHttpMediaType(new NewtonsoftJsonSerializer());
-RxHttp.Default.ResponseMediaType = new JsonHttpMediaType(new NewtonsoftJsonSerializer())
+RxHttp.Default.RequestMediaType = new JsonHttpMediaType(new NativeJsonSerializer());
+RxHttp.Default.ResponseMediaType = new JsonHttpMediaType(new NativeJsonSerializer())
 ```
 
 ## Save response to file (Download)
