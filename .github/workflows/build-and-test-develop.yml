@@ -27,7 +27,7 @@ jobs:
 
     - name: Moving test coverage result to root folder
       run: |
-        mv Rx.Http.Tests/TestResults/**/coverage.cobertura.xml ./
+        mv $(find Rx.Http.Tests/TestResults -name coverage.cobertura.xml | head -n 1) ./coverage.cobertura.xml
     
     - name: Run codacy-coverage-reporter
       uses: codacy/codacy-coverage-reporter-action@v1.3.0
