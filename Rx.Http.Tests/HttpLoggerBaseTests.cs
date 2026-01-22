@@ -19,7 +19,7 @@ namespace Rx.Http.Tests
         async Task TestIfBodyLogWorksWithNullContent()
         {
             var guid = Guid.NewGuid();
-            var url = "http://google.com";
+            var url = "https://google.com";
             
             var bodyLog = await loggerBase.GetBodyLog(null, HttpMethod.Get, url, guid, LoggingMessageType.Request);
             var expected = $"Request body for GET {url} [RequestId = {guid}]:\n"; ;
@@ -31,7 +31,7 @@ namespace Rx.Http.Tests
         async Task TestIfBodyLogWorksWithContent()
         {
             var guid = Guid.NewGuid();
-            var url = "http://google.com";
+            var url = "https://google.com";
 
             var message = "This is an example of string";
             byte[] byteArray = Encoding.UTF8.GetBytes(message);
@@ -48,7 +48,7 @@ namespace Rx.Http.Tests
         async Task TestIfBodyLogWorksWithWrongContentType()
         {
             var guid = Guid.NewGuid();
-            var url = "http://google.com";
+            var url = "https://google.com";
 
             var message = "This is an example of string";
             byte[] byteArray = Encoding.UTF8.GetBytes(message);
@@ -65,7 +65,7 @@ namespace Rx.Http.Tests
         [Fact]
         void TestHeaders()
         {
-            var url = "http://google.com";
+            var url = "https://google.com";
             var guid = Guid.NewGuid();
 
             var content = new StreamContent(new MemoryStream());
