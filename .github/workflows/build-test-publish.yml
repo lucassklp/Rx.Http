@@ -2,18 +2,20 @@ name: Build, Test and Publish
 
 on:
   push:
-    branches: 
+    branches:
       - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.302
+        dotnet-version: |
+          8.0.x
+          10.0.x
         source-url: https://nuget.pkg.github.com/lucassklp/index.json
       env:
         NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
@@ -21,18 +23,22 @@ jobs:
     - name: Install dependencies
       run: dotnet restore
 
-    - name: Test
-      run: dotnet test --collect:"XPlat Code Coverage" --no-restore --verbosity normal
+    - name: Test net8.0
+      run: dotnet test --framework net8.0 --collect:"XPlat Code Coverage" --results-directory ./TestResults/net8.0 --no-restore --verbosity normal
 
-    - name: Moving test coverage result to root folder
+    - name: Test net10.0
+      run: dotnet test --framework net10.0 --collect:"XPlat Code Coverage" --results-directory ./TestResults/net10.0 --no-restore --verbosity normal
+
+    - name: Moving test coverage results to root folder
       run: |
-        mv Rx.Http.Tests/TestResults/**/coverage.cobertura.xml ./
+        cp TestResults/net8.0/**/coverage.cobertura.xml ./coverage.net8.0.cobertura.xml
+        cp TestResults/net10.0/**/coverage.cobertura.xml ./coverage.net10.0.cobertura.xml
 
     - name: Send test coverage to Codacy
       uses: codacy/codacy-coverage-reporter-action@v1
       with:
         project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-        coverage-reports: coverage.cobertura.xml
+        coverage-reports: coverage.net8.0.cobertura.xml,coverage.net10.0.cobertura.xml
 
     - name: Pack
       run: |
