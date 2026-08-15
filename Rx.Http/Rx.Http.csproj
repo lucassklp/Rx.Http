@@ -2,7 +2,7 @@
     <PropertyGroup>
       <TargetFrameworks>netstandard2.0;net8.0;net10.0</TargetFrameworks>
       <LangVersion>8.0</LangVersion>
-      <Version>2.1.0</Version>
+      <Version>2.1.1</Version>
       <IsPackable>true</IsPackable>
       <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
       <Authors>Lucas Simas</Authors>
