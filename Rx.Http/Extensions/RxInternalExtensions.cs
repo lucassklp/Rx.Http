@@ -12,12 +12,20 @@ namespace Rx.Http.Extensions
 
             foreach (var field in type.GetFields())
             {
-                keys.Add(field.Name, field.GetValue(obj).ToString());
+                var value = field.GetValue(obj);
+                if (value != null)
+                {
+                    keys[field.Name] = value.ToString();
+                }
             }
 
             foreach (var property in type.GetProperties())
             {
-                keys.Add(property.Name, property.GetValue(obj).ToString());
+                var value = property.GetValue(obj);
+                if (value != null)
+                {
+                    keys[property.Name] = value.ToString();
+                }
             }
 
             return keys;

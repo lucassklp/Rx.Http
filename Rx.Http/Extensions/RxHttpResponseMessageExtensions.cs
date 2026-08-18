@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Net.Http;
 using System.Reactive.Linq;
 using HtmlAgilityPack;
 using Rx.Http.Exceptions;
@@ -26,26 +25,34 @@ namespace Rx.Http.Extensions
                 {
                     throw new RxHttpRequestException(response, exception);
                 }
+                finally
+                {
+                    response.Dispose();
+                }
             });
         }
 
-        public static IObservable<string> AsString(this IObservable<HttpResponseMessage> response)
+        public static IObservable<string> AsString(this IObservable<RxHttpResponse> response)
         {
-            return response.SelectMany(async (httpResp) =>
+            return response.SelectMany(async httpResp =>
             {
-                return await httpResp.Content.ReadAsStringAsync();
+                using (httpResp)
+                {
+                    return await httpResp.Content.ReadAsStringAsync();
+                }
             });
         }
 
         public static IObservable<RxHttpResponse> ToFile(this IObservable<RxHttpResponse> response, string path)
         {
-            return response.SelectMany(async (httpResp) =>
+            return response.SelectMany(async httpResp =>
             {
-                var fileStream = File.Create(path);
-                var stream = await httpResp.Content.ReadAsStreamAsync();
-                stream.Seek(0, SeekOrigin.Begin);
-                stream.CopyTo(fileStream);
-                fileStream.Close();
+                using (httpResp)
+                using (var fileStream = File.Create(path))
+                {
+                    var stream = await httpResp.Content.ReadAsStreamAsync();
+                    await stream.CopyToAsync(fileStream);
+                }
                 return httpResp;
             });
         }
@@ -54,10 +61,13 @@ namespace Rx.Http.Extensions
         {
             return response.SelectMany(async httpResponse =>
             {
-                var html = await httpResponse.Content.ReadAsStringAsync();
-                var htmlDoc = new HtmlDocument();
-                htmlDoc.LoadHtml(html);
-                return htmlDoc;
+                using (httpResponse)
+                {
+                    var html = await httpResponse.Content.ReadAsStringAsync();
+                    var htmlDoc = new HtmlDocument();
+                    htmlDoc.LoadHtml(html);
+                    return htmlDoc;
+                }
             });
         }
     }

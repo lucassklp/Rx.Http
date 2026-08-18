@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
 using System;
+using System.Text.Json.Serialization;
 
 namespace Models
 {
@@ -15,6 +16,7 @@ namespace Models
         public string Title { get; set; }
 
         [JsonProperty("completed")]
+        [JsonPropertyName("completed")]
         public bool IsCompleted { get; set; }
 
         public bool Equals(Todo other)
